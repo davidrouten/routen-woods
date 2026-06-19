@@ -79,8 +79,12 @@
 - [x] AWS S3 for image uploads (production bucket: routen-woods-production, IAM scoped)
 - [x] SSL + force_ssl enabled
 
-## Phase 7: Hardening (In Progress)
+## Phase 7: Hardening & Performance (In Progress)
 - [x] Cloudflare Turnstile on lead forms (soft signal, not hard block — weight 0.5 in SpamDetector)
+- [x] Image optimization: lazy loading, decoding="async", fetchpriority="high" on LCP image
+- [x] Image optimization: Active Storage variants (resized webp) for gallery images
+- [x] Spam score column in admin leads index (color-coded progress bar)
+- [ ] Heroku libvips buildpack for production image variants
 - [ ] Rate limiting by IP (add as SpamDetector signal)
 - [ ] Production email delivery (SendGrid / Postmark)
 - [ ] Twilio SMS setup (env vars)
