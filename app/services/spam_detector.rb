@@ -26,6 +26,7 @@ class SpamDetector
     check_email_pattern
     check_content_spam_words
     check_duplicate_submission
+    check_turnstile
   end
 
   def check_honeypot
@@ -55,5 +56,10 @@ class SpamDetector
                 .where.not(id: @lead.id)
                 .count
     @signals << { name: :duplicate, weight: 0.4 } if dupes >= 2
+  end
+
+  def check_turnstile
+    return unless TurnstileVerifier.configured?
+    @signals << { name: :turnstile_failed, weight: 0.5 } if @lead.turnstile_passed == false
   end
 end

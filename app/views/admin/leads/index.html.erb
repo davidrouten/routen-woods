@@ -39,6 +39,7 @@
         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Service</th>
         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Temp</th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Spam Score</th>
         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
       </tr>
@@ -63,6 +64,15 @@
             <% if lead.lead_temperature.present? %>
               <span class="inline-block px-2 py-1 rounded-full text-xs font-medium <%= temperature_badge_color(lead.lead_temperature) %>"><%= lead.temperature_emoji %> <%= lead.lead_temperature.capitalize %></span>
             <% end %>
+          </td>
+          <td class="px-6 py-4">
+            <% score = lead.spam_score || 0 %>
+            <div class="flex items-center gap-2">
+              <div class="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
+                <div class="h-full rounded-full <%= score >= 0.7 ? 'bg-red-500' : score >= 0.4 ? 'bg-yellow-500' : 'bg-green-500' %>" style="width: <%= (score * 100).round %>%"></div>
+              </div>
+              <span class="text-xs text-gray-500"><%= (score * 100).round %>%</span>
+            </div>
           </td>
           <td class="px-6 py-4 text-sm text-gray-500"><%= lead.created_at.strftime("%b %d, %Y") %></td>
           <td class="px-6 py-4 text-sm">

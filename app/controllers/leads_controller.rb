@@ -1,6 +1,11 @@
 class LeadsController < ApplicationController
   def create
-    @lead = SalesEngine.create_lead(lead_params)
+    turnstile_passed = TurnstileVerifier.verify(
+      params["cf-turnstile-response"],
+      ip: request.remote_ip
+    )
+
+    @lead = SalesEngine.create_lead(lead_params.merge(turnstile_passed: turnstile_passed))
 
     respond_to do |format|
       format.turbo_stream

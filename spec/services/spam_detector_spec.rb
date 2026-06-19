@@ -28,6 +28,26 @@ RSpec.describe SpamDetector do
       expect(lead.reload.spam).to be false
     end
 
+    context "turnstile signal" do
+      it "adds weight when turnstile fails and is configured" do
+        allow(TurnstileVerifier).to receive(:configured?).and_return(true)
+        lead = create(:lead, turnstile_passed: false, honeypot_value: nil, form_completion_seconds: 30)
+        expect(lead.reload.spam_score).to be >= 0.5
+      end
+
+      it "does not add weight when turnstile passes" do
+        allow(TurnstileVerifier).to receive(:configured?).and_return(true)
+        lead = create(:lead, turnstile_passed: true, honeypot_value: nil, form_completion_seconds: 30)
+        expect(lead.reload.spam_score).to eq(0.0)
+      end
+
+      it "skips turnstile check when not configured" do
+        allow(TurnstileVerifier).to receive(:configured?).and_return(false)
+        lead = create(:lead, turnstile_passed: false, honeypot_value: nil, form_completion_seconds: 30)
+        expect(lead.reload.spam_score).to eq(0.0)
+      end
+    end
+
     it "caps score at 1.0" do
       lead = create(:lead, honeypot_value: "bot", form_completion_seconds: 0.5,
                     email: "12345678@x.com", message: "free viagra bitcoin lottery")

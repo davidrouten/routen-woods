@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_19_023940) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_19_134015) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -79,6 +79,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_19_023940) do
     t.boolean "spam", default: false
     t.float "spam_score", default: 0.0
     t.integer "status", default: 0, null: false
+    t.boolean "turnstile_passed"
     t.datetime "updated_at", null: false
     t.string "utm_campaign"
     t.string "utm_content"

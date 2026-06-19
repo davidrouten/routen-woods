@@ -74,13 +74,13 @@
 - [x] Seeds (admin user, sample leads, testimonials — Oxford, MI area)
 - [x] Responsive design pass
 - [x] Tailwind theme (navy, amber, warm whites, gradient overlays, angled dividers)
-- [x] RSpec test suite (85 specs — models, services, requests)
+- [x] RSpec test suite (95 specs — models, services, requests, turnstile)
 - [x] Heroku deployment (Procfile, single-dyno config, async jobs, memory cache)
 - [x] AWS S3 for image uploads (production bucket: routen-woods-production, IAM scoped)
 - [x] SSL + force_ssl enabled
 
 ## Phase 7: Hardening (In Progress)
-- [ ] Cloudflare Turnstile on lead forms (soft signal, not hard block — weight 0.5 in SpamDetector)
+- [x] Cloudflare Turnstile on lead forms (soft signal, not hard block — weight 0.5 in SpamDetector)
 - [ ] Rate limiting by IP (add as SpamDetector signal)
 - [ ] Production email delivery (SendGrid / Postmark)
 - [ ] Twilio SMS setup (env vars)
