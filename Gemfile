@@ -25,19 +25,13 @@ gem "jbuilder"
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 
-# Use the database-backed adapters for Rails.cache, Active Job, and Action Cable
-gem "solid_cache"
-gem "solid_queue"
-gem "solid_cable"
+# Solid Cache/Queue/Cable removed — single-dyno Heroku uses memory_store, async jobs, and async cable.
+# Re-add these when scaling to multiple dynos with dedicated databases.
 
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
 
-# Deploy this application anywhere as a Docker container [https://kamal-deploy.org]
-gem "kamal", require: false
-
-# Add HTTP asset caching/compression and X-Sendfile acceleration to Puma [https://github.com/basecamp/thruster/]
-gem "thruster", require: false
+# Kamal and Thruster removed — deploying to Heroku, not Docker.
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 gem "image_processing", "~> 1.2"
