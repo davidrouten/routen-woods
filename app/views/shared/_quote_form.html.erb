@@ -1,0 +1,55 @@
+<%= form_with(model: lead, url: leads_path, id: "lead_form", class: "space-y-6", data: { controller: "form-timing", action: "submit->form-timing#submit" }) do |f| %>
+  <% if lead.errors.any? %>
+    <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+      <ul class="list-disc list-inside text-red-700 text-sm">
+        <% lead.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div>
+      <%= f.label :first_name, "First Name", class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.text_field :first_name, placeholder: t("business.forms.quote.name_placeholder"), class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#d4a338] focus:border-transparent outline-none transition", required: true, data: { action: "focus->form-timing#start" } %>
+    </div>
+    <div>
+      <%= f.label :last_name, "Last Name", class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.text_field :last_name, class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#d4a338] focus:border-transparent outline-none transition" %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div>
+      <%= f.label :email, "Email", class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.email_field :email, placeholder: t("business.forms.quote.email_placeholder"), class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#d4a338] focus:border-transparent outline-none transition" %>
+    </div>
+    <div>
+      <%= f.label :phone, "Phone", class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.telephone_field :phone, placeholder: t("business.forms.quote.phone_placeholder"), class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#d4a338] focus:border-transparent outline-none transition" %>
+    </div>
+  </div>
+
+  <div>
+    <%= f.label :service_interested_in, t("business.forms.quote.service_label"), class: "block text-sm font-medium text-gray-700 mb-1" %>
+    <%= f.select :service_interested_in, service_options_for_select, { include_blank: "Select a service..." }, class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#d4a338] focus:border-transparent outline-none transition" %>
+  </div>
+
+  <div>
+    <%= f.label :message, "Tell us about your project", class: "block text-sm font-medium text-gray-700 mb-1" %>
+    <%= f.text_area :message, placeholder: t("business.forms.contact.message_placeholder"), rows: 4, class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#d4a338] focus:border-transparent outline-none transition resize-none" %>
+  </div>
+
+  <%# Honeypot - hidden from real users %>
+  <div class="hidden" aria-hidden="true">
+    <%= f.text_field :honeypot_value, tabindex: "-1", autocomplete: "off" %>
+  </div>
+
+  <%# Form timing for spam detection %>
+  <%= f.hidden_field :form_completion_seconds, value: "", data: { "form-timing-target": "completionField" } %>
+
+  <div>
+    <%= f.submit t("business.forms.quote.submit"), class: "w-full px-8 py-4 bg-[#d4a338] text-[#0f1b2d] font-bold rounded-lg text-lg hover:bg-[#b8860b] transition shadow-lg cursor-pointer" %>
+  </div>
+<% end %>

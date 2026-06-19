@@ -1,0 +1,108 @@
+en:
+  business:
+    name: "Routen Woods"
+    tagline: "Craftsmanship That Transforms Your Kitchen"
+    motto: "Where quality meets craftsmanship"
+    email: "generic@email.com"
+    phone: "(813) 111-1111"
+    phone_raw: "+18131111111"
+    address:
+      street: "123 Craftsman Way"
+      city: "Tampa"
+      state: "FL"
+      zip: "33601"
+      full: "123 Craftsman Way, Tampa, FL 33601"
+    hours: "Mon-Fri 8AM-6PM, Sat 9AM-2PM"
+    service_area: "Tampa Bay and surrounding areas"
+    social:
+      facebook: "https://facebook.com/routenwoods"
+      instagram: "https://instagram.com/routenwoods"
+      google_business: ""
+
+    services:
+      cabinet_refinishing:
+        name: "Cabinet Refinishing"
+        short_description: "Restore your cabinets to their original beauty"
+        description: "Professional cabinet refinishing that breathes new life into your kitchen. We strip, sand, and apply premium finishes that last for years."
+        icon: "paintbrush"
+        price_starting: "Starting at $2,500"
+      cabinet_painting:
+        name: "Cabinet Painting"
+        short_description: "Transform with a fresh coat of premium paint"
+        description: "Complete cabinet painting services using premium paints and expert techniques for a flawless factory finish."
+        icon: "paint-roller"
+        price_starting: "Starting at $3,000"
+      cabinet_refacing:
+        name: "Cabinet Refacing"
+        short_description: "New doors, same great bones"
+        description: "Replace your cabinet doors and drawer fronts for a completely new look without the cost of full replacement."
+        icon: "door-open"
+        price_starting: "Starting at $5,000"
+      custom_staining:
+        name: "Custom Staining"
+        short_description: "Rich, natural wood finishes"
+        description: "Expert wood staining that brings out the natural grain and beauty of your cabinets with rich, lasting color."
+        icon: "droplet"
+        price_starting: "Starting at $2,000"
+
+    hero:
+      heading: "Transform Your Kitchen Without the Renovation"
+      subheading: "Expert cabinet refinishing, painting, and refacing in %{service_area}"
+      cta_primary: "Get a Free Quote"
+      cta_secondary: "View Our Work"
+
+    sections:
+      about:
+        heading: "Why Choose Us?"
+        body: "With years of experience in cabinet refinishing and restoration, we deliver results that exceed expectations. Our team of skilled craftsmen treats every project with the care and attention it deserves."
+        values:
+          craftsmanship:
+            title: "Master Craftsmanship"
+            description: "Every project receives meticulous attention to detail from start to finish."
+          materials:
+            title: "Premium Materials"
+            description: "We use only the highest quality paints, stains, and finishes for lasting results."
+          satisfaction:
+            title: "Guaranteed Satisfaction"
+            description: "Your happiness is our measure of success. We stand behind every project."
+      testimonials:
+        heading: "What Our Customers Say"
+        subheading: "Don't just take our word for it"
+      gallery:
+        heading: "Our Recent Work"
+        subheading: "See the transformation for yourself"
+      contact:
+        heading: "Ready to Transform Your Kitchen?"
+        subheading: "Get a free, no-obligation quote today"
+
+    forms:
+      quote:
+        heading: "Get Your Free Quote"
+        submit: "Request My Free Quote"
+        success: "Thank you! We'll be in touch within 24 hours."
+        name_placeholder: "Your Name"
+        email_placeholder: "Email Address"
+        phone_placeholder: "Phone Number"
+        service_label: "Service Interested In"
+      contact:
+        heading: "Send Us a Message"
+        submit: "Send Message"
+        success: "Message received! We'll get back to you shortly."
+        message_placeholder: "Tell us about your project..."
+
+    cta:
+      sticky_header: "Free Quote — Call %{phone}"
+      floating_button: "Get a Quote"
+      inline_after_services: "Ready to get started? Get your free quote today."
+      exit_intent_heading: "Wait! Don't leave without your free quote"
+      exit_intent_body: "Get a no-obligation estimate for your project in under 2 minutes."
+      exit_intent_cta: "Get My Free Quote"
+
+    seo:
+      title: "%{business_name} | Cabinet Refinishing"
+      description: "Professional cabinet refinishing, painting, and refacing services. Transform your kitchen without the cost of a full renovation."
+      keywords: "cabinet refinishing, cabinet painting, kitchen cabinet refacing, cabinet restoration"
+
+    footer:
+      copyright: "© %{year} %{business_name}. All rights reserved."
+      tagline: "Proudly serving %{service_area}"

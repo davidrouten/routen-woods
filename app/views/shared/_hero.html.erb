@@ -1,0 +1,14 @@
+<section class="relative bg-gradient-to-br from-[#0f1b2d] via-[#1b2a4a] to-[#2d3a52] py-24 lg:py-32" data-hero>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
+      <%= t("business.hero.heading") %>
+    </h1>
+    <p class="text-xl md:text-2xl text-gray-300 mb-10 max-w-3xl mx-auto">
+      <%= t("business.hero.subheading", service_area: t("business.service_area")) %>
+    </p>
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <%= link_to t("business.hero.cta_primary"), contact_path, class: "inline-flex items-center justify-center px-8 py-4 bg-[#d4a338] text-[#0f1b2d] font-bold rounded-lg text-lg hover:bg-[#b8860b] transition shadow-lg" %>
+      <%= link_to t("business.hero.cta_secondary"), gallery_path, class: "inline-flex items-center justify-center px-8 py-4 border-2 border-white text-white font-semibold rounded-lg text-lg hover:bg-white hover:text-[#0f1b2d] transition" %>
+    </div>
+  </div>
+</section>

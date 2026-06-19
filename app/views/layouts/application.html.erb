@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= content_for?(:title) ? yield(:title) : t("business.seo.title", business_name: t("business.name")) %></title>
+  <meta name="description" content="<%= t("business.seo.description") %>">
+  <meta name="keywords" content="<%= t("business.seo.keywords") %>">
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+  <%= javascript_importmap_tags %>
+</head>
+<body class="font-sans text-gray-800 bg-white">
+  <%= render "layouts/header" %>
+  <%= render "layouts/flash" %>
+  <main>
+    <%= yield %>
+  </main>
+  <%= render "layouts/footer" %>
+  <%= render "shared/cta_floating" %>
+  <%= render "shared/cta_exit_intent" %>
+</body>
+</html>

@@ -1,0 +1,18 @@
+en:
+  notifications:
+    new_lead:
+      email_subject: "New Lead: %{name} — %{service}"
+      sms_body: "New lead from %{name} for %{service}. View: %{url}"
+      slack_text: "New lead: *%{name}* interested in *%{service}*"
+    status_changed:
+      email_subject: "Lead %{name} moved to %{status}"
+      sms_body: "Lead %{name} is now %{status}"
+      slack_text: "Lead *%{name}* moved from %{from} to *%{to}*"
+    lead_assigned:
+      email_subject: "Lead %{name} assigned to you"
+      sms_body: "Lead %{name} has been assigned to you. View: %{url}"
+      slack_text: "Lead *%{name}* assigned to *%{assignee}*"
+    daily_summary:
+      email_subject: "Daily Lead Summary — %{date}"
+      sms_body: "%{count} new leads today"
+      slack_text: "Daily summary: *%{count}* new leads today"

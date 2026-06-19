@@ -1,0 +1,10 @@
+<%= I18n.t("notifications.#{@event}.email_subject", name: @lead.first_name, service: @lead.service_interested_in, status: @lead.status, from: @context[:from], to: @context[:to]) %>
+
+Name: <%= @lead.first_name %> <%= @lead.last_name %>
+<% if @lead.email.present? %>Email: <%= @lead.email %><% end %>
+<% if @lead.phone.present? %>Phone: <%= @lead.phone %><% end %>
+<% if @lead.service_interested_in.present? %>Service: <%= @lead.service_interested_in %><% end %>
+<% if @lead.message.present? %>Message: <%= @lead.message %><% end %>
+<% if @lead.lead_temperature.present? %>Temperature: <%= @lead.lead_temperature.capitalize %><% end %>
+
+View lead: <%= admin_lead_url(@lead) %>

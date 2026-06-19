@@ -1,0 +1,37 @@
+en:
+  admin:
+    nav:
+      dashboard: "Dashboard"
+      leads: "Leads"
+      spam: "Spam"
+      testimonials: "Testimonials"
+      gallery: "Gallery"
+      settings: "Settings"
+      users: "Users"
+    dashboard:
+      title: "Dashboard"
+      leads_today: "Leads Today"
+      total_leads: "Total Leads"
+      hot_leads: "Hot Leads"
+      spam_count: "Spam"
+      recent_leads: "Recent Leads"
+    leads:
+      title: "Leads"
+      no_leads: "No leads yet."
+      filter_all: "All"
+      mark_spam: "Mark as Spam"
+      unmark_spam: "Not Spam"
+      assign: "Assign"
+      add_note: "Add Note"
+      status:
+        incoming: "Incoming"
+        contacted: "Contacted"
+        scheduled: "Scheduled"
+        quoted: "Quoted"
+        booked: "Booked"
+        completed: "Completed"
+        lost: "Lost"
+      temperature:
+        hot: "Hot"
+        warm: "Warm"
+        cold: "Cold"

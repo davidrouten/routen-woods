@@ -1,0 +1,47 @@
+<% content_for(:title) { "Gallery | #{t('business.name')}" } %>
+
+<section class="bg-gradient-to-br from-[#0f1b2d] to-[#1b2a4a] py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <h1 class="text-4xl font-bold text-white mb-4"><%= t("business.sections.gallery.heading") %></h1>
+    <p class="text-gray-300 text-lg"><%= t("business.sections.gallery.subheading") %></p>
+  </div>
+</section>
+
+<section class="py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <% if @images.any? %>
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <% @images.each do |image| %>
+          <div class="relative group overflow-hidden rounded-lg aspect-square bg-gray-200">
+            <% if image.image.attached? %>
+              <%= image_tag image.image, class: "w-full h-full object-cover group-hover:scale-105 transition duration-300", alt: image.title %>
+            <% else %>
+              <div class="w-full h-full flex items-center justify-center text-gray-400">
+                <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+              </div>
+            <% end %>
+            <div class="absolute inset-0 bg-[#0f1b2d]/60 opacity-0 group-hover:opacity-100 transition flex items-end p-4">
+              <div>
+                <p class="text-white font-semibold"><%= image.title %></p>
+                <% if image.description.present? %>
+                  <p class="text-gray-300 text-sm"><%= image.description %></p>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="text-center py-20">
+        <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+        </svg>
+        <p class="text-gray-500 text-lg">Gallery coming soon! Check back for photos of our recent work.</p>
+      </div>
+    <% end %>
+  </div>
+</section>
+
+<%= render "shared/cta_inline" %>

@@ -1,0 +1,44 @@
+<header class="sticky top-0 z-50 bg-[#0f1b2d] shadow-lg" data-controller="mobile-menu">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16">
+      <!-- Logo -->
+      <div class="flex-shrink-0">
+        <%= link_to root_path, class: "text-white text-xl font-bold tracking-wide" do %>
+          <%= t("business.name") %>
+        <% end %>
+      </div>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex space-x-8">
+        <%= link_to "Home", root_path, class: "text-gray-300 hover:text-white transition" %>
+        <%= link_to "Services", services_path, class: "text-gray-300 hover:text-white transition" %>
+        <%= link_to "Gallery", gallery_path, class: "text-gray-300 hover:text-white transition" %>
+        <%= link_to "About", about_path, class: "text-gray-300 hover:text-white transition" %>
+        <%= link_to "Contact", contact_path, class: "text-gray-300 hover:text-white transition" %>
+      </nav>
+
+      <!-- CTA + Mobile Toggle -->
+      <div class="flex items-center space-x-4">
+        <%= link_to t("business.cta.sticky_header", phone: t("business.phone")), "tel:#{t("business.phone_raw")}", class: "hidden lg:inline-flex items-center px-4 py-2 bg-[#d4a338] text-[#0f1b2d] font-semibold rounded hover:bg-[#b8860b] transition text-sm" %>
+
+        <button data-action="mobile-menu#toggle" class="md:hidden text-white" aria-label="Menu">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div data-mobile-menu-target="menu" class="hidden md:hidden bg-[#1b2a4a]">
+    <div class="px-4 pt-2 pb-4 space-y-2">
+      <%= link_to "Home", root_path, class: "block text-gray-300 hover:text-white py-2" %>
+      <%= link_to "Services", services_path, class: "block text-gray-300 hover:text-white py-2" %>
+      <%= link_to "Gallery", gallery_path, class: "block text-gray-300 hover:text-white py-2" %>
+      <%= link_to "About", about_path, class: "block text-gray-300 hover:text-white py-2" %>
+      <%= link_to "Contact", contact_path, class: "block text-gray-300 hover:text-white py-2" %>
+      <%= link_to t("business.cta.sticky_header", phone: t("business.phone")), "tel:#{t("business.phone_raw")}", class: "block text-[#d4a338] font-semibold py-2" %>
+    </div>
+  </div>
+</header>

@@ -1,0 +1,81 @@
+<h1 class="text-2xl font-bold text-gray-900 mb-6"><%= t("admin.dashboard.title") %></h1>
+
+<!-- Stats Grid -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+  <div class="bg-white rounded-xl shadow-sm p-6">
+    <p class="text-sm text-gray-500 mb-1"><%= t("admin.dashboard.leads_today") %></p>
+    <p class="text-3xl font-bold text-[#0f1b2d]"><%= @leads_today %></p>
+  </div>
+  <div class="bg-white rounded-xl shadow-sm p-6">
+    <p class="text-sm text-gray-500 mb-1"><%= t("admin.dashboard.total_leads") %></p>
+    <p class="text-3xl font-bold text-[#0f1b2d]"><%= @leads_by_status.values.sum %></p>
+  </div>
+  <div class="bg-white rounded-xl shadow-sm p-6">
+    <p class="text-sm text-gray-500 mb-1"><%= t("admin.dashboard.hot_leads") %></p>
+    <p class="text-3xl font-bold text-red-600"><%= @hot_leads.size %></p>
+  </div>
+  <div class="bg-white rounded-xl shadow-sm p-6">
+    <p class="text-sm text-gray-500 mb-1"><%= t("admin.dashboard.spam_count") %></p>
+    <p class="text-3xl font-bold text-gray-400"><%= @spam_count %></p>
+  </div>
+</div>
+
+<!-- Status Breakdown -->
+<div class="bg-white rounded-xl shadow-sm p-6 mb-8">
+  <h2 class="text-lg font-semibold text-gray-900 mb-4">Leads by Status</h2>
+  <div class="flex flex-wrap gap-3">
+    <% Lead.statuses.each_key do |status| %>
+      <%= link_to admin_leads_path(status: status), class: "inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium #{status_badge_color(status)}" do %>
+        <%= t("admin.leads.status.#{status}") %>
+        <span class="bg-white/50 px-2 py-0.5 rounded-full text-xs"><%= @leads_by_status[status] || 0 %></span>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+  <!-- Recent Leads -->
+  <div class="bg-white rounded-xl shadow-sm p-6">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-lg font-semibold text-gray-900"><%= t("admin.dashboard.recent_leads") %></h2>
+      <%= link_to "View all", admin_leads_path, class: "text-sm text-[#d4a338] hover:text-[#b8860b]" %>
+    </div>
+    <div class="space-y-3">
+      <% @recent_leads.each do |lead| %>
+        <%= link_to admin_lead_path(lead), class: "block p-3 hover:bg-gray-50 rounded-lg transition" do %>
+          <div class="flex justify-between items-start">
+            <div>
+              <p class="font-medium text-gray-900"><%= lead.first_name %> <%= lead.last_name %></p>
+              <p class="text-sm text-gray-500"><%= lead.service_interested_in&.titleize %></p>
+            </div>
+            <div class="text-right">
+              <span class="inline-block px-2 py-1 rounded-full text-xs font-medium <%= status_badge_color(lead.status) %>"><%= lead.status.titleize %></span>
+              <p class="text-xs text-gray-400 mt-1"><%= time_ago_in_words(lead.created_at) %> ago</p>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Hot Leads -->
+  <div class="bg-white rounded-xl shadow-sm p-6">
+    <h2 class="text-lg font-semibold text-gray-900 mb-4">Hot Leads</h2>
+    <div class="space-y-3">
+      <% @hot_leads.each do |lead| %>
+        <%= link_to admin_lead_path(lead), class: "block p-3 hover:bg-gray-50 rounded-lg transition" do %>
+          <div class="flex justify-between items-start">
+            <div>
+              <p class="font-medium text-gray-900"><%= lead.temperature_emoji %> <%= lead.first_name %> <%= lead.last_name %></p>
+              <p class="text-sm text-gray-500"><%= lead.email || lead.phone %></p>
+            </div>
+            <span class="inline-block px-2 py-1 rounded-full text-xs font-medium <%= status_badge_color(lead.status) %>"><%= lead.status.titleize %></span>
+          </div>
+        <% end %>
+      <% end %>
+      <% if @hot_leads.empty? %>
+        <p class="text-gray-400 text-sm text-center py-4">No hot leads right now</p>
+      <% end %>
+    </div>
+  </div>
+</div>

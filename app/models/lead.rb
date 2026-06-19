@@ -1,0 +1,63 @@
+class Lead < ApplicationRecord
+  enum :status, {
+    incoming: 0,
+    contacted: 1,
+    scheduled: 2,
+    quoted: 3,
+    booked: 4,
+    completed: 5,
+    lost: 6
+  }
+
+  belongs_to :assigned_to, class_name: "User", optional: true
+  has_many :notes, dependent: :destroy
+  has_many :status_changes, dependent: :destroy
+
+  validates :first_name, presence: true
+  validates :email, presence: true, unless: -> { phone.present? }
+  validates :phone, presence: true, unless: -> { email.present? }
+
+  scope :not_spam, -> { where(spam: false) }
+  scope :spam_only, -> { where(spam: true) }
+  scope :by_status, ->(s) { where(status: s) }
+  scope :hot, -> { where(lead_temperature: "hot") }
+  scope :warm, -> { where(lead_temperature: "warm") }
+  scope :cold, -> { where(lead_temperature: "cold") }
+  scope :recent, -> { order(created_at: :desc) }
+
+  after_create :calculate_spam_score
+  after_create :calculate_lead_temperature
+  after_create :notify_new_lead
+
+  def transition_to!(new_status, user: nil)
+    old_status = status
+    update!(status: new_status)
+    timestamp_col = "#{new_status}_at"
+    update_column(timestamp_col, Time.current) if has_attribute?(timestamp_col)
+    status_changes.create!(from_status: old_status, to_status: new_status, user: user)
+    NotificationService.notify(:status_changed, self, from: old_status, to: new_status)
+  end
+
+  def temperature_emoji
+    case lead_temperature
+    when "hot" then "\u{1F525}"
+    when "warm" then "\u{1F324}"
+    when "cold" then "\u{2744}\u{FE0F}"
+    end
+  end
+
+  private
+
+  def calculate_spam_score
+    SpamDetector.new(self).score!
+  end
+
+  def calculate_lead_temperature
+    LeadScorer.new(self).score!
+  end
+
+  def notify_new_lead
+    return if spam?
+    NotificationService.notify(:new_lead, self)
+  end
+end
