@@ -85,6 +85,7 @@
 - [x] Image optimization: Active Storage variants (resized webp) for gallery images
 - [x] Spam score column in admin leads index (color-coded progress bar)
 - [ ] Heroku libvips buildpack for production image variants
+- [x] Gallery lightbox (click image to view full-size, keyboard nav, Stimulus controller)
 - [ ] Rate limiting by IP (add as SpamDetector signal)
 - [ ] Production email delivery (SendGrid / Postmark)
 - [ ] Twilio SMS setup (env vars)
@@ -95,7 +96,6 @@
 
 ## Future / Backlog
 - [ ] AWS S3 dev/staging bucket for local development
-- [ ] Stimulus: gallery_lightbox_controller
 - [ ] Stimulus: lead_filter_controller (dynamic admin filtering)
 - [ ] AI-powered lead scoring (LLM integration)
 - [ ] Push notifications

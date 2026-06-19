@@ -7,9 +7,12 @@
     </div>
 
     <% if images.any? %>
-      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" data-controller="lightbox">
         <% images.each_with_index do |image, idx| %>
-          <div class="group relative overflow-hidden rounded-2xl aspect-square bg-gray-200 shadow-sm hover:shadow-xl transition-all duration-500">
+          <div class="group relative overflow-hidden rounded-2xl aspect-square bg-gray-200 shadow-sm hover:shadow-xl transition-all duration-500 cursor-pointer"
+               data-lightbox-target="item"
+               data-action="click->lightbox#open"
+               data-lightbox-url="<%= image.image.attached? ? url_for(image.image.variant(resize_to_limit: [1600, 1600], format: :webp)) : '' %>">
             <% if image.image.attached? %>
               <% if idx == 0 %>
                 <%= image_tag image.image.variant(resize_to_limit: [1000, 1000], format: :webp),
