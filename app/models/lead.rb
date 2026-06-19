@@ -19,11 +19,26 @@ class Lead < ApplicationRecord
 
   scope :not_spam, -> { where(spam: false) }
   scope :spam_only, -> { where(spam: true) }
+  scope :not_archived, -> { where(archived_at: nil) }
+  scope :archived_only, -> { where.not(archived_at: nil) }
+  scope :open_leads, -> { not_spam.not_archived.where.not(status: [:completed, :lost]) }
   scope :by_status, ->(s) { where(status: s) }
   scope :hot, -> { where(lead_temperature: "hot") }
   scope :warm, -> { where(lead_temperature: "warm") }
   scope :cold, -> { where(lead_temperature: "cold") }
   scope :recent, -> { order(created_at: :desc) }
+
+  def archive!
+    update!(archived_at: Time.current)
+  end
+
+  def restore!
+    update!(archived_at: nil)
+  end
+
+  def archived?
+    archived_at.present?
+  end
 
   after_create :calculate_spam_score
   after_create :calculate_lead_temperature

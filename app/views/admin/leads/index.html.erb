@@ -1,27 +1,55 @@
+<% current_view = if params[:spam] == "true"
+                     :spam
+                   elsif params[:archived] == "true"
+                     :archived
+                   elsif params[:filter] == "all"
+                     :all
+                   elsif params[:status].present?
+                     params[:status].to_sym
+                   else
+                     :open
+                   end %>
+
 <div class="flex justify-between items-center mb-6">
-  <h1 class="text-2xl font-bold text-gray-900"><%= params[:spam] == "true" ? t("admin.nav.spam") : t("admin.leads.title") %></h1>
+  <h1 class="text-2xl font-bold text-gray-900">
+    <%= case current_view
+        when :spam then t("admin.nav.spam")
+        when :archived then "Archived Leads"
+        else t("admin.leads.title")
+        end %>
+  </h1>
 </div>
 
 <!-- Filters -->
 <div class="bg-white rounded-xl shadow-sm p-4 mb-6">
   <div class="flex flex-wrap gap-3 items-center">
-    <!-- Status filter -->
-    <%= link_to t("admin.leads.filter_all"), admin_leads_path(spam: params[:spam]), class: "px-3 py-1.5 rounded-full text-sm font-medium #{params[:status].blank? ? 'bg-[#0f1b2d] text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'} transition" %>
+    <!-- Primary filters -->
+    <%= link_to "Open", admin_leads_path, class: "px-3 py-1.5 rounded-full text-sm font-medium #{current_view == :open ? 'bg-[#0f1b2d] text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'} transition" %>
+    <%= link_to "All", admin_leads_path(filter: "all"), class: "px-3 py-1.5 rounded-full text-sm font-medium #{current_view == :all ? 'bg-[#0f1b2d] text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'} transition" %>
+
+    <span class="text-gray-300">|</span>
+
+    <!-- Status filters -->
     <% Lead.statuses.each_key do |status| %>
-      <%= link_to t("admin.leads.status.#{status}"), admin_leads_path(status: status, spam: params[:spam], temperature: params[:temperature]), class: "px-3 py-1.5 rounded-full text-sm font-medium #{params[:status] == status ? 'bg-[#0f1b2d] text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'} transition" %>
+      <%= link_to t("admin.leads.status.#{status}"), admin_leads_path(status: status, temperature: params[:temperature]), class: "px-3 py-1.5 rounded-full text-sm font-medium #{current_view == status.to_sym ? 'bg-[#0f1b2d] text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'} transition" %>
     <% end %>
 
     <span class="text-gray-300">|</span>
 
     <!-- Temperature filter -->
     <% %w[hot warm cold].each do |temp| %>
-      <%= link_to t("admin.leads.temperature.#{temp}"), admin_leads_path(temperature: temp, status: params[:status], spam: params[:spam]), class: "px-3 py-1.5 rounded-full text-sm font-medium #{params[:temperature] == temp ? temperature_badge_color(temp) : 'bg-gray-100 text-gray-600 hover:bg-gray-200'} transition" %>
+      <%= link_to t("admin.leads.temperature.#{temp}"), admin_leads_path(temperature: temp, status: params[:status], filter: params[:filter]), class: "px-3 py-1.5 rounded-full text-sm font-medium #{params[:temperature] == temp ? temperature_badge_color(temp) : 'bg-gray-100 text-gray-600 hover:bg-gray-200'} transition" %>
     <% end %>
+
+    <span class="text-gray-300">|</span>
+
+    <!-- Special views -->
+    <%= link_to "Spam", admin_leads_path(spam: true), class: "px-3 py-1.5 rounded-full text-sm font-medium #{current_view == :spam ? 'bg-red-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'} transition" %>
+    <%= link_to "Archived", admin_leads_path(archived: true), class: "px-3 py-1.5 rounded-full text-sm font-medium #{current_view == :archived ? 'bg-gray-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'} transition" %>
 
     <!-- Search -->
     <div class="ml-auto">
       <%= form_with url: admin_leads_path, method: :get, class: "flex gap-2" do |f| %>
-        <%= f.hidden_field :spam, value: params[:spam] %>
         <%= f.search_field :q, value: params[:q], placeholder: "Search leads...", class: "px-3 py-1.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#d4a338] focus:border-transparent outline-none" %>
         <%= f.submit "Search", class: "px-3 py-1.5 bg-[#0f1b2d] text-white rounded-lg text-sm hover:bg-[#1b2a4a] transition cursor-pointer" %>
       <% end %>
@@ -46,43 +74,7 @@
     </thead>
     <tbody class="divide-y divide-gray-200">
       <% @leads.each do |lead| %>
-        <tr class="hover:bg-gray-50">
-          <td class="px-6 py-4">
-            <%= link_to admin_lead_path(lead), class: "font-medium text-gray-900 hover:text-[#d4a338]" do %>
-              <%= lead.first_name %> <%= lead.last_name %>
-            <% end %>
-          </td>
-          <td class="px-6 py-4 text-sm text-gray-500">
-            <% if lead.email.present? %><p><%= lead.email %></p><% end %>
-            <% if lead.phone.present? %><p><%= lead.phone %></p><% end %>
-          </td>
-          <td class="px-6 py-4 text-sm text-gray-500"><%= lead.service_interested_in&.titleize %></td>
-          <td class="px-6 py-4">
-            <span class="inline-block px-2 py-1 rounded-full text-xs font-medium <%= status_badge_color(lead.status) %>"><%= lead.status.titleize %></span>
-          </td>
-          <td class="px-6 py-4">
-            <% if lead.lead_temperature.present? %>
-              <span class="inline-block px-2 py-1 rounded-full text-xs font-medium <%= temperature_badge_color(lead.lead_temperature) %>"><%= lead.temperature_emoji %> <%= lead.lead_temperature.capitalize %></span>
-            <% end %>
-          </td>
-          <td class="px-6 py-4">
-            <% score = lead.spam_score || 0 %>
-            <div class="flex items-center gap-2">
-              <div class="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
-                <div class="h-full rounded-full <%= score >= 0.7 ? 'bg-red-500' : score >= 0.4 ? 'bg-yellow-500' : 'bg-green-500' %>" style="width: <%= (score * 100).round %>%"></div>
-              </div>
-              <span class="text-xs text-gray-500"><%= (score * 100).round %>%</span>
-            </div>
-          </td>
-          <td class="px-6 py-4 text-sm text-gray-500"><%= lead.created_at.strftime("%b %d, %Y") %></td>
-          <td class="px-6 py-4 text-sm">
-            <% if params[:spam] == "true" && current_user_can?(:manage, :leads) %>
-              <%= button_to "Not Spam", unmark_spam_admin_lead_path(lead), method: :patch, class: "text-green-600 hover:text-green-800 text-xs" %>
-            <% elsif current_user_can?(:manage, :leads) %>
-              <%= button_to "Spam", mark_spam_admin_lead_path(lead), method: :patch, class: "text-red-600 hover:text-red-800 text-xs", data: { turbo_confirm: "Mark as spam?" } %>
-            <% end %>
-          </td>
-        </tr>
+        <%= render "admin/leads/lead_row", lead: lead, current_view: current_view %>
       <% end %>
     </tbody>
   </table>
@@ -93,6 +85,18 @@
     </div>
   <% end %>
 </div>
+
+<!-- Hidden forms for modal confirmations (outside table so browser doesn't strip them) -->
+<% @leads.each do |lead| %>
+  <% unless current_view == :spam || current_view == :archived %>
+    <%= form_with url: mark_spam_admin_lead_path(lead), method: :patch, id: "spam_form_#{lead.id}", class: "hidden" do |f| %>
+      <%= f.submit class: "hidden" %>
+    <% end %>
+    <%= form_with url: archive_admin_lead_path(lead), method: :patch, id: "archive_form_#{lead.id}", class: "hidden" do |f| %>
+      <%= f.submit class: "hidden" %>
+    <% end %>
+  <% end %>
+<% end %>
 
 <!-- Pagination -->
 <% if @pagy && @pagy.pages > 1 %>

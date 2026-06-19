@@ -1,12 +1,23 @@
 module Admin
   class LeadsController < BaseController
-    before_action :set_lead, only: [:show, :transition, :mark_spam, :unmark_spam, :assign]
+    include ActionView::RecordIdentifier
+    before_action :set_lead, only: [:show, :transition, :mark_spam, :unmark_spam, :archive, :restore, :assign]
     before_action -> { require_permission!(:view, :leads) }, only: [:index, :show]
-    before_action -> { require_permission!(:manage, :leads) }, only: [:transition, :mark_spam, :unmark_spam, :assign]
+    before_action -> { require_permission!(:manage, :leads) }, only: [:transition, :mark_spam, :unmark_spam, :archive, :restore, :assign]
 
     def index
-      scope = params[:spam] == "true" ? Lead.spam_only : Lead.not_spam
-      scope = scope.by_status(params[:status]) if params[:status].present?
+      scope = if params[:spam] == "true"
+                Lead.spam_only
+              elsif params[:archived] == "true"
+                Lead.archived_only
+              elsif params[:filter] == "all"
+                Lead.not_spam.not_archived
+              elsif params[:status].present?
+                Lead.not_spam.not_archived.by_status(params[:status])
+              else
+                Lead.open_leads
+              end
+
       scope = scope.where(lead_temperature: params[:temperature]) if params[:temperature].present?
       scope = SalesEngine.search(params[:q]) if params[:q].present?
       @pagy, @leads = pagy(:offset, scope.recent, limit: 25)
@@ -20,17 +31,42 @@ module Admin
 
     def transition
       SalesEngine.update_status(@lead, params[:status], user: current_user)
-      redirect_to admin_lead_path(@lead), notice: "Status updated to #{params[:status]}."
+      respond_to do |format|
+        format.turbo_stream { render turbo_stream: turbo_stream.replace(dom_id(@lead), partial: "admin/leads/lead_row", locals: { lead: @lead, current_view: params[:current_view]&.to_sym || :open }) }
+        format.html { redirect_to admin_lead_path(@lead), notice: "Status updated to #{params[:status]}." }
+      end
     end
 
     def mark_spam
       @lead.update!(spam: true)
-      redirect_to admin_leads_path, notice: "Marked as spam."
+      respond_to do |format|
+        format.turbo_stream { render turbo_stream: turbo_stream.remove(dom_id(@lead)) }
+        format.html { redirect_to admin_leads_path, notice: "Marked as spam." }
+      end
     end
 
     def unmark_spam
       @lead.update!(spam: false, spam_score: 0)
-      redirect_to admin_lead_path(@lead), notice: "Removed from spam."
+      respond_to do |format|
+        format.turbo_stream { render turbo_stream: turbo_stream.remove(dom_id(@lead)) }
+        format.html { redirect_to admin_lead_path(@lead), notice: "Removed from spam." }
+      end
+    end
+
+    def archive
+      @lead.archive!
+      respond_to do |format|
+        format.turbo_stream { render turbo_stream: turbo_stream.remove(dom_id(@lead)) }
+        format.html { redirect_to admin_leads_path, notice: "Lead archived." }
+      end
+    end
+
+    def restore
+      @lead.restore!
+      respond_to do |format|
+        format.turbo_stream { render turbo_stream: turbo_stream.remove(dom_id(@lead)) }
+        format.html { redirect_to admin_leads_path(archived: true), notice: "Lead restored." }
+      end
     end
 
     def assign

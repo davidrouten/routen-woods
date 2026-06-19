@@ -1,0 +1,82 @@
+<tr class="hover:bg-gray-50" id="<%= dom_id(lead) %>">
+  <td class="px-6 py-4">
+    <%= link_to admin_lead_path(lead), class: "font-medium text-gray-900 hover:text-[#d4a338]" do %>
+      <%= lead.first_name %> <%= lead.last_name %>
+    <% end %>
+  </td>
+  <td class="px-6 py-4 text-sm text-gray-500">
+    <% if lead.email.present? %><p><%= lead.email %></p><% end %>
+    <% if lead.phone.present? %><p><%= lead.phone %></p><% end %>
+  </td>
+  <td class="px-6 py-4 text-sm text-gray-500"><%= lead.service_interested_in&.titleize %></td>
+  <td class="px-6 py-4">
+    <% if current_user_can?(:manage, :leads) %>
+      <button class="inline-block px-2 py-1 rounded-full text-xs font-medium cursor-pointer hover:ring-2 hover:ring-[#d4a338] transition <%= status_badge_color(lead.status) %>"
+              data-action="click->modal#openContent"
+              data-modal-target="#status_modal_<%= lead.id %>">
+        <%= lead.status.titleize %>
+      </button>
+      <template id="status_modal_<%= lead.id %>">
+        <h3 class="text-lg font-bold text-gray-900 mb-4">Change Status</h3>
+        <p class="text-gray-500 text-sm mb-4"><%= lead.first_name %> <%= lead.last_name %></p>
+        <div class="flex flex-wrap gap-2">
+          <% Lead.statuses.each_key do |s| %>
+            <% next if s == lead.status %>
+            <%= form_with url: transition_admin_lead_path(lead), method: :patch, class: "inline", data: { turbo_frame: "_top" } do |f| %>
+              <%= f.hidden_field :status, value: s %>
+              <%= f.hidden_field :current_view, value: current_view %>
+              <%= f.submit s.titleize, class: "px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer transition hover:ring-2 hover:ring-[#d4a338] #{status_badge_color(s)}" %>
+            <% end %>
+          <% end %>
+        </div>
+        <div class="flex justify-end mt-6">
+          <button data-role="modal-cancel" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition cursor-pointer">Cancel</button>
+        </div>
+      </template>
+    <% else %>
+      <span class="inline-block px-2 py-1 rounded-full text-xs font-medium <%= status_badge_color(lead.status) %>"><%= lead.status.titleize %></span>
+    <% end %>
+  </td>
+  <td class="px-6 py-4">
+    <% if lead.lead_temperature.present? %>
+      <span class="inline-block px-2 py-1 rounded-full text-xs font-medium <%= temperature_badge_color(lead.lead_temperature) %>"><%= lead.temperature_emoji %> <%= lead.lead_temperature.capitalize %></span>
+    <% end %>
+  </td>
+  <td class="px-6 py-4">
+    <% score = lead.spam_score || 0 %>
+    <div class="flex items-center gap-2">
+      <div class="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
+        <div class="h-full rounded-full <%= score >= 0.7 ? 'bg-red-500' : score >= 0.4 ? 'bg-yellow-500' : 'bg-green-500' %>" style="width: <%= (score * 100).round %>%"></div>
+      </div>
+      <span class="text-xs text-gray-500"><%= (score * 100).round %>%</span>
+    </div>
+  </td>
+  <td class="px-6 py-4 text-sm text-gray-500"><%= lead.created_at.strftime("%b %d, %Y") %></td>
+  <td class="px-6 py-4 text-sm">
+    <div class="flex items-center gap-2">
+      <% if current_user_can?(:manage, :leads) %>
+        <% if current_view == :spam %>
+          <%= button_to "Restore", unmark_spam_admin_lead_path(lead), method: :patch, class: "text-green-600 hover:text-green-800 text-xs font-medium" %>
+        <% elsif current_view == :archived %>
+          <%= button_to "Restore", restore_admin_lead_path(lead), method: :patch, class: "text-green-600 hover:text-green-800 text-xs font-medium" %>
+        <% else %>
+          <button class="text-red-600 hover:text-red-800 text-xs font-medium cursor-pointer"
+                  data-action="click->modal#openConfirm"
+                  data-confirm-title="Mark as Spam"
+                  data-confirm-message="Mark <%= lead.first_name %> <%= lead.last_name %> as spam? This will move the lead to the spam folder."
+                  data-confirm-text="Mark Spam"
+                  data-confirm-class="danger"
+                  data-confirm-form="#spam_form_<%= lead.id %>">Spam</button>
+
+          <button class="text-gray-500 hover:text-gray-700 text-xs font-medium cursor-pointer"
+                  data-action="click->modal#openConfirm"
+                  data-confirm-title="Archive Lead"
+                  data-confirm-message="Archive <%= lead.first_name %> <%= lead.last_name %>? You can restore it later from the Archived view."
+                  data-confirm-text="Archive"
+                  data-confirm-class=""
+                  data-confirm-form="#archive_form_<%= lead.id %>">Archive</button>
+        <% end %>
+      <% end %>
+    </div>
+  </td>
+</tr>

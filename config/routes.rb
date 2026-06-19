@@ -24,6 +24,8 @@ Rails.application.routes.draw do
         patch :transition
         patch :mark_spam
         patch :unmark_spam
+        patch :archive
+        patch :restore
         patch :assign
       end
       resources :notes, only: [:create, :destroy]

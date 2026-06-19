@@ -94,6 +94,50 @@
 - [ ] Admin password change from default
 - [ ] Custom domain + DNS
 
+## Phase 8: Admin Improvements (In Progress)
+
+### 8.1 — "Open" filter & default
+- [x] Add "Open" filter to leads index (all non-closed/spam/archived leads)
+- [x] Default leads index to "Open" filter on page load
+
+### 8.2 — Soft delete / archive leads
+- [x] Add `archived_at` column to leads (soft delete)
+- [x] Archive button on each lead row with modal confirmation
+- [x] Archived leads excluded from "Open" filter
+- [x] "Archived" view to see/restore archived leads
+
+### 8.3 — Custom confirmation modal (Stimulus)
+- [x] Branded modal component (replaces browser confirm dialogs)
+- [x] Replace all turbo_confirm dialogs with custom modal
+- [x] Inline status change from leads index via modal (pill menu)
+- [x] Spam button uses custom modal
+- [x] Status change triggers Turbo Stream in-place update (no full page reload)
+
+### 8.4 — Dynamic services CRUD
+- [ ] Service model (name, description, active boolean)
+- [ ] Admin CRUD for services (Lead Generation Settings page)
+- [ ] Lead form: multi-select for services (checkboxes if ≤6, else dropdown)
+- [ ] Inline edit services via modal on leads index
+
+### 8.5 — Budget range options
+- [ ] BudgetRange model (label, active boolean, sort_order)
+- [ ] Admin CRUD on Lead Generation Settings page
+- [ ] Lead form: budget range dropdown (active options only)
+- [ ] Inline edit budget via modal on leads index
+
+### 8.6 — Timeframe options
+- [ ] Timeframe model (label, active boolean, sort_order)
+- [ ] Admin CRUD on Lead Generation Settings page
+- [ ] Lead form: timeframe dropdown (active options only)
+- [ ] Inline edit timeframe via modal on leads index
+- [ ] Default options: ASAP, 1-4 weeks, 2-3 months, 3-6 months, Just browsing
+
+### 8.7 — LeadFormSettings (HOLD — needs more planning)
+- [ ] LeadFormSettings object to track multiple form configurations
+- [ ] Setting to determine which forms display where in the app
+- [ ] Per-form field requirements (e.g. budget optional, timeframe required)
+- [ ] Field customization per form (A/B testing, seasonal promos)
+
 ## Future / Backlog
 - [ ] AWS S3 dev/staging bucket for local development
 - [ ] Stimulus: lead_filter_controller (dynamic admin filtering)
