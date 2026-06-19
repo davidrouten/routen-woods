@@ -42,6 +42,9 @@ gem "thruster", require: false
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 gem "image_processing", "~> 1.2"
 
+# Active Storage S3 adapter for production (Heroku ephemeral filesystem)
+gem "aws-sdk-s3", require: false
+
 # Authentication
 gem "devise"
 
