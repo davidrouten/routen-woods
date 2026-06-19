@@ -1,14 +1,49 @@
-<section class="relative bg-gradient-to-br from-[#0f1b2d] via-[#1b2a4a] to-[#2d3a52] py-24 lg:py-32" data-hero>
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
-      <%= t("business.hero.heading") %>
-    </h1>
-    <p class="text-xl md:text-2xl text-gray-300 mb-10 max-w-3xl mx-auto">
-      <%= t("business.hero.subheading", service_area: t("business.service_area")) %>
-    </p>
-    <div class="flex flex-col sm:flex-row gap-4 justify-center">
-      <%= link_to t("business.hero.cta_primary"), contact_path, class: "inline-flex items-center justify-center px-8 py-4 bg-[#d4a338] text-[#0f1b2d] font-bold rounded-lg text-lg hover:bg-[#b8860b] transition shadow-lg" %>
-      <%= link_to t("business.hero.cta_secondary"), gallery_path, class: "inline-flex items-center justify-center px-8 py-4 border-2 border-white text-white font-semibold rounded-lg text-lg hover:bg-white hover:text-[#0f1b2d] transition" %>
+<section class="relative min-h-[90vh] flex items-center overflow-hidden" data-hero>
+  <!-- Background with overlay -->
+  <div class="absolute inset-0 bg-gradient-to-br from-[#0f1b2d] via-[#1b2a4a] to-[#0f1b2d]"></div>
+
+  <!-- Decorative elements -->
+  <div class="absolute inset-0 opacity-10">
+    <div class="absolute top-20 left-10 w-72 h-72 bg-[#d4a338] rounded-full blur-3xl"></div>
+    <div class="absolute bottom-20 right-10 w-96 h-96 bg-[#d4a338] rounded-full blur-3xl"></div>
+  </div>
+
+  <!-- Grid pattern overlay -->
+  <div class="absolute inset-0 opacity-5" style="background-image: url('data:image/svg+xml,<svg width=&quot;60&quot; height=&quot;60&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;><rect width=&quot;60&quot; height=&quot;60&quot; fill=&quot;none&quot; stroke=&quot;white&quot; stroke-width=&quot;0.5&quot;/></svg>');"></div>
+
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 w-full">
+    <div class="max-w-3xl">
+      <!-- Badge -->
+      <div class="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full mb-8 border border-white/20">
+        <span class="w-2 h-2 bg-[#d4a338] rounded-full animate-pulse"></span>
+        <span class="text-[#d4a338] text-sm font-medium tracking-wide uppercase"><%= t("business.motto") %></span>
+      </div>
+
+      <h1 class="text-5xl md:text-6xl lg:text-7xl font-extrabold text-white leading-[1.1] mb-6 tracking-tight">
+        <%= t("business.hero.heading") %>
+      </h1>
+
+      <p class="text-xl md:text-2xl text-gray-300 mb-10 leading-relaxed max-w-2xl">
+        <%= t("business.hero.subheading", service_area: t("business.service_area")) %>
+      </p>
+
+      <div class="flex flex-col sm:flex-row gap-4">
+        <%= link_to contact_path, class: "group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#d4a338] text-[#0f1b2d] font-bold rounded-xl text-lg hover:bg-[#b8860b] transition-all duration-300 shadow-lg shadow-[#d4a338]/25 hover:shadow-xl hover:shadow-[#d4a338]/30 hover:-translate-y-0.5" do %>
+          <%= t("business.hero.cta_primary") %>
+          <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+        <% end %>
+        <%= link_to gallery_path, class: "group inline-flex items-center justify-center gap-3 px-8 py-4 border-2 border-white/30 text-white font-semibold rounded-xl text-lg hover:bg-white hover:text-[#0f1b2d] transition-all duration-300 backdrop-blur-sm" do %>
+          <%= t("business.hero.cta_secondary") %>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        <% end %>
+      </div>
     </div>
+  </div>
+
+  <!-- Angled bottom edge -->
+  <div class="absolute bottom-0 left-0 right-0">
+    <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" class="w-full h-16 md:h-20">
+      <path d="M0 80L1440 80L1440 40C1200 0 240 0 0 40L0 80Z" fill="white"/>
+    </svg>
   </div>
 </section>

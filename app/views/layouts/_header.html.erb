@@ -1,27 +1,33 @@
-<header class="sticky top-0 z-50 bg-[#0f1b2d] shadow-lg" data-controller="mobile-menu">
+<header class="sticky top-0 z-50 bg-[#0f1b2d]/95 backdrop-blur-md shadow-lg border-b border-white/5" data-controller="mobile-menu">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex justify-between items-center h-16">
+    <div class="flex justify-between items-center h-18">
       <!-- Logo -->
       <div class="flex-shrink-0">
-        <%= link_to root_path, class: "text-white text-xl font-bold tracking-wide" do %>
-          <%= t("business.name") %>
+        <%= link_to root_path, class: "flex items-center gap-3 group" do %>
+          <div class="w-10 h-10 bg-gradient-to-br from-[#d4a338] to-[#b8860b] rounded-xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
+            <span class="text-[#0f1b2d] font-extrabold text-lg">R</span>
+          </div>
+          <span class="text-white text-xl font-bold tracking-wide"><%= t("business.name") %></span>
         <% end %>
       </div>
 
       <!-- Desktop Nav -->
-      <nav class="hidden md:flex space-x-8">
-        <%= link_to "Home", root_path, class: "text-gray-300 hover:text-white transition" %>
-        <%= link_to "Services", services_path, class: "text-gray-300 hover:text-white transition" %>
-        <%= link_to "Gallery", gallery_path, class: "text-gray-300 hover:text-white transition" %>
-        <%= link_to "About", about_path, class: "text-gray-300 hover:text-white transition" %>
-        <%= link_to "Contact", contact_path, class: "text-gray-300 hover:text-white transition" %>
+      <nav class="hidden md:flex items-center space-x-1">
+        <%= link_to "Home", root_path, class: "px-4 py-2 text-gray-300 hover:text-white rounded-lg hover:bg-white/10 transition-all duration-200 text-sm font-medium" %>
+        <%= link_to "Services", services_path, class: "px-4 py-2 text-gray-300 hover:text-white rounded-lg hover:bg-white/10 transition-all duration-200 text-sm font-medium" %>
+        <%= link_to "Gallery", gallery_path, class: "px-4 py-2 text-gray-300 hover:text-white rounded-lg hover:bg-white/10 transition-all duration-200 text-sm font-medium" %>
+        <%= link_to "About", about_path, class: "px-4 py-2 text-gray-300 hover:text-white rounded-lg hover:bg-white/10 transition-all duration-200 text-sm font-medium" %>
+        <%= link_to "Contact", contact_path, class: "px-4 py-2 text-gray-300 hover:text-white rounded-lg hover:bg-white/10 transition-all duration-200 text-sm font-medium" %>
       </nav>
 
       <!-- CTA + Mobile Toggle -->
-      <div class="flex items-center space-x-4">
-        <%= link_to t("business.cta.sticky_header", phone: t("business.phone")), "tel:#{t("business.phone_raw")}", class: "hidden lg:inline-flex items-center px-4 py-2 bg-[#d4a338] text-[#0f1b2d] font-semibold rounded hover:bg-[#b8860b] transition text-sm" %>
+      <div class="flex items-center gap-3">
+        <%= link_to "tel:#{t('business.phone_raw')}", class: "hidden lg:inline-flex items-center gap-2 px-5 py-2.5 bg-[#d4a338] text-[#0f1b2d] font-bold rounded-xl hover:bg-[#b8860b] transition-all duration-200 text-sm shadow-lg shadow-[#d4a338]/20 hover:shadow-xl hover:shadow-[#d4a338]/30 hover:-translate-y-0.5" do %>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+          <%= t("business.phone") %>
+        <% end %>
 
-        <button data-action="mobile-menu#toggle" class="md:hidden text-white" aria-label="Menu">
+        <button data-action="mobile-menu#toggle" class="md:hidden text-white p-2 rounded-lg hover:bg-white/10 transition" aria-label="Menu">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
           </svg>
@@ -31,14 +37,19 @@
   </div>
 
   <!-- Mobile Menu -->
-  <div data-mobile-menu-target="menu" class="hidden md:hidden bg-[#1b2a4a]">
-    <div class="px-4 pt-2 pb-4 space-y-2">
-      <%= link_to "Home", root_path, class: "block text-gray-300 hover:text-white py-2" %>
-      <%= link_to "Services", services_path, class: "block text-gray-300 hover:text-white py-2" %>
-      <%= link_to "Gallery", gallery_path, class: "block text-gray-300 hover:text-white py-2" %>
-      <%= link_to "About", about_path, class: "block text-gray-300 hover:text-white py-2" %>
-      <%= link_to "Contact", contact_path, class: "block text-gray-300 hover:text-white py-2" %>
-      <%= link_to t("business.cta.sticky_header", phone: t("business.phone")), "tel:#{t("business.phone_raw")}", class: "block text-[#d4a338] font-semibold py-2" %>
+  <div data-mobile-menu-target="menu" class="hidden md:hidden bg-[#0f1b2d] border-t border-white/10">
+    <div class="px-4 pt-2 pb-6 space-y-1">
+      <%= link_to "Home", root_path, class: "block text-gray-300 hover:text-white hover:bg-white/10 py-3 px-4 rounded-lg transition" %>
+      <%= link_to "Services", services_path, class: "block text-gray-300 hover:text-white hover:bg-white/10 py-3 px-4 rounded-lg transition" %>
+      <%= link_to "Gallery", gallery_path, class: "block text-gray-300 hover:text-white hover:bg-white/10 py-3 px-4 rounded-lg transition" %>
+      <%= link_to "About", about_path, class: "block text-gray-300 hover:text-white hover:bg-white/10 py-3 px-4 rounded-lg transition" %>
+      <%= link_to "Contact", contact_path, class: "block text-gray-300 hover:text-white hover:bg-white/10 py-3 px-4 rounded-lg transition" %>
+      <div class="pt-3 border-t border-white/10">
+        <%= link_to "tel:#{t('business.phone_raw')}", class: "flex items-center justify-center gap-2 py-3 px-4 bg-[#d4a338] text-[#0f1b2d] font-bold rounded-xl" do %>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+          Call <%= t("business.phone") %>
+        <% end %>
+      </div>
     </div>
   </div>
 </header>

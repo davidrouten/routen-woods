@@ -1,32 +1,52 @@
 <% content_for(:title) { "Services | #{t('business.name')}" } %>
 
-<section class="bg-gradient-to-br from-[#0f1b2d] to-[#1b2a4a] py-16">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-    <h1 class="text-4xl font-bold text-white mb-4">Our Services</h1>
-    <p class="text-gray-300 text-lg">Professional cabinet services tailored to your needs</p>
+<section class="relative bg-gradient-to-br from-[#0f1b2d] via-[#1b2a4a] to-[#0f1b2d] py-24 overflow-hidden">
+  <div class="absolute inset-0 opacity-10">
+    <div class="absolute top-10 right-20 w-72 h-72 bg-[#d4a338] rounded-full blur-3xl"></div>
+  </div>
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <p class="text-[#d4a338] font-semibold tracking-wider uppercase text-sm mb-3">What We Do</p>
+    <h1 class="text-5xl md:text-6xl font-extrabold text-white mb-4">Our Services</h1>
+    <p class="text-gray-300 text-lg max-w-2xl mx-auto">Professional cabinet services tailored to your needs</p>
+  </div>
+  <div class="absolute bottom-0 left-0 right-0">
+    <svg viewBox="0 0 1440 60" fill="none" preserveAspectRatio="none" class="w-full h-12 md:h-16">
+      <path d="M0 60L1440 60L1440 30C1200 0 240 0 0 30L0 60Z" fill="white"/>
+    </svg>
   </div>
 </section>
 
-<section class="py-16">
-  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+<section class="py-20">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-24">
     <% I18n.t("business.services").each_with_index do |(key, service), index| %>
-      <div id="<%= key %>" class="flex flex-col md:flex-row gap-8 items-center <%= 'md:flex-row-reverse' if index.odd? %>">
+      <div id="<%= key %>" class="flex flex-col md:flex-row gap-12 items-center <%= 'md:flex-row-reverse' if index.odd? %>">
         <div class="md:w-1/2">
-          <div class="bg-gray-100 rounded-xl aspect-video flex items-center justify-center">
-            <svg class="w-16 h-16 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-            </svg>
+          <div class="bg-gradient-to-br from-gray-100 to-gray-50 rounded-2xl aspect-[4/3] flex items-center justify-center shadow-inner overflow-hidden group">
+            <div class="text-center">
+              <div class="w-20 h-20 mx-auto mb-4 bg-[#0f1b2d] rounded-2xl flex items-center justify-center">
+                <svg class="w-10 h-10 text-[#d4a338]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+              </div>
+              <p class="text-gray-400 text-sm">Photo coming soon</p>
+            </div>
           </div>
         </div>
         <div class="md:w-1/2">
-          <h2 class="text-2xl font-bold text-[#0f1b2d] mb-3"><%= service[:name] %></h2>
-          <p class="text-gray-600 mb-4"><%= service[:description] %></p>
-          <p class="text-[#d4a338] font-semibold mb-6"><%= service[:price_starting] %></p>
-          <%= link_to "Get a Quote", contact_path, class: "inline-flex items-center px-6 py-3 bg-[#d4a338] text-[#0f1b2d] font-bold rounded-lg hover:bg-[#b8860b] transition" %>
+          <div class="inline-flex items-center gap-2 px-3 py-1 bg-[#d4a338]/10 rounded-full mb-4">
+            <span class="text-[#d4a338] text-sm font-semibold"><%= service[:price_starting] %></span>
+          </div>
+          <h2 class="text-3xl font-extrabold text-[#0f1b2d] mb-4"><%= service[:name] %></h2>
+          <p class="text-gray-500 text-lg leading-relaxed mb-8"><%= service[:description] %></p>
+          <%= link_to contact_path, class: "group inline-flex items-center gap-2 px-6 py-3 bg-[#d4a338] text-[#0f1b2d] font-bold rounded-xl hover:bg-[#b8860b] transition-all duration-300 shadow-lg shadow-[#d4a338]/20 hover:-translate-y-0.5" do %>
+            Get a Quote
+            <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+          <% end %>
         </div>
       </div>
     <% end %>
   </div>
 </section>
 
+<%= render "shared/process_steps" %>
 <%= render "shared/cta_inline" %>

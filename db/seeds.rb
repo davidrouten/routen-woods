@@ -36,11 +36,11 @@ puts "  Notification preferences created"
 
 # Sample testimonials
 testimonials = [
-  { author_name: "Sarah Johnson", author_title: "Homeowner, Tampa FL", body: "Routen Woods completely transformed our kitchen cabinets. They look brand new! The team was professional, on time, and the quality of work exceeded our expectations. Highly recommend!", rating: 5, featured: true, position: 0 },
-  { author_name: "Mike Chen", author_title: "Homeowner, Brandon FL", body: "We got quotes from several companies and Routen Woods was the best value by far. The refinishing work is absolutely stunning and has held up beautifully.", rating: 5, featured: true, position: 1 },
-  { author_name: "Lisa Martinez", author_title: "Interior Designer, Tampa FL", body: "I recommend Routen Woods to all my clients. Their attention to detail and craftsmanship is unmatched. They treat every cabinet like a work of art.", rating: 5, featured: true, position: 2 },
-  { author_name: "Tom Williams", author_title: "Homeowner, St. Petersburg FL", body: "Great experience from start to finish. The staining work on our oak cabinets brought out the natural grain beautifully. Worth every penny.", rating: 4, featured: false, position: 3 },
-  { author_name: "Jennifer Adams", author_title: "Homeowner, Clearwater FL", body: "Quick turnaround, fair pricing, and excellent results. Our kitchen looks like it belongs in a magazine now!", rating: 5, featured: false, position: 4 }
+  { author_name: "Sarah Johnson", author_title: "Homeowner, Oxford MI", body: "Routen Woods completely transformed our kitchen cabinets. They look brand new! The team was professional, on time, and the quality of work exceeded our expectations. Highly recommend!", rating: 5, featured: true, position: 0 },
+  { author_name: "Mike Chen", author_title: "Homeowner, Lake Orion MI", body: "We got quotes from several companies and Routen Woods was the best value by far. The refinishing work is absolutely stunning and has held up beautifully.", rating: 5, featured: true, position: 1 },
+  { author_name: "Lisa Martinez", author_title: "Interior Designer, Rochester MI", body: "I recommend Routen Woods to all my clients. Their attention to detail and craftsmanship is unmatched. They treat every cabinet like a work of art.", rating: 5, featured: true, position: 2 },
+  { author_name: "Tom Williams", author_title: "Homeowner, Auburn Hills MI", body: "Great experience from start to finish. The staining work on our oak cabinets brought out the natural grain beautifully. Worth every penny.", rating: 4, featured: false, position: 3 },
+  { author_name: "Jennifer Adams", author_title: "Homeowner, Clarkston MI", body: "Quick turnaround, fair pricing, and excellent results. Our kitchen looks like it belongs in a magazine now!", rating: 5, featured: false, position: 4 }
 ]
 testimonials.each do |attrs|
   Testimonial.find_or_create_by!(author_name: attrs[:author_name]) { |t| t.assign_attributes(attrs) }
@@ -50,14 +50,14 @@ puts "  #{testimonials.size} testimonials created"
 # Sample leads in various statuses
 services = %w[cabinet_refinishing cabinet_painting cabinet_refacing custom_staining]
 lead_data = [
-  { first_name: "James", last_name: "Wilson", email: "james.wilson@example.com", phone: "813-555-0101", status: :incoming, service: services[0] },
-  { first_name: "Emily", last_name: "Brown", email: "emily.b@example.com", phone: "813-555-0102", status: :incoming, service: services[1] },
-  { first_name: "Robert", last_name: "Davis", email: "rdavis@example.com", phone: "813-555-0103", status: :contacted, service: services[2] },
-  { first_name: "Amanda", last_name: "Garcia", email: "agarcia@example.com", phone: "813-555-0104", status: :scheduled, service: services[0] },
-  { first_name: "David", last_name: "Miller", email: "dmiller@example.com", phone: "813-555-0105", status: :quoted, service: services[3] },
-  { first_name: "Jessica", last_name: "Taylor", email: "jtaylor@example.com", phone: "813-555-0106", status: :booked, service: services[0] },
-  { first_name: "Chris", last_name: "Anderson", email: "canderson@example.com", phone: "813-555-0107", status: :completed, service: services[1] },
-  { first_name: "Maria", last_name: "Thomas", email: "mthomas@example.com", phone: "813-555-0108", status: :lost, service: services[2] }
+  { first_name: "James", last_name: "Wilson", email: "james.wilson@example.com", phone: "248-555-0101", status: :incoming, service: services[0] },
+  { first_name: "Emily", last_name: "Brown", email: "emily.b@example.com", phone: "248-555-0102", status: :incoming, service: services[1] },
+  { first_name: "Robert", last_name: "Davis", email: "rdavis@example.com", phone: "248-555-0103", status: :contacted, service: services[2] },
+  { first_name: "Amanda", last_name: "Garcia", email: "agarcia@example.com", phone: "248-555-0104", status: :scheduled, service: services[0] },
+  { first_name: "David", last_name: "Miller", email: "dmiller@example.com", phone: "248-555-0105", status: :quoted, service: services[3] },
+  { first_name: "Jessica", last_name: "Taylor", email: "jtaylor@example.com", phone: "248-555-0106", status: :booked, service: services[0] },
+  { first_name: "Chris", last_name: "Anderson", email: "canderson@example.com", phone: "248-555-0107", status: :completed, service: services[1] },
+  { first_name: "Maria", last_name: "Thomas", email: "mthomas@example.com", phone: "248-555-0108", status: :lost, service: services[2] }
 ]
 
 lead_data.each do |data|

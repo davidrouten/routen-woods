@@ -8,12 +8,12 @@ en:
     phone_raw: "+18131111111"
     address:
       street: "123 Craftsman Way"
-      city: "Tampa"
-      state: "FL"
-      zip: "33601"
-      full: "123 Craftsman Way, Tampa, FL 33601"
+      city: "Oxford"
+      state: "MI"
+      zip: "48371"
+      full: "123 Craftsman Way, Oxford, MI 48371"
     hours: "Mon-Fri 8AM-6PM, Sat 9AM-2PM"
-    service_area: "Tampa Bay and surrounding areas"
+    service_area: "Oxford, Michigan and surrounding areas"
     social:
       facebook: "https://facebook.com/routenwoods"
       instagram: "https://instagram.com/routenwoods"
@@ -51,29 +51,62 @@ en:
       cta_primary: "Get a Free Quote"
       cta_secondary: "View Our Work"
 
+    trust_bar:
+      experience: "15+ Years Experience"
+      projects: "1,000+ Projects Completed"
+      rating: "5-Star Rated"
+      guarantee: "Satisfaction Guaranteed"
+
+    process:
+      heading: "How It Works"
+      subheading: "From consultation to completion in four simple steps"
+      steps:
+        consultation:
+          number: "01"
+          title: "Free Consultation"
+          description: "We visit your home, assess your cabinets, and discuss your vision. No pressure, no obligation."
+        preparation:
+          number: "02"
+          title: "Expert Preparation"
+          description: "Meticulous cleaning, sanding, and priming. Great results start with great prep work."
+        transformation:
+          number: "03"
+          title: "The Transformation"
+          description: "Premium finishes applied by skilled craftsmen. Multiple coats for a flawless, factory-quality result."
+        reveal:
+          number: "04"
+          title: "The Big Reveal"
+          description: "Final inspection, cleanup, and your jaw-dropping kitchen reveal. We don't leave until you love it."
+
     sections:
       about:
-        heading: "Why Choose Us?"
+        heading: "Why Homeowners Choose Us"
         body: "With years of experience in cabinet refinishing and restoration, we deliver results that exceed expectations. Our team of skilled craftsmen treats every project with the care and attention it deserves."
         values:
           craftsmanship:
             title: "Master Craftsmanship"
-            description: "Every project receives meticulous attention to detail from start to finish."
+            description: "Every project receives meticulous attention to detail from our experienced team."
           materials:
             title: "Premium Materials"
             description: "We use only the highest quality paints, stains, and finishes for lasting results."
           satisfaction:
             title: "Guaranteed Satisfaction"
-            description: "Your happiness is our measure of success. We stand behind every project."
+            description: "Your happiness is our measure of success. We stand behind every project we complete."
+          licensed:
+            title: "Licensed & Insured"
+            description: "Fully licensed and insured for your peace of mind. Professional from start to finish."
       testimonials:
         heading: "What Our Customers Say"
-        subheading: "Don't just take our word for it"
+        subheading: "Real reviews from real homeowners in Oxford, Michigan"
       gallery:
         heading: "Our Recent Work"
         subheading: "See the transformation for yourself"
       contact:
         heading: "Ready to Transform Your Kitchen?"
         subheading: "Get a free, no-obligation quote today"
+      before_after:
+        heading: "See the Difference"
+        subheading: "Real results from real Oxford, Michigan kitchens"
 
     forms:
       quote:
