@@ -1,8 +1,8 @@
 module Admin
   class GalleryImagesController < BaseController
-    before_action -> { require_permission!(:view, :gallery) }, only: [:index, :show]
-    before_action -> { require_permission!(:manage, :gallery) }, except: [:index, :show]
-    before_action :set_gallery_image, only: [:show, :edit, :update, :destroy]
+    before_action -> { require_permission!(:view, :gallery) }, only: [:index]
+    before_action -> { require_permission!(:manage, :gallery) }, except: [:index]
+    before_action :set_gallery_image, only: [:edit, :update, :destroy]
 
     def index
       @gallery_images = GalleryImage.positioned

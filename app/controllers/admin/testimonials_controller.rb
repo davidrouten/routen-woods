@@ -1,8 +1,8 @@
 module Admin
   class TestimonialsController < BaseController
-    before_action -> { require_permission!(:view, :testimonials) }, only: [:index, :show]
-    before_action -> { require_permission!(:manage, :testimonials) }, except: [:index, :show]
-    before_action :set_testimonial, only: [:show, :edit, :update, :destroy]
+    before_action -> { require_permission!(:view, :testimonials) }, only: [:index]
+    before_action -> { require_permission!(:manage, :testimonials) }, except: [:index]
+    before_action :set_testimonial, only: [:edit, :update, :destroy]
 
     def index
       @testimonials = Testimonial.positioned

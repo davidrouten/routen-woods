@@ -73,6 +73,14 @@ group :development, :test do
 
   gem "faker"
   gem "dotenv-rails"
+  gem "rspec-rails"
+  gem "factory_bot_rails"
+end
+
+group :test do
+  gem "shoulda-matchers"
+  gem "capybara"
+  gem "selenium-webdriver"
 end
 
 group :development do
