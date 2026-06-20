@@ -1,7 +1,7 @@
 <div class="flex justify-between items-center mb-6">
   <h1 class="text-2xl font-bold text-gray-900"><%= t("admin.nav.gallery") %></h1>
   <% if current_user_can?(:manage, :gallery) %>
-    <%= link_to "Add Image", new_admin_gallery_image_path, class: "px-4 py-2 bg-[#d4a338] text-[#0f1b2d] font-semibold rounded-lg hover:bg-[#b8860b] transition text-sm" %>
+    <%= link_to "Add Image", new_admin_gallery_image_path, class: "px-4 py-2 bg-[#d4a338] text-[#0f1b2d] font-semibold rounded-lg hover:bg-[#b8860b] transition text-sm cursor-pointer" %>
   <% end %>
 </div>
 
@@ -23,8 +23,8 @@
         <% if image.featured? %><span class="text-xs text-[#d4a338]">Featured</span><% end %>
         <% if current_user_can?(:manage, :gallery) %>
           <div class="flex gap-2 mt-2">
-            <%= link_to "Edit", edit_admin_gallery_image_path(image), class: "text-xs text-[#d4a338] hover:text-[#b8860b]" %>
-            <%= button_to "Delete", admin_gallery_image_path(image), method: :delete, class: "text-xs text-red-500 hover:text-red-700", data: { turbo_confirm: "Delete?" } %>
+            <%= link_to "Edit", edit_admin_gallery_image_path(image), class: "px-3 py-1 text-xs font-medium text-[#d4a338] bg-[#d4a338]/10 rounded-md hover:bg-[#d4a338]/20 transition cursor-pointer" %>
+            <%= render "shared/confirm_button", url: admin_gallery_image_path(image), method: :delete, label: "Delete", title: "Delete Image", message: "Delete \"#{image.title}\"? This cannot be undone.", danger: true %>
           </div>
         <% end %>
       </div>

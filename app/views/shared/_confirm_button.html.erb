@@ -1,0 +1,28 @@
+<%# Confirm button with custom modal
+  Required locals:
+    url:          - form action URL
+    method:       - HTTP method (:delete, :patch, etc.)
+    label:        - button text
+    title:        - modal title
+    message:      - modal message
+  Optional locals:
+    confirm_text: - modal confirm button text (defaults to label)
+    danger:       - true for red confirm button (default false)
+    form_id:      - override auto-generated form ID
+    button_class: - CSS classes for trigger button
+%>
+<% form_id = local_assigns[:form_id] || "confirm_#{SecureRandom.hex(6)}" %>
+<% confirm_text = local_assigns[:confirm_text] || label %>
+<% danger = local_assigns.fetch(:danger, false) %>
+<% button_class = local_assigns[:button_class] || "px-3 py-1 text-xs font-medium text-red-600 bg-red-50 rounded-md hover:bg-red-100 transition cursor-pointer" %>
+
+<%= form_with url: url, method: method, id: form_id, class: "hidden" do |f| %>
+  <%= f.submit class: "hidden" %>
+<% end %>
+<button class="<%= button_class %>"
+        data-action="click->modal#openConfirm"
+        data-confirm-title="<%= title %>"
+        data-confirm-message="<%= message %>"
+        data-confirm-text="<%= confirm_text %>"
+        data-confirm-class="<%= danger ? 'danger' : '' %>"
+        data-confirm-form="#<%= form_id %>"><%= label %></button>

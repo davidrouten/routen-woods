@@ -30,6 +30,9 @@
 
 <h3>Cancel my account</h3>
 
-<div>Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, method: :delete %></div>
+<div>
+  Unhappy?
+  <%= render "shared/confirm_button", url: registration_path(resource_name), method: :delete, label: "Cancel my account", title: "Cancel Account", message: "Are you sure you want to cancel your account? This cannot be undone.", confirm_text: "Cancel Account", danger: true, button_class: "text-red-600 hover:text-red-800 underline cursor-pointer" %>
+</div>
 
 <%= link_to "Back", :back %>

@@ -102,9 +102,7 @@
                 <div class="flex items-center gap-2">
                   <span class="text-xs text-gray-400"><%= time_ago_in_words(note.created_at) %> ago</span>
                   <% if current_user.admin? || note.user == current_user %>
-                    <%= button_to admin_lead_note_path(@lead, note), method: :delete, class: "text-red-400 hover:text-red-600 text-xs", data: { turbo_confirm: "Delete this note?" } do %>
-                      &times;
-                    <% end %>
+                    <%= render "shared/confirm_button", url: admin_lead_note_path(@lead, note), method: :delete, label: "&times;".html_safe, title: "Delete Note", message: "Delete this note? This cannot be undone.", danger: true, button_class: "text-red-400 hover:text-red-600 text-xs cursor-pointer" %>
                   <% end %>
                 </div>
               </div>
@@ -131,7 +129,7 @@
         <div class="space-y-2">
           <% Lead.statuses.each_key do |status| %>
             <% next if status == @lead.status %>
-            <%= button_to t("admin.leads.status.#{status}"), transition_admin_lead_path(@lead, status: status), method: :patch, class: "w-full text-left px-3 py-2 rounded-lg text-sm font-medium #{status_badge_color(status)} hover:opacity-80 transition", data: { turbo_confirm: "Move to #{status}?" } %>
+            <%= render "shared/confirm_button", url: transition_admin_lead_path(@lead, status: status), method: :patch, label: t("admin.leads.status.#{status}"), title: "Change Status", message: "Move this lead to \"#{status.titleize}\"?", confirm_text: "Move to #{status.titleize}", button_class: "w-full text-left px-3 py-2 rounded-lg text-sm font-medium #{status_badge_color(status)} hover:opacity-80 transition cursor-pointer" %>
           <% end %>
         </div>
       </div>
@@ -142,9 +140,9 @@
       <div class="bg-white rounded-xl shadow-sm p-6">
         <h3 class="text-sm font-semibold text-gray-900 mb-3">Actions</h3>
         <% if @lead.spam? %>
-          <%= button_to t("admin.leads.unmark_spam"), unmark_spam_admin_lead_path(@lead), method: :patch, class: "w-full px-3 py-2 bg-green-100 text-green-700 rounded-lg text-sm font-medium hover:bg-green-200 transition" %>
+          <%= button_to t("admin.leads.unmark_spam"), unmark_spam_admin_lead_path(@lead), method: :patch, class: "w-full px-3 py-2 bg-green-100 text-green-700 rounded-lg text-sm font-medium hover:bg-green-200 transition cursor-pointer" %>
         <% else %>
-          <%= button_to t("admin.leads.mark_spam"), mark_spam_admin_lead_path(@lead), method: :patch, class: "w-full px-3 py-2 bg-red-100 text-red-700 rounded-lg text-sm font-medium hover:bg-red-200 transition", data: { turbo_confirm: "Mark as spam?" } %>
+          <%= render "shared/confirm_button", url: mark_spam_admin_lead_path(@lead), method: :patch, label: t("admin.leads.mark_spam"), title: "Mark as Spam", message: "Mark this lead as spam? It will be moved to the spam view.", confirm_text: "Mark Spam", danger: true, button_class: "w-full px-3 py-2 bg-red-100 text-red-700 rounded-lg text-sm font-medium hover:bg-red-200 transition cursor-pointer" %>
         <% end %>
       </div>
     <% end %>

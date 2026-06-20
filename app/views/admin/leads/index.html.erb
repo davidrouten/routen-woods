@@ -86,18 +86,6 @@
   <% end %>
 </div>
 
-<!-- Hidden forms for modal confirmations (outside table so browser doesn't strip them) -->
-<% @leads.each do |lead| %>
-  <% unless current_view == :spam || current_view == :archived %>
-    <%= form_with url: mark_spam_admin_lead_path(lead), method: :patch, id: "spam_form_#{lead.id}", class: "hidden" do |f| %>
-      <%= f.submit class: "hidden" %>
-    <% end %>
-    <%= form_with url: archive_admin_lead_path(lead), method: :patch, id: "archive_form_#{lead.id}", class: "hidden" do |f| %>
-      <%= f.submit class: "hidden" %>
-    <% end %>
-  <% end %>
-<% end %>
-
 <!-- Pagination -->
 <% if @pagy && @pagy.pages > 1 %>
   <div class="mt-6 flex justify-center">

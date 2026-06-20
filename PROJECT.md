@@ -84,7 +84,7 @@
 - [x] Image optimization: lazy loading, decoding="async", fetchpriority="high" on LCP image
 - [x] Image optimization: Active Storage variants (resized webp) for gallery images
 - [x] Spam score column in admin leads index (color-coded progress bar)
-- [ ] Heroku libvips buildpack for production image variants
+- [X] Heroku libvips buildpack for production image variants
 - [x] Gallery lightbox (click image to view full-size, keyboard nav, Stimulus controller)
 - [ ] Rate limiting by IP (add as SpamDetector signal)
 - [ ] Production email delivery (SendGrid / Postmark)
@@ -151,9 +151,6 @@
 ### 9.2 — Performance / CDN
 - [x] Responsive srcset (400w mobile, 800w desktop) via helper
 - [x] Heroku libvips buildpack (already added)
-- [ ] CloudFront distribution in front of S3 (backlog — needed at 100+ images)
-- [ ] Long cache headers on image assets (backlog — revisit with CloudFront)
-- [ ] Background job to pre-process image variants on upload (eliminates cold-start delay for first visitor)
 
 ### 9.3 — Before/after photo component
 - [ ] Before/after slider component (Stimulus controller)
@@ -190,6 +187,9 @@
 - [ ] Surface pricing signals when demand exceeds capacity
 
 ## Future / Backlog
+- [ ] CloudFront CDN in front of S3 (needed at 100+ images)
+- [ ] Long cache headers on image assets (revisit with CloudFront)
+- [ ] Background job to pre-process image variants on upload (eliminates cold-start delay)
 - [ ] AWS S3 dev/staging bucket for local development
 - [ ] Stimulus: lead_filter_controller (dynamic admin filtering)
 - [ ] AI-powered lead scoring (LLM integration)

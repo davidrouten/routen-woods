@@ -56,25 +56,12 @@
     <div class="flex items-center gap-2">
       <% if current_user_can?(:manage, :leads) %>
         <% if current_view == :spam %>
-          <%= button_to "Restore", unmark_spam_admin_lead_path(lead), method: :patch, class: "text-green-600 hover:text-green-800 text-xs font-medium" %>
+          <%= button_to "Restore", unmark_spam_admin_lead_path(lead), method: :patch, class: "px-3 py-1 text-xs font-medium text-green-700 bg-green-50 rounded-md hover:bg-green-100 transition cursor-pointer" %>
         <% elsif current_view == :archived %>
-          <%= button_to "Restore", restore_admin_lead_path(lead), method: :patch, class: "text-green-600 hover:text-green-800 text-xs font-medium" %>
+          <%= button_to "Restore", restore_admin_lead_path(lead), method: :patch, class: "px-3 py-1 text-xs font-medium text-green-700 bg-green-50 rounded-md hover:bg-green-100 transition cursor-pointer" %>
         <% else %>
-          <button class="text-red-600 hover:text-red-800 text-xs font-medium cursor-pointer"
-                  data-action="click->modal#openConfirm"
-                  data-confirm-title="Mark as Spam"
-                  data-confirm-message="Mark <%= lead.first_name %> <%= lead.last_name %> as spam? This will move the lead to the spam folder."
-                  data-confirm-text="Mark Spam"
-                  data-confirm-class="danger"
-                  data-confirm-form="#spam_form_<%= lead.id %>">Spam</button>
-
-          <button class="text-gray-500 hover:text-gray-700 text-xs font-medium cursor-pointer"
-                  data-action="click->modal#openConfirm"
-                  data-confirm-title="Archive Lead"
-                  data-confirm-message="Archive <%= lead.first_name %> <%= lead.last_name %>? You can restore it later from the Archived view."
-                  data-confirm-text="Archive"
-                  data-confirm-class=""
-                  data-confirm-form="#archive_form_<%= lead.id %>">Archive</button>
+          <%= render "shared/confirm_button", url: mark_spam_admin_lead_path(lead), method: :patch, label: "Spam", title: "Mark as Spam", message: "Mark #{lead.first_name} #{lead.last_name} as spam? This will move the lead to the spam folder.", confirm_text: "Mark Spam", button_class: "px-3 py-1 text-xs font-medium text-[#d4a338] bg-[#d4a338]/10 rounded-md hover:bg-[#d4a338]/20 transition cursor-pointer" %>
+          <%= render "shared/confirm_button", url: archive_admin_lead_path(lead), method: :patch, label: "Archive", title: "Archive Lead", message: "Archive #{lead.first_name} #{lead.last_name}? You can restore it later from the Archived view.", danger: true, button_class: "px-3 py-1 text-xs font-medium text-red-600 bg-red-50 rounded-md hover:bg-red-100 transition cursor-pointer" %>
         <% end %>
       <% end %>
     </div>
