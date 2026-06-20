@@ -182,9 +182,66 @@
 - [ ] Track which leads received review request
 
 ### 10.4 — Capacity & scheduling view
-- [ ] Calendar/timeline view of booked jobs
-- [ ] "Booked X weeks out" indicator on dashboard
 - [ ] Surface pricing signals when demand exceeds capacity
+- [ ] (Calendar, scheduling, and "booked X weeks out" moved to Phase 11.4)
+
+## Phase 11: Projects & Billing (NOT STARTED — needs design)
+
+### 11.1 — Lead → Project conversion
+- [ ] Project model (separate from Lead, belongs_to Lead — a lead can spawn multiple projects)
+- [ ] Project lifecycle (status enum: quoted, scheduled, in_progress, completed, cancelled)
+- [ ] Project address (or multiple — start simple with one, use multiple projects per lead for multi-site)
+- [ ] Project photos (before/after, linked to project not just gallery)
+- [ ] Testimonials linkable to a specific project
+- [ ] What happens when a project needs to revert? Close/cancel the project, lead remains — don't merge models
+- [ ] Eventually: extract Contact/Person from Lead (same person → multiple leads → multiple projects) — not needed at first
+
+### 11.2 — Consent & marketing
+- [ ] Consent capture on lead form: consent for this inquiry + opt-in for future marketing
+- [ ] Marketing framing: "We run specials 3x/year — opt in to hear about savings"
+- [ ] Track consent type (service-specific vs marketing) and timestamp
+- [ ] TCPA compliance if SMS marketing enabled
+
+### 11.3 — Billing & payments
+- [ ] Price (or price range) on project
+- [ ] Invoice date, pay-by date
+- [ ] Payment status (unpaid, partial, paid_in_full)
+- [ ] Payment schedule support: down payment → milestone (e.g. 25% at 75% completion) → final payment
+- [ ] All manual at first — surface contact info (email, phone, SMS) so billing person can collect
+- [ ] Payment history log (amount, date, method, notes)
+
+### 11.4 — Project calendar & scheduling
+- [ ] Calendar/timeline view of projects by week
+- [ ] Estimated duration per project (e.g. 5 days)
+- [ ] Crew/person assignment per project
+- [ ] Uncertainty overlap visualization (dotted lines, ~20-30% of estimated time beyond end date)
+- [ ] "Booked X weeks out" dashboard indicator (move from Phase 10)
+
+## Phase 12: AI Lead Creation (NOT STARTED — needs design)
+
+### 12.1 — Unstructured text → Lead
+- [ ] Input box in admin: paste/type unstructured text about a call, meeting, referral
+- [ ] LLM parses out: name, phone, email, address, service interest, notes, price discussed
+- [ ] Preview parsed result, highlight missing info, let user confirm/edit before creating
+- [ ] Auto-creates lead with contact details + adds parsed notes
+- [ ] Example: "just got off the phone with Jon Smith, 813-444-5555, wants to refinish 14 cabinets, walnut veneer, gold pulls, ~$7500 estimate"
+
+### 12.2 — SMS-to-lead (medium future)
+- [ ] User texts unstructured details to a Twilio number → system auto-creates lead
+- [ ] Confirmation reply back to user with parsed summary
+- [ ] Same parsing pipeline as 12.1
+
+## Phase 13: Conversational AI Assistant (medium future)
+
+### 13.1 — Query the system via chat
+- [ ] LLM with access to leads, projects, calendar data
+- [ ] Ask questions: "what's the cell number for the Reynolds job?"
+- [ ] Ask for summaries: "what work do we have going on this week?"
+- [ ] Predictive: "given our track record, how likely are we to be on schedule?"
+
+### 13.2 — SMS-based assistant
+- [ ] Same as 13.1 but via SMS conversation with the system
+- [ ] Context-aware follow-ups
 
 ## Future / Backlog
 - [ ] CloudFront CDN in front of S3 (needed at 100+ images)
@@ -200,6 +257,6 @@
 - [ ] Multi-tenant support
 - [ ] Analytics dashboard (conversion rates, lead sources)
 - [ ] Email drip campaigns
-- [ ] Online scheduling / calendar integration
+- [ ] Online scheduling / calendar integration (see Phase 11.4)
 - [ ] Review/reputation management
 - [ ] Google Analytics / SEO sitemap
