@@ -27,4 +27,27 @@ module ApplicationHelper
       "cold" => "bg-blue-100 text-blue-700"
     }[temp] || "bg-gray-100 text-gray-600"
   end
+
+  def responsive_gallery_image(image_attachment, alt:, sizes: "(max-width: 640px) 400px, 800px", eager: false, **html_opts)
+    small = url_for(image_attachment.variant(resize_to_limit: [400, 400], format: :webp))
+    medium = url_for(image_attachment.variant(resize_to_limit: [800, 800], format: :webp))
+
+    opts = {
+      src: medium,
+      srcset: "#{small} 400w, #{medium} 800w",
+      sizes: sizes,
+      alt: alt,
+      width: 800,
+      height: 800,
+      decoding: "async"
+    }.merge(html_opts)
+
+    if eager
+      opts[:fetchpriority] = "high"
+    else
+      opts[:loading] = "lazy"
+    end
+
+    tag.img(**opts)
+  end
 end

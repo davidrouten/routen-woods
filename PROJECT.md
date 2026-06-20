@@ -149,11 +149,11 @@
 - [x] Gated behind ENABLE_STRUCTURED_DATA env var (off until go-live)
 
 ### 9.2 — Performance / CDN
-- [ ] CloudFront distribution in front of S3 bucket
-- [ ] AVIF variant support alongside WebP
-- [ ] Responsive srcset with multiple breakpoints (400w, 800w, 1200w)
-- [ ] Long cache headers on image assets
+- [x] Responsive srcset (400w mobile, 800w desktop) via helper
 - [x] Heroku libvips buildpack (already added)
+- [ ] CloudFront distribution in front of S3 (backlog — needed at 100+ images)
+- [ ] Long cache headers on image assets (backlog — revisit with CloudFront)
+- [ ] Background job to pre-process image variants on upload (eliminates cold-start delay for first visitor)
 
 ### 9.3 — Before/after photo component
 - [ ] Before/after slider component (Stimulus controller)

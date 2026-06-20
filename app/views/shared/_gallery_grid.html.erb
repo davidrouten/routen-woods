@@ -14,15 +14,8 @@
                data-action="click->lightbox#open"
                data-lightbox-url="<%= image.image.attached? ? url_for(image.image.variant(resize_to_limit: [1600, 1600], format: :webp)) : '' %>">
             <% if image.image.attached? %>
-              <% if idx == 0 %>
-                <%= image_tag image.image.variant(resize_to_limit: [1000, 1000], format: :webp),
-                    class: "w-full h-full object-cover group-hover:scale-110 transition-transform duration-700",
-                    alt: image.title, width: 1000, height: 1000, fetchpriority: "high", decoding: "async" %>
-              <% else %>
-                <%= image_tag image.image.variant(resize_to_limit: [800, 800], format: :webp),
-                    class: "w-full h-full object-cover group-hover:scale-110 transition-transform duration-700",
-                    alt: image.title, width: 800, height: 800, loading: "lazy", decoding: "async" %>
-              <% end %>
+              <%= responsive_gallery_image image.image, alt: image.title, eager: idx == 0,
+                  class: "w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" %>
             <% else %>
               <div class="w-full h-full flex items-center justify-center text-gray-300">
                 <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
