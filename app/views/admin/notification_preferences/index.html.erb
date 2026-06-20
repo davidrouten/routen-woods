@@ -16,10 +16,10 @@
         <tr>
           <%= form_with model: [:admin, pref], class: "contents" do |f| %>
             <td class="px-6 py-4 font-medium text-gray-900"><%= pref.event_name.titleize %></td>
-            <td class="px-6 py-4 text-center"><%= f.check_box :email_enabled, class: "rounded text-[#d4a338] focus:ring-[#d4a338]" %></td>
-            <td class="px-6 py-4 text-center"><%= f.check_box :sms_enabled, class: "rounded text-[#d4a338] focus:ring-[#d4a338]" %></td>
-            <td class="px-6 py-4 text-center"><%= f.check_box :slack_enabled, class: "rounded text-[#d4a338] focus:ring-[#d4a338]" %></td>
-            <td class="px-6 py-4 text-right"><%= f.submit "Save", class: "px-3 py-1 bg-[#0f1b2d] text-white rounded text-sm hover:bg-[#1b2a4a] transition cursor-pointer" %></td>
+            <td class="px-6 py-4 text-center"><%= f.check_box :email_enabled, class: "rounded text-accent focus:ring-accent" %></td>
+            <td class="px-6 py-4 text-center"><%= f.check_box :sms_enabled, class: "rounded text-accent focus:ring-accent" %></td>
+            <td class="px-6 py-4 text-center"><%= f.check_box :slack_enabled, class: "rounded text-accent focus:ring-accent" %></td>
+            <td class="px-6 py-4 text-right"><%= f.submit "Save", class: "px-3 py-1 bg-primary text-white rounded text-sm hover:bg-primary-light transition cursor-pointer" %></td>
           <% end %>
         </tr>
       <% end %>

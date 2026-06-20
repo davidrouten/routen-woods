@@ -24,14 +24,14 @@
 <div class="bg-white rounded-xl shadow-sm p-4 mb-6">
   <div class="flex flex-wrap gap-3 items-center">
     <!-- Primary filters -->
-    <%= link_to "Open", admin_leads_path, class: "px-3 py-1.5 rounded-full text-sm font-medium #{current_view == :open ? 'bg-[#0f1b2d] text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'} transition" %>
-    <%= link_to "All", admin_leads_path(filter: "all"), class: "px-3 py-1.5 rounded-full text-sm font-medium #{current_view == :all ? 'bg-[#0f1b2d] text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'} transition" %>
+    <%= link_to "Open", admin_leads_path, class: "px-3 py-1.5 rounded-full text-sm font-medium #{current_view == :open ? 'bg-primary text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'} transition" %>
+    <%= link_to "All", admin_leads_path(filter: "all"), class: "px-3 py-1.5 rounded-full text-sm font-medium #{current_view == :all ? 'bg-primary text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'} transition" %>
 
     <span class="text-gray-300">|</span>
 
     <!-- Status filters -->
     <% Lead.statuses.each_key do |status| %>
-      <%= link_to t("admin.leads.status.#{status}"), admin_leads_path(status: status, temperature: params[:temperature]), class: "px-3 py-1.5 rounded-full text-sm font-medium #{current_view == status.to_sym ? 'bg-[#0f1b2d] text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'} transition" %>
+      <%= link_to t("admin.leads.status.#{status}"), admin_leads_path(status: status, temperature: params[:temperature]), class: "px-3 py-1.5 rounded-full text-sm font-medium #{current_view == status.to_sym ? 'bg-primary text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'} transition" %>
     <% end %>
 
     <span class="text-gray-300">|</span>
@@ -50,8 +50,8 @@
     <!-- Search -->
     <div class="ml-auto">
       <%= form_with url: admin_leads_path, method: :get, class: "flex gap-2" do |f| %>
-        <%= f.search_field :q, value: params[:q], placeholder: "Search leads...", class: "px-3 py-1.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#d4a338] focus:border-transparent outline-none" %>
-        <%= f.submit "Search", class: "px-3 py-1.5 bg-[#0f1b2d] text-white rounded-lg text-sm hover:bg-[#1b2a4a] transition cursor-pointer" %>
+        <%= f.search_field :q, value: params[:q], placeholder: "Search leads...", class: "px-3 py-1.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-accent focus:border-transparent outline-none" %>
+        <%= f.submit "Search", class: "px-3 py-1.5 bg-primary text-white rounded-lg text-sm hover:bg-primary-light transition cursor-pointer" %>
       <% end %>
     </div>
   </div>

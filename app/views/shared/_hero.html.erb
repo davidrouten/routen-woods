@@ -1,11 +1,11 @@
 <section class="relative min-h-[90vh] flex items-center overflow-hidden" data-hero>
   <!-- Background with overlay -->
-  <div class="absolute inset-0 bg-gradient-to-br from-[#0f1b2d] via-[#1b2a4a] to-[#0f1b2d]"></div>
+  <div class="absolute inset-0 bg-brand-gradient"></div>
 
   <!-- Decorative elements -->
   <div class="absolute inset-0 opacity-10">
-    <div class="absolute top-20 left-10 w-72 h-72 bg-[#d4a338] rounded-full blur-3xl"></div>
-    <div class="absolute bottom-20 right-10 w-96 h-96 bg-[#d4a338] rounded-full blur-3xl"></div>
+    <div class="glow-orb top-20 left-10"></div>
+    <div class="glow-orb bottom-20 right-10 w-96 h-96"></div>
   </div>
 
   <!-- Grid pattern overlay -->
@@ -15,8 +15,8 @@
     <div class="max-w-3xl">
       <!-- Badge -->
       <div class="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full mb-8 border border-white/20">
-        <span class="w-2 h-2 bg-[#d4a338] rounded-full animate-pulse"></span>
-        <span class="text-[#d4a338] text-sm font-medium tracking-wide uppercase"><%= t("business.motto") %></span>
+        <span class="w-2 h-2 bg-accent rounded-full animate-pulse"></span>
+        <span class="text-accent text-sm font-medium tracking-wide uppercase"><%= t("business.motto") %></span>
       </div>
 
       <h1 class="text-5xl md:text-6xl lg:text-7xl font-extrabold text-white leading-[1.1] mb-6 tracking-tight">
@@ -28,11 +28,11 @@
       </p>
 
       <div class="flex flex-col sm:flex-row gap-4">
-        <%= link_to contact_path, class: "group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#d4a338] text-[#0f1b2d] font-bold rounded-xl text-lg hover:bg-[#b8860b] transition-all duration-300 shadow-lg shadow-[#d4a338]/25 hover:shadow-xl hover:shadow-[#d4a338]/30 hover:-translate-y-0.5" do %>
+        <%= link_to contact_path, class: "btn-primary group" do %>
           <%= t("business.hero.cta_primary") %>
           <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
         <% end %>
-        <%= link_to gallery_path, class: "group inline-flex items-center justify-center gap-3 px-8 py-4 border-2 border-white/30 text-white font-semibold rounded-xl text-lg hover:bg-white hover:text-[#0f1b2d] transition-all duration-300 backdrop-blur-sm" do %>
+        <%= link_to gallery_path, class: "btn-outline group" do %>
           <%= t("business.hero.cta_secondary") %>
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
         <% end %>

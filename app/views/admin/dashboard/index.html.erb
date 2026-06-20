@@ -4,11 +4,11 @@
 <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
   <div class="bg-white rounded-xl shadow-sm p-6">
     <p class="text-sm text-gray-500 mb-1"><%= t("admin.dashboard.leads_today") %></p>
-    <p class="text-3xl font-bold text-[#0f1b2d]"><%= @leads_today %></p>
+    <p class="text-3xl font-bold text-primary"><%= @leads_today %></p>
   </div>
   <div class="bg-white rounded-xl shadow-sm p-6">
     <p class="text-sm text-gray-500 mb-1"><%= t("admin.dashboard.total_leads") %></p>
-    <p class="text-3xl font-bold text-[#0f1b2d]"><%= @leads_by_status.values.sum %></p>
+    <p class="text-3xl font-bold text-primary"><%= @leads_by_status.values.sum %></p>
   </div>
   <div class="bg-white rounded-xl shadow-sm p-6">
     <p class="text-sm text-gray-500 mb-1"><%= t("admin.dashboard.hot_leads") %></p>
@@ -38,7 +38,7 @@
   <div class="bg-white rounded-xl shadow-sm p-6">
     <div class="flex justify-between items-center mb-4">
       <h2 class="text-lg font-semibold text-gray-900"><%= t("admin.dashboard.recent_leads") %></h2>
-      <%= link_to "View all", admin_leads_path, class: "text-sm text-[#d4a338] hover:text-[#b8860b]" %>
+      <%= link_to "View all", admin_leads_path, class: "text-sm text-accent hover:text-accent-hover" %>
     </div>
     <div class="space-y-3">
       <% @recent_leads.each do |lead| %>

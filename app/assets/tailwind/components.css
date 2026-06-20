@@ -1,0 +1,96 @@
+/* ==========================================================================
+   Component Classes
+   ==========================================================================
+   Reusable patterns extracted from templates. Use these to keep views DRY.
+   All colors reference theme tokens, so re-theming is automatic.
+   ========================================================================== */
+
+/* --- Buttons --- */
+
+.btn-primary {
+  @apply inline-flex items-center justify-center gap-2 px-8 py-4 bg-accent text-primary
+         font-bold rounded-xl text-lg hover:bg-accent-hover transition-all duration-300
+         shadow-lg shadow-accent/25 hover:shadow-xl hover:shadow-accent/30
+         hover:-translate-y-0.5 cursor-pointer;
+}
+
+.btn-primary-sm {
+  @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-accent text-primary
+         font-bold rounded-xl text-sm hover:bg-accent-hover transition-all duration-200
+         shadow-lg shadow-accent/20 hover:shadow-xl hover:shadow-accent/30
+         hover:-translate-y-0.5 cursor-pointer;
+}
+
+.btn-outline {
+  @apply inline-flex items-center justify-center gap-2 px-8 py-4 border-2 border-white/30
+         text-white font-semibold rounded-xl text-lg hover:bg-white hover:text-primary
+         transition-all duration-300 backdrop-blur-sm;
+}
+
+.btn-admin {
+  @apply px-4 py-2 bg-accent text-primary font-semibold rounded-lg
+         hover:bg-accent-hover transition text-sm cursor-pointer;
+}
+
+.btn-admin-link {
+  @apply px-3 py-1 text-xs font-medium text-accent bg-accent/10 rounded-md
+         hover:bg-accent/20 transition cursor-pointer;
+}
+
+/* --- Form Inputs --- */
+
+.input {
+  @apply w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl
+         focus:ring-2 focus:ring-accent focus:border-transparent focus:bg-white
+         outline-none transition-all duration-200;
+}
+
+.input-admin {
+  @apply w-full px-4 py-2 border border-gray-300 rounded-lg
+         focus:ring-2 focus:ring-accent focus:border-transparent outline-none;
+}
+
+/* --- Section Headings --- */
+
+.section-label {
+  @apply text-accent font-semibold tracking-wider uppercase text-sm mb-3;
+}
+
+.section-heading {
+  @apply text-4xl md:text-5xl font-extrabold text-primary mb-4;
+}
+
+/* --- Dark Section (hero / testimonials / CTA backgrounds) --- */
+
+.bg-brand-gradient {
+  @apply bg-gradient-to-br from-primary via-primary-light to-primary;
+}
+
+/* --- Decorative glow orb (used in heroes and page banners) --- */
+
+.glow-orb {
+  @apply absolute w-72 h-72 bg-accent rounded-full blur-3xl;
+}
+
+/* --- Accent gradient bar (exit-intent, service cards) --- */
+
+.accent-bar {
+  @apply h-1.5 bg-gradient-to-r from-accent to-accent-hover;
+}
+
+/* --- Avatar circle (testimonials, admin notes) --- */
+
+.avatar-accent {
+  @apply bg-gradient-to-br from-accent to-accent-hover rounded-full flex items-center
+         justify-center text-primary font-bold;
+}
+
+/* --- Icon container (trust bar, about values) --- */
+
+.icon-box {
+  @apply bg-primary rounded-xl flex items-center justify-center;
+}
+
+.icon-box-accent {
+  @apply bg-accent/10 rounded-2xl flex items-center justify-center;
+}

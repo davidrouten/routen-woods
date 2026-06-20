@@ -139,6 +139,34 @@
 - [ ] Per-form field requirements (e.g. budget optional, timeframe required)
 - [ ] Field customization per form (A/B testing, seasonal promos)
 
+## Phase 8.5: Design System & Styling Revamp (COMPLETE)
+
+Goal: eliminate all 180+ hardcoded hex values (`#d4a338`, `#0f1b2d`, etc.) from templates. Establish a proper design system with semantic tokens so color/style changes happen in ONE place.
+
+### 8.5.1 — Theme colors (`theme.css`)
+- [x] Created `app/assets/tailwind/theme.css` with `@theme` block
+- [x] 5 semantic color tokens: `primary` (#0f1b2d), `primary-light` (#1b2a4a), `primary-dark` (#0a1220), `accent` (#d4a338), `accent-hover` (#b8860b)
+- [x] All utilities auto-generated: `bg-primary`, `text-accent`, `border-accent/20`, etc.
+
+### 8.5.2 — Component classes (`components.css`)
+- [x] Created `app/assets/tailwind/components.css` with 13 reusable classes:
+  - Buttons: `.btn-primary`, `.btn-primary-sm`, `.btn-outline`, `.btn-admin`, `.btn-admin-link`
+  - Inputs: `.input`, `.input-admin`
+  - Headings: `.section-label`, `.section-heading`
+  - Layout: `.bg-brand-gradient`, `.glow-orb`, `.accent-bar`, `.avatar-accent`, `.icon-box`, `.icon-box-accent`
+
+### 8.5.3 — Migration (30 ERB files, 180+ hex references)
+- [x] Replaced all hardcoded hex values across all 30 ERB templates
+- [x] Applied component classes to reduce template verbosity
+- [x] Updated `application.css` entry point to import theme + components
+- [x] Zero hardcoded hex values remain in any template
+- [x] Tailwind builds clean with all tokens and components
+
+### Architecture
+- Entry point: `app/assets/tailwind/application.css` → imports `theme.css` + `components.css`
+- To re-theme: change 5 hex values in `theme.css`, everything updates automatically
+- Component classes use `@apply` to compose Tailwind utilities into reusable patterns
+
 ## Phase 9: SEO, Speed & Structured Data
 
 ### 9.1 — JSON-LD structured data

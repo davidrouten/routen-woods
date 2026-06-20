@@ -1,8 +1,8 @@
 <section id="gallery" class="py-24 bg-gray-50">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center mb-16">
-      <p class="text-[#d4a338] font-semibold tracking-wider uppercase text-sm mb-3">Portfolio</p>
-      <h2 class="text-4xl md:text-5xl font-extrabold text-[#0f1b2d] mb-4"><%= t("business.sections.gallery.heading") %></h2>
+      <p class="section-label">Portfolio</p>
+      <h2 class="section-heading"><%= t("business.sections.gallery.heading") %></h2>
       <p class="text-gray-500 text-lg"><%= t("business.sections.gallery.subheading") %></p>
     </div>
 
@@ -23,7 +23,7 @@
                 </svg>
               </div>
             <% end %>
-            <div class="absolute inset-0 bg-gradient-to-t from-[#0f1b2d]/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-5">
+            <div class="absolute inset-0 bg-gradient-to-t from-primary/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-5">
               <p class="text-white font-semibold"><%= image.title %></p>
             </div>
           </div>
@@ -41,7 +41,7 @@
     <% end %>
 
     <div class="text-center mt-10">
-      <%= link_to gallery_path, class: "group inline-flex items-center gap-2 px-8 py-4 border-2 border-[#0f1b2d] text-[#0f1b2d] font-bold rounded-xl hover:bg-[#0f1b2d] hover:text-white transition-all duration-300" do %>
+      <%= link_to gallery_path, class: "group inline-flex items-center gap-2 px-8 py-4 border-2 border-primary text-primary font-bold rounded-xl hover:bg-primary hover:text-white transition-all duration-300" do %>
         View Full Gallery
         <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
       <% end %>

@@ -1,7 +1,7 @@
 <div class="flex justify-between items-center mb-6">
   <h1 class="text-2xl font-bold text-gray-900"><%= t("admin.nav.testimonials") %></h1>
   <% if current_user_can?(:manage, :testimonials) %>
-    <%= link_to "Add Testimonial", new_admin_testimonial_path, class: "px-4 py-2 bg-[#d4a338] text-[#0f1b2d] font-semibold rounded-lg hover:bg-[#b8860b] transition text-sm cursor-pointer" %>
+    <%= link_to "Add Testimonial", new_admin_testimonial_path, class: "btn-admin" %>
   <% end %>
 </div>
 
@@ -23,12 +23,12 @@
             <p class="font-medium text-gray-900"><%= t.author_name %></p>
             <p class="text-sm text-gray-500 truncate max-w-xs"><%= truncate(t.body, length: 80) %></p>
           </td>
-          <td class="px-6 py-4 text-[#d4a338]"><%= "★" * t.rating %></td>
+          <td class="px-6 py-4 text-accent"><%= "★" * t.rating %></td>
           <td class="px-6 py-4"><%= t.featured? ? "✓" : "—" %></td>
           <td class="px-6 py-4 text-gray-500"><%= t.position %></td>
           <td class="px-6 py-4 text-right space-x-2">
             <% if current_user_can?(:manage, :testimonials) %>
-              <%= link_to "Edit", edit_admin_testimonial_path(t), class: "px-3 py-1 text-xs font-medium text-[#d4a338] bg-[#d4a338]/10 rounded-md hover:bg-[#d4a338]/20 transition cursor-pointer" %>
+              <%= link_to "Edit", edit_admin_testimonial_path(t), class: "btn-admin-link" %>
               <%= render "shared/confirm_button", url: admin_testimonial_path(t), method: :delete, label: "Delete", title: "Delete Testimonial", message: "Delete testimonial from \"#{t.author_name}\"? This cannot be undone.", danger: true %>
             <% end %>
           </td>

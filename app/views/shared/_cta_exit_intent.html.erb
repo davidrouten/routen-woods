@@ -3,7 +3,7 @@
   <div class="absolute inset-0 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden relative">
       <!-- Accent bar -->
-      <div class="h-1.5 bg-gradient-to-r from-[#d4a338] to-[#b8860b]"></div>
+      <div class="accent-bar"></div>
 
       <div class="p-8">
         <button data-action="click->exit-intent#close" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-400 hover:bg-gray-200 hover:text-gray-600 transition">
@@ -12,14 +12,14 @@
           </svg>
         </button>
 
-        <div class="w-16 h-16 mx-auto mb-6 bg-[#d4a338]/10 rounded-2xl flex items-center justify-center">
-          <svg class="w-8 h-8 text-[#d4a338]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <div class="icon-box-accent w-16 h-16 mx-auto mb-6">
+          <svg class="w-8 h-8 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         </div>
 
-        <h3 class="text-2xl font-extrabold text-[#0f1b2d] text-center mb-2"><%= t("business.cta.exit_intent_heading") %></h3>
+        <h3 class="text-2xl font-extrabold text-primary text-center mb-2"><%= t("business.cta.exit_intent_heading") %></h3>
         <p class="text-gray-500 text-center mb-8"><%= t("business.cta.exit_intent_body") %></p>
 
-        <%= link_to contact_path, class: "group flex items-center justify-center gap-2 w-full px-8 py-4 bg-[#d4a338] text-[#0f1b2d] font-bold rounded-xl text-lg hover:bg-[#b8860b] transition-all duration-300 shadow-lg shadow-[#d4a338]/25" do %>
+        <%= link_to contact_path, class: "btn-primary w-full group" do %>
           <%= t("business.cta.exit_intent_cta") %>
           <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
         <% end %>

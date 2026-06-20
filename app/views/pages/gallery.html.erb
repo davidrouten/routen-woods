@@ -1,11 +1,11 @@
 <% content_for(:title) { "Gallery | #{t('business.name')}" } %>
 
-<section class="relative bg-gradient-to-br from-[#0f1b2d] via-[#1b2a4a] to-[#0f1b2d] py-24 overflow-hidden">
+<section class="relative bg-brand-gradient py-24 overflow-hidden">
   <div class="absolute inset-0 opacity-10">
-    <div class="absolute top-10 left-1/2 w-72 h-72 bg-[#d4a338] rounded-full blur-3xl"></div>
+    <div class="absolute top-10 left-1/2 w-72 h-72 bg-accent glow-orb rounded-full blur-3xl"></div>
   </div>
   <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-    <p class="text-[#d4a338] font-semibold tracking-wider uppercase text-sm mb-3">Portfolio</p>
+    <p class="section-label">Portfolio</p>
     <h1 class="text-5xl md:text-6xl font-extrabold text-white mb-4"><%= t("business.sections.gallery.heading") %></h1>
     <p class="text-gray-300 text-lg"><%= t("business.sections.gallery.subheading") %></p>
   </div>
@@ -35,7 +35,7 @@
                 </svg>
               </div>
             <% end %>
-            <div class="absolute inset-0 bg-gradient-to-t from-[#0f1b2d]/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-5">
+            <div class="absolute inset-0 bg-gradient-to-t from-primary/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-5">
               <div>
                 <p class="text-white font-semibold"><%= image.title %></p>
                 <% if image.description.present? %>

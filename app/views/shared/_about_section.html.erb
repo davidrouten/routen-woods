@@ -10,20 +10,20 @@
 <section id="about" class="py-24 bg-gray-50">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center mb-16">
-      <p class="text-[#d4a338] font-semibold tracking-wider uppercase text-sm mb-3">Why Us</p>
-      <h2 class="text-4xl md:text-5xl font-extrabold text-[#0f1b2d] mb-4"><%= t("business.sections.about.heading") %></h2>
+      <p class="section-label">Why Us</p>
+      <h2 class="section-heading"><%= t("business.sections.about.heading") %></h2>
       <p class="text-gray-500 text-lg max-w-2xl mx-auto"><%= t("business.sections.about.body") %></p>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
       <% I18n.t("business.sections.about.values").each do |key, value| %>
         <div class="group text-center p-8 rounded-2xl hover:bg-white hover:shadow-xl transition-all duration-500">
-          <div class="w-16 h-16 mx-auto mb-6 bg-[#d4a338]/10 rounded-2xl flex items-center justify-center group-hover:bg-[#d4a338] transition-all duration-500 group-hover:rotate-6 group-hover:scale-110">
-            <svg class="w-8 h-8 text-[#d4a338] group-hover:text-white transition-colors duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="icon-box-accent w-16 h-16 mx-auto mb-6 group-hover:bg-accent transition-all duration-500 group-hover:rotate-6 group-hover:scale-110">
+            <svg class="w-8 h-8 text-accent group-hover:text-white transition-colors duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <%= raw(value_icons[key.to_s] || value_icons["satisfaction"]) %>
             </svg>
           </div>
-          <h3 class="text-lg font-bold text-[#0f1b2d] mb-3"><%= value[:title] %></h3>
+          <h3 class="text-lg font-bold text-primary mb-3"><%= value[:title] %></h3>
           <p class="text-gray-500 leading-relaxed"><%= value[:description] %></p>
         </div>
       <% end %>
