@@ -14,6 +14,21 @@ en:
       full: "123 Craftsman Way, Oxford, MI 48371"
     hours: "Mon-Fri 8AM-6PM, Sat 9AM-2PM"
     service_area: "Oxford, Michigan and surrounding areas"
+    service_area_cities:
+      - "Oxford"
+      - "Lake Orion"
+      - "Auburn Hills"
+      - "Rochester"
+      - "Clarkston"
+      - "Orion Township"
+    founded_year: "2010"
+    price_range: "$$"
+    geo:
+      latitude: "42.8206"
+      longitude: "-83.2647"
+    working_hours:
+      - "Mo-Fr 08:00-18:00"
+      - "Sa 09:00-14:00"
     social:
       facebook: "https://facebook.com/routenwoods"
       instagram: "https://instagram.com/routenwoods"
@@ -130,6 +145,18 @@ en:
       exit_intent_heading: "Wait! Don't leave without your free quote"
       exit_intent_body: "Get a no-obligation estimate for your project in under 2 minutes."
       exit_intent_cta: "Get My Free Quote"
+
+    faq:
+      - question: "How much does cabinet refinishing cost?"
+        answer: "Cabinet refinishing typically starts at $2,000-$2,500 for a standard kitchen. The final cost depends on the number of cabinets, condition, and chosen finish. We provide free, no-obligation quotes."
+      - question: "How long does cabinet refinishing take?"
+        answer: "Most kitchen cabinet refinishing projects take 3-5 days. We work efficiently to minimize disruption to your daily routine."
+      - question: "Is refinishing better than replacing cabinets?"
+        answer: "For structurally sound cabinets, refinishing saves 50-70% compared to full replacement while delivering a like-new appearance. It's also faster and less disruptive than a full renovation."
+      - question: "What areas do you serve?"
+        answer: "We proudly serve Oxford, Michigan and surrounding areas including Lake Orion, Auburn Hills, Rochester, and Clarkston."
+      - question: "Do you offer free estimates?"
+        answer: "Yes! We offer free, no-obligation in-home consultations where we assess your cabinets and provide a detailed quote."
 
     seo:
       title: "%{business_name} | Cabinet Refinishing"

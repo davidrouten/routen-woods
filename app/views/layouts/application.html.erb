@@ -13,6 +13,11 @@
   <% if ENV["TURNSTILE_SITE_KEY"].present? %>
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   <% end %>
+  <% if ENV["ENABLE_STRUCTURED_DATA"].present? %>
+    <%= local_business_jsonld %>
+    <%= services_jsonld %>
+    <%= yield :structured_data %>
+  <% end %>
 </head>
 <body class="font-sans text-gray-800 bg-white" data-controller="modal">
   <%= render "layouts/header" %>
