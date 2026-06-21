@@ -33,9 +33,6 @@
           </div>
         </div>
         <div class="md:w-1/2">
-          <div class="inline-flex items-center gap-2 px-3 py-1 bg-accent/10 rounded-full mb-4">
-            <span class="text-accent text-sm font-semibold"><%= service[:price_starting] %></span>
-          </div>
           <h2 class="text-3xl font-extrabold text-primary mb-4"><%= service[:name] %></h2>
           <p class="text-gray-500 text-lg leading-relaxed mb-8"><%= service[:description] %></p>
           <%= link_to contact_path, class: "group inline-flex items-center gap-2 px-6 py-3 bg-accent text-primary font-bold rounded-xl hover:bg-accent-hover transition-all duration-300 shadow-lg shadow-accent/20 hover:-translate-y-0.5" do %>

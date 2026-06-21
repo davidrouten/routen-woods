@@ -7,8 +7,8 @@ RSpec.describe LeadScorer do
         email: "jane@example.com",
         phone: "813-555-0100",
         last_name: "Smith",
-        message: "I need my kitchen cabinets completely refinished with new hardware",
-        service_interested_in: "cabinet_refinishing"
+        message: "I need my kitchen cabinets completely refaced with new doors",
+        service_interested_in: "cabinet_refacing"
       )
       expect(lead.reload.lead_temperature).to eq("hot")
       expect(lead.ai_score).to be >= 70

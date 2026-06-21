@@ -35,34 +35,45 @@ en:
       google_business: ""
 
     services:
-      cabinet_refinishing:
-        name: "Cabinet Refinishing"
-        short_description: "Restore your cabinets to their original beauty"
-        description: "Professional cabinet refinishing that breathes new life into your kitchen. We strip, sand, and apply premium finishes that last for years."
-        icon: "paintbrush"
-        price_starting: "Starting at $2,500"
-      cabinet_painting:
-        name: "Cabinet Painting"
-        short_description: "Transform with a fresh coat of premium paint"
-        description: "Complete cabinet painting services using premium paints and expert techniques for a flawless factory finish."
-        icon: "paint-roller"
-        price_starting: "Starting at $3,000"
       cabinet_refacing:
         name: "Cabinet Refacing"
-        short_description: "New doors, same great bones"
-        description: "Replace your cabinet doors and drawer fronts for a completely new look without the cost of full replacement."
+        short_description: "New doors, new finish, same great bones"
+        description: "Our signature service. We replace your cabinet doors and drawer fronts with your choice of style — from contemporary slabs to ornate raised panels to simple shakers — then relaminate the existing cabinet boxes to match. A complete kitchen transformation, typically finished within a week instead of the months a full rebuild takes."
         icon: "door-open"
-        price_starting: "Starting at $5,000"
-      custom_staining:
-        name: "Custom Staining"
-        short_description: "Rich, natural wood finishes"
-        description: "Expert wood staining that brings out the natural grain and beauty of your cabinets with rich, lasting color."
-        icon: "droplet"
-        price_starting: "Starting at $2,000"
+      cabinet_customization:
+        name: "Cabinet Customization & Accessories"
+        short_description: "Make your cabinets work harder for you"
+        description: "Upgrade your kitchen with custom rollout trays, spice racks, lazy susans, and other accessories that turn wasted cabinet space into smart storage. Simple additions that make a big difference in how your kitchen functions day to day."
+        icon: "adjustments"
+      cabinet_repair:
+        name: "Cabinet Repair"
+        short_description: "Fix what's broken, save what's good"
+        description: "From stripped screws and broken drawer boxes to water-damaged sides and face frames, we handle the repairs other companies won't touch. We can replace drawer sides, rebuild damaged sections, or custom-frame around new appliances like dishwashers — whatever it takes to get your cabinets solid again."
+        icon: "wrench"
+      cabinet_repainting:
+        name: "Cabinet Repainting"
+        short_description: "A fresh coat for a fresh look"
+        description: "Want a specific color or need to match new doors? We offer a white-glove cabinet repainting solution — your cabinets are professionally finished and returned looking factory-new. Perfect when refacing isn't the right fit but your cabinets still have great bones."
+        icon: "paint-roller"
+      cabinet_installation:
+        name: "Cabinet Installation"
+        short_description: "Professional installs by a licensed builder"
+        description: "Need new cabinets installed? We handle the full installation — something most refacing companies can't offer because it requires a builder's license. Whether you're adding cabinets to a new space or replacing old ones entirely, we do the job right."
+        icon: "hammer"
+      custom_closets:
+        name: "Custom Closets & Pantries"
+        short_description: "Custom storage that transforms your space"
+        description: "Full custom closet and pantry systems designed and installed to fit your space perfectly. There's nothing quite like seeing a cluttered closet or bare pantry turned into an organized, beautiful storage solution built exactly to your needs."
+        icon: "template"
+      countertops:
+        name: "Countertops"
+        short_description: "Premade, laminate, or custom — we do it all"
+        description: "Complete your kitchen transformation with new countertops. We offer premade, laminate, solid surface, and custom wood options — a service most refacing companies won't touch. Pair with a refacing project for a seamless, coordinated result."
+        icon: "table"
 
     hero:
       heading: "Transform Your Kitchen Without the Renovation"
-      subheading: "Expert cabinet refinishing, painting, and refacing in %{service_area}"
+      subheading: "Expert cabinet refacing, customization, and repair in %{service_area}"
       cta_primary: "Get a Free Quote"
       cta_secondary: "View Our Work"
 
@@ -74,24 +85,24 @@ en:
 
     process:
       heading: "How It Works"
-      subheading: "From consultation to completion in four simple steps"
+      subheading: "From consultation to completion — most refacing jobs wrap up within a week"
       steps:
         consultation:
           number: "01"
           title: "Free Consultation"
-          description: "We visit your home, assess your cabinets, and discuss your vision. No pressure, no obligation."
+          description: "We visit your home, assess your cabinets, and discuss your vision. No pressure, no obligation — just honest advice on what'll work best for your space."
         preparation:
           number: "02"
           title: "Expert Preparation"
-          description: "Meticulous cleaning, sanding, and priming. Great results start with great prep work."
+          description: "Meticulous measuring and surface preparation, followed by applying high-quality laminate finish to your cabinet boxes. We offer a wide variety of door styles in 3DL, 5-piece profile-wrapped, and melamine materials — from contemporary slabs to ornate raised panels to simple shakers."
         transformation:
           number: "03"
           title: "The Transformation"
-          description: "Premium finishes applied by skilled craftsmen. Multiple coats for a flawless, factory-quality result."
+          description: "Your new doors and drawer fronts are installed, and your existing cabinet boxes are relaminated to match. Most jobs are completed within a week — not the months you'd wait for a full kitchen rebuild."
         reveal:
           number: "04"
           title: "The Big Reveal"
-          description: "Final inspection, cleanup, and your jaw-dropping kitchen reveal. We don't leave until you love it."
+          description: "Final walkthrough, quality inspection, and your jaw-dropping kitchen reveal. We don't leave until you love it."
 
     sections:
       about:
@@ -147,21 +158,21 @@ en:
       exit_intent_cta: "Get My Free Quote"
 
     faq:
-      - question: "How much does cabinet refinishing cost?"
-        answer: "Cabinet refinishing typically starts at $2,000-$2,500 for a standard kitchen. The final cost depends on the number of cabinets, condition, and chosen finish. We provide free, no-obligation quotes."
-      - question: "How long does cabinet refinishing take?"
-        answer: "Most kitchen cabinet refinishing projects take 3-5 days. We work efficiently to minimize disruption to your daily routine."
-      - question: "Is refinishing better than replacing cabinets?"
-        answer: "For structurally sound cabinets, refinishing saves 50-70% compared to full replacement while delivering a like-new appearance. It's also faster and less disruptive than a full renovation."
+      - question: "How long does cabinet refacing take?"
+        answer: "Most cabinet refacing projects are completed within a week — a fraction of the time a full kitchen rebuild would take. We work efficiently to minimize disruption to your daily routine."
+      - question: "What's the difference between refacing and replacing cabinets?"
+        answer: "Refacing keeps your existing cabinet boxes and replaces the doors, drawer fronts, and surface finish. You get a completely new look at a fraction of the cost and time of full replacement — and with far less mess and disruption."
+      - question: "What door styles do you offer?"
+        answer: "We offer a wide variety of styles in 3DL, 5-piece profile-wrapped, and melamine materials — from contemporary slabs to ornate raised panels to simple shakers. There's a fit for any kitchen."
       - question: "What areas do you serve?"
         answer: "We proudly serve Oxford, Michigan and surrounding areas including Lake Orion, Auburn Hills, Rochester, and Clarkston."
       - question: "Do you offer free estimates?"
         answer: "Yes! We offer free, no-obligation in-home consultations where we assess your cabinets and provide a detailed quote."
 
     seo:
-      title: "%{business_name} | Cabinet Refinishing"
-      description: "Professional cabinet refinishing, painting, and refacing services. Transform your kitchen without the cost of a full renovation."
-      keywords: "cabinet refinishing, cabinet painting, kitchen cabinet refacing, cabinet restoration"
+      title: "%{business_name} | Cabinet Refacing & Renovation"
+      description: "Professional cabinet refacing, customization, repair, and installation services. Transform your kitchen in a week — not months."
+      keywords: "cabinet refacing, cabinet repair, kitchen cabinet installation, custom closets, cabinet repainting, countertops"
 
     footer:
       copyright: "© %{year} %{business_name}. All rights reserved."

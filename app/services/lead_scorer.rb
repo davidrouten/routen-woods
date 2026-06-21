@@ -14,7 +14,7 @@ class LeadScorer
     points += 10 if @lead.service_interested_in.present?
 
     # High-value services
-    high_value = %w[cabinet_refacing cabinet_refinishing]
+    high_value = %w[cabinet_refacing cabinet_installation custom_closets]
     points += 15 if high_value.include?(@lead.service_interested_in)
 
     # Engagement

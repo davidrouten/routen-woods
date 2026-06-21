@@ -57,18 +57,7 @@ module StructuredDataHelper
           "name" => biz[:name],
           "telephone" => biz[:phone_raw]
         },
-        "areaServed" => biz[:service_area],
-        "offers" => {
-          "@type" => "Offer",
-          "priceCurrency" => "USD",
-          "price" => extract_price(svc[:price_starting]),
-          "priceSpecification" => {
-            "@type" => "UnitPriceSpecification",
-            "priceCurrency" => "USD",
-            "price" => extract_price(svc[:price_starting]),
-            "unitText" => "project"
-          }
-        }
+        "areaServed" => biz[:service_area]
       }
     end
 

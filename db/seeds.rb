@@ -48,7 +48,7 @@ end
 puts "  #{testimonials.size} testimonials created"
 
 # Sample leads in various statuses
-services = %w[cabinet_refinishing cabinet_painting cabinet_refacing custom_staining]
+services = %w[cabinet_refacing cabinet_customization cabinet_repair cabinet_repainting cabinet_installation custom_closets countertops]
 lead_data = [
   { first_name: "James", last_name: "Wilson", email: "james.wilson@example.com", phone: "248-555-0101", status: :incoming, service: services[0] },
   { first_name: "Emily", last_name: "Brown", email: "emily.b@example.com", phone: "248-555-0102", status: :incoming, service: services[1] },

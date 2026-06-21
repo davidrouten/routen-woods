@@ -190,86 +190,229 @@ Goal: eliminate all 180+ hardcoded hex values (`#d4a338`, `#0f1b2d`, etc.) from 
 - [ ] Each page: what's included, rough price range, timeline, service area, reviews
 - [ ] Inline testimonials on service pages (not quarantined on testimonials page)
 
-## Phase 10: Pipeline & Lead Management
+---
 
-### 10.1 — Speed-to-lead
-- [ ] Instant SMS + email to owner on form submit (partially wired — needs Twilio/SendGrid setup)
-- [ ] "Contacted?" timer in admin — shows time since lead came in
-- [ ] Lead aging visual (highlight leads not contacted within X minutes)
+# Two Pipelines: Lead → Project
 
-### 10.2 — Form qualification
+The system has two distinct lifecycles. A **Lead** is a sales conversation — someone expressed interest, we reach out, we negotiate, and either win or lose the deal. A **Project** is a job — it exists only after a lead is won, and tracks planning through completion and payment. One lead can spawn multiple projects (e.g. seven franchise locations), but the models stay separate because the concerns are different: leads care about speed-to-contact and qualification; projects care about scheduling, photos, client communication, and getting paid.
+
+### Design principle: compound actions
+
+Status should never be a chore. Every status transition is a **side effect of the real-world action** the user was going to take anyway. The "Call" button is a `tel:` link that also stamps `contacted_at`. "Mark complete" also fires the balance payment link and the review request. One tap, multiple effects, defined in one place (AASM callbacks or guarded transition methods on the model).
+
+### Design principle: one primary action per state
+
+Each state surfaces exactly one big obvious button — the most likely next step. Everything else (edit cost, add a note) is inline and secondary. The user never has to decide "what do I do next?" — the card tells them.
+
+### Lead states
+```
+new → contacted → negotiating → won | lost
+```
+- **New**: primary action = Call/Text (tel: link + stamps contacted_at)
+- **Contacted**: primary action = Mark Negotiating (they're interested, working on scope/price)
+- **Negotiating**: primary action = Won (creates Project) or Lost (closes with reason)
+- **Won**: lead is closed, project(s) created — lead becomes read-only history
+- **Lost**: closed with lost_reason, available for re-engagement later
+
+### Project states
+```
+scheduled → in_progress → complete → paid
+                ↕
+             blocked
+```
+- **Scheduled**: primary action = Add Details (scope, price, dates) — triggers deposit link + client page goes live
+- **In Progress**: primary action = Post Update (photo/note) — syncs to client page automatically
+- **Blocked**: reachable from in_progress, returns to in_progress when resolved — surfaces "what's blocking?" prominently
+- **Complete**: primary action = Request Balance + Review — sends balance payment link + review ask via SMS
+- **Paid**: terminal — auto-set by Stripe webhook, updates client page, job is done
+
+---
+
+## Phase 10: Lead Pipeline Refinement (NOT STARTED)
+
+Refine the existing Lead model to be a clean sales pipeline. Lead's job ends at won/lost — it should NOT track project execution.
+
+### 10.1 — Lead state machine cleanup
+- [ ] Refine Lead status enum: `new`, `contacted`, `negotiating`, `won`, `lost`
+- [ ] Remove any project-execution statuses from Lead (booked, in_progress, completed — these belong on Project)
+- [ ] Add `contacted_at` timestamp (set automatically when status → contacted)
+- [ ] Add `lost_reason` field (free text, set when status → lost)
+- [ ] AASM or guarded transitions with callbacks (e.g. `lead.contact!` stamps contacted_at + notifies)
+- [ ] Migrate existing leads to new status values
+
+### 10.2 — Speed-to-lead
+- [ ] Instant push/SMS to owner on new lead (partially wired — needs Twilio/SendGrid setup)
+- [ ] "Contacted?" timer on lead cards — shows elapsed time since created_at
+- [ ] Lead aging visual (highlight leads not contacted within configurable threshold)
+- [ ] New lead sound/vibration on admin (via push notification)
+
+### 10.3 — Compound actions on lead cards
+- [ ] "Call" button = `tel:` link + auto-stamps `contacted_at` in same tap
+- [ ] "Text" button = `sms:` link + auto-stamps `contacted_at`
+- [ ] "Won" action = transitions lead + opens "Create Project" flow in one step
+- [ ] "Lost" action = modal for lost_reason + closes lead
+- [ ] One primary action button per state, prominent on the card — everything else secondary
+
+### 10.4 — Form qualification
 - [ ] ZIP code field with service-area gate (warn if outside area, still accept)
-- [ ] Photo upload on lead form (Active Storage)
+- [ ] Photo upload on lead form (Active Storage, opens camera on mobile)
 - [ ] Kitchen size / scope field
 - [ ] TCPA opt-in consent checkbox + language (required if SMS enabled)
+- [ ] Consent tracking: inquiry consent vs marketing opt-in, with timestamps
 
-### 10.3 — Review request automation
-- [ ] After job completion (status → completed), trigger review request SMS/email
-- [ ] Configurable delay (e.g. 1 day after completion)
-- [ ] Include direct Google review link
-- [ ] Track which leads received review request
+## Phase 11: Project Model & Execution Pipeline (NOT STARTED)
 
-### 10.4 — Capacity & scheduling view
-- [ ] Surface pricing signals when demand exceeds capacity
-- [ ] (Calendar, scheduling, and "booked X weeks out" moved to Phase 11.4)
+Project is a separate model from Lead. It represents a confirmed job moving through execution to payment.
 
-## Phase 11: Projects & Billing (NOT STARTED — needs design)
+### 11.1 — Project model
+- [ ] Project model: `belongs_to :lead`, `has_many :project_photos`, `has_many :messages`
+- [ ] Fields: title, description, address, estimated_price, deposit_amount, balance_amount, estimated_duration_days, scheduled_start_date, scheduled_end_date
+- [ ] Status enum via AASM: `scheduled`, `in_progress`, `blocked`, `complete`, `paid`
+- [ ] `has_secure_token :client_token` — stable, revocable token for magic-link client page
+- [ ] Each transition owns its side effects via callbacks (see compound actions principle above)
+- [ ] Testimonial optionally `belongs_to :project` (link reviews to specific jobs)
 
-### 11.1 — Lead → Project conversion
-- [ ] Project model (separate from Lead, belongs_to Lead — a lead can spawn multiple projects)
-- [ ] Project lifecycle (status enum: quoted, scheduled, in_progress, completed, cancelled)
-- [ ] Project address (or multiple — start simple with one, use multiple projects per lead for multi-site)
-- [ ] Project photos (before/after, linked to project not just gallery)
-- [ ] Testimonials linkable to a specific project
-- [ ] What happens when a project needs to revert? Close/cancel the project, lead remains — don't merge models
-- [ ] Eventually: extract Contact/Person from Lead (same person → multiple leads → multiple projects) — not needed at first
+### 11.2 — Lead → Project conversion
+- [ ] "Won" on a lead opens a quick-create Project form (prefilled from lead details)
+- [ ] Lead status auto-set to `won` when project is created
+- [ ] One lead can create multiple projects (e.g. multi-site franchise jobs)
+- [ ] Lead becomes read-only history once won — all further work happens on the Project
+- [ ] Project links back to originating lead for audit trail
 
-### 11.2 — Consent & marketing
-- [ ] Consent capture on lead form: consent for this inquiry + opt-in for future marketing
-- [ ] Marketing framing: "We run specials 3x/year — opt in to hear about savings"
-- [ ] Track consent type (service-specific vs marketing) and timestamp
-- [ ] TCPA compliance if SMS marketing enabled
+### 11.3 — Compound actions on project cards
+- [ ] **Scheduled**: "Add Details" — inline edit scope/price/dates, triggers deposit payment link generation
+- [ ] **In Progress**: "Post Update" — photo upload (camera-native on mobile) + optional note, auto-syncs to client page
+- [ ] **Blocked**: "What's blocking?" — prominent text field, returns to in_progress when resolved
+- [ ] **Complete**: "Request Payment" — generates balance payment link + sends review request (single tap, both fire)
+- [ ] **Paid**: no action needed — auto-set by Stripe webhook
 
-### 11.3 — Billing & payments
-- [ ] Price (or price range) on project
-- [ ] Invoice date, pay-by date
-- [ ] Payment status (unpaid, partial, paid_in_full)
-- [ ] Payment schedule support: down payment → milestone (e.g. 25% at 75% completion) → final payment
-- [ ] All manual at first — surface contact info (email, phone, SMS) so billing person can collect
-- [ ] Payment history log (amount, date, method, notes)
+### 11.4 — Project photos
+- [ ] ProjectPhoto model (Active Storage, belongs_to :project)
+- [ ] Before/after tagging (enum: before, during, after)
+- [ ] Camera-native upload on mobile (accept="image/*" capture="environment")
+- [ ] Photos auto-appear on client status page
+- [ ] Optional: promote project photos to public gallery
 
-### 11.4 — Project calendar & scheduling
-- [ ] Calendar/timeline view of projects by week
-- [ ] Estimated duration per project (e.g. 5 days)
-- [ ] Crew/person assignment per project
-- [ ] Uncertainty overlap visualization (dotted lines, ~20-30% of estimated time beyond end date)
-- [ ] "Booked X weeks out" dashboard indicator (move from Phase 10)
+### 11.5 — Job-type templates (later)
+- [ ] Predefined templates: "$5k cabinet refresh", "full refinish + pull-outs", etc.
+- [ ] Templates prefill line items, typical price band, estimated duration
+- [ ] "Add details" becomes mostly confirming, not typing from scratch
 
-## Phase 12: AI Lead Creation (NOT STARTED — needs design)
+## Phase 12: Client Status Page (NOT STARTED)
 
-### 12.1 — Unstructured text → Lead
+Each project gets a public, tokenized URL that clients can visit to see their job's status, photos, pay, and communicate — no login required. This is high-leverage because updating the project for the shop also updates what the client sees. Two tasks become one.
+
+### 12.1 — Magic-link client page
+- [ ] Route: `GET /p/:client_token` — looks up project by `has_secure_token`
+- [ ] No login required — token is unguessable, can be revoked if needed
+- [ ] Read-only view: project status, timeline, photos, next steps
+- [ ] Status-aware content: shows different messaging per state (e.g. "Your cabinets are being refinished" vs "Work is complete — here's your invoice")
+- [ ] SMS sent to client on key state changes with the magic link ("Your cabinets are in finishing — here's the latest")
+
+### 12.2 — Client messaging thread
+- [ ] Message model: `belongs_to :project`, `sender` enum (`client`, `shop`)
+- [ ] Client can post messages from the status page (textarea, rate-limited, HTML-escaped)
+- [ ] Messages are immutable + timestamped (paper trail for scope disputes)
+- [ ] Auto-acknowledgment on submit: "Got it — Ryan will see this and follow up"
+- [ ] Inbound client messages push/SMS to shop immediately (speed-to-lead treatment)
+- [ ] `acknowledged_at` on client messages — shop taps to acknowledge, clears "needs attention" badge
+- [ ] `project.messages.unresolved.any?` drives badge on active project cards
+- [ ] Shop replies go back out as SMS to client (they don't need to refresh the page)
+
+### 12.3 — Guardrails
+- [ ] Rate-limit message submissions from client page
+- [ ] Never render client input as raw HTML (ERB auto-escapes, but avoid `raw`/`html_safe`)
+- [ ] Token expiry or revocation mechanism if needed
+
+## Phase 13: Payments via Stripe (NOT STARTED)
+
+Build almost nothing — lean on Stripe to generate payment links and a webhook to close the loop. No invoicing UI, no payment reconciliation. Use ACH for large payments to avoid getting eaten alive by card processing fees.
+
+### Fee strategy
+- **Card payments (2.9% + $0.30)**: fine for small deposits, but $145 on a $5k balance and $725 on $25k is unacceptable
+- **ACH bank transfer (0.8%, capped at $5)**: use for balance payments — $5 flat on any job size
+- **Rule of thumb**: offer card for deposits (convenience, smaller amounts), default to ACH for balance payments (large amounts, $5 cap saves hundreds)
+- **Optional**: pass card processing fee through as a "convenience fee" if client insists on card for balance — common in contracting
+
+### 13.1 — Stripe integration
+- [ ] Stripe gem (`stripe` + `stripe-rails`) + API keys in env
+- [ ] Generate deposit Payment Link when project enters `scheduled` (card payment, amount from `deposit_amount`)
+- [ ] Generate balance Payment Link when project enters `complete` (ACH preferred, card as fallback, amount from `balance_amount`)
+- [ ] Client status page shows both payment options with clear fee disclosure ("Pay by bank transfer — no fee" vs "Pay by card — 3% convenience fee")
+- [ ] Both links appear on client status page + get texted to client
+- [ ] Single webhook endpoint: `checkout.session.completed` / `payment_intent.succeeded` → `project.mark_paid!`
+- [ ] `mark_paid!` callback updates client page status to "Paid — thank you!"
+- [ ] Payment model for audit: amount, stripe_payment_id, paid_at, payment_type (deposit/balance), payment_method (card/ach)
+
+### 13.2 — Payment visibility
+- [ ] Admin project card shows payment status (deposit paid? balance paid? method used?)
+- [ ] Client page shows what's owed and pay button(s)
+- [ ] Stripe handles receipts and reminders — we don't build that
+
+### 13.3 — Fee reference
+| Method | Rate | $500 deposit | $5k balance | $25k balance |
+|--------|------|-------------|-------------|--------------|
+| Card | 2.9% + $0.30 | $14.80 | $145.30 | $725.30 |
+| ACH | 0.8% ($5 cap) | $4.00 | $5.00 | $5.00 |
+
+## Phase 14: PWA & Mobile-First Admin (NOT STARTED)
+
+The admin "portal" is really a phone app wearing a web page's clothes. Build it phone-first because the user is on a jobsite, not at a desk.
+
+### 14.1 — PWA setup
+- [ ] Web app manifest (name, icons, theme color, display: standalone)
+- [ ] Service worker for offline fallback + caching
+- [ ] "Add to home screen" prompt
+- [ ] PWA lives on home screen, launches without browser chrome
+
+### 14.2 — Push notifications
+- [ ] Web Push API for new leads (speed-to-lead — must know within seconds)
+- [ ] Push for new client messages (inbound messages get speed-to-lead treatment)
+- [ ] Push on payment received
+- [ ] Fallback to SMS if push not available
+
+### 14.3 — Mobile-first admin UX
+- [ ] Thumb-reachable primary action buttons (bottom of card, not top)
+- [ ] Camera-native photo upload (`capture="environment"` — opens camera, not file picker)
+- [ ] Voice-to-text for notes (Web Speech API — dictate measurements with dust on your hands)
+- [ ] Swipe gestures for common actions (swipe right = advance status)
+- [ ] Optimistic UI — tap registers instantly, syncs in background
+
+## Phase 15: AI Features (NOT STARTED)
+
+### 15.1 — Unstructured text → Lead
 - [ ] Input box in admin: paste/type unstructured text about a call, meeting, referral
 - [ ] LLM parses out: name, phone, email, address, service interest, notes, price discussed
 - [ ] Preview parsed result, highlight missing info, let user confirm/edit before creating
 - [ ] Auto-creates lead with contact details + adds parsed notes
 - [ ] Example: "just got off the phone with Jon Smith, 813-444-5555, wants to refinish 14 cabinets, walnut veneer, gold pulls, ~$7500 estimate"
 
-### 12.2 — SMS-to-lead (medium future)
+### 15.2 — SMS-to-lead
 - [ ] User texts unstructured details to a Twilio number → system auto-creates lead
 - [ ] Confirmation reply back to user with parsed summary
-- [ ] Same parsing pipeline as 12.1
+- [ ] Same parsing pipeline as 15.1
 
-## Phase 13: Conversational AI Assistant (medium future)
-
-### 13.1 — Query the system via chat
+### 15.3 — Conversational assistant
 - [ ] LLM with access to leads, projects, calendar data
 - [ ] Ask questions: "what's the cell number for the Reynolds job?"
 - [ ] Ask for summaries: "what work do we have going on this week?"
-- [ ] Predictive: "given our track record, how likely are we to be on schedule?"
+- [ ] Available via admin chat panel and SMS
 
-### 13.2 — SMS-based assistant
-- [ ] Same as 13.1 but via SMS conversation with the system
-- [ ] Context-aware follow-ups
+## Phase 16: Scheduling & Multi-Project (NOT STARTED)
+
+### 16.1 — Project calendar
+- [ ] Calendar/timeline view of projects by week
+- [ ] Estimated duration per project (from project fields)
+- [ ] Crew/person assignment per project
+- [ ] Uncertainty overlap visualization (dotted lines, ~20-30% beyond estimated end)
+- [ ] "Booked X weeks out" dashboard indicator
+
+### 16.2 — GroupProject (multi-site jobs)
+- [ ] GroupProject model: ties multiple Projects together under one umbrella
+- [ ] Use case: client wants to refinish 7 franchise locations — one lead, one group, 7 projects
+- [ ] Group-level status rollup (all scheduled? any blocked? all paid?)
+- [ ] Single client page for the group with per-location status
+- [ ] Not needed until the use case actually appears — build it then
 
 ## Future / Backlog
 - [ ] CloudFront CDN in front of S3 (needed at 100+ images)
@@ -278,13 +421,15 @@ Goal: eliminate all 180+ hardcoded hex values (`#d4a338`, `#0f1b2d`, etc.) from 
 - [ ] AWS S3 dev/staging bucket for local development
 - [ ] Stimulus: lead_filter_controller (dynamic admin filtering)
 - [ ] AI-powered lead scoring (LLM integration)
-- [ ] Push notifications
 - [ ] HubSpot adapter for SalesEngine
 - [ ] Salesforce adapter for SalesEngine
 - [ ] Named permission sets / "role templates"
 - [ ] Multi-tenant support
-- [ ] Analytics dashboard (conversion rates, lead sources)
-- [ ] Email drip campaigns
-- [ ] Online scheduling / calendar integration (see Phase 11.4)
-- [ ] Review/reputation management
+- [ ] Analytics dashboard (conversion rates, lead sources, win/loss ratios)
+- [ ] Email drip campaigns for lost leads (re-engagement)
+- [ ] Review/reputation management (aggregate Google reviews)
 - [ ] Google Analytics / SEO sitemap
+- [ ] Extract Contact/Person from Lead (same person → multiple leads → multiple projects) — not needed at first
+- [ ] Before/after slider component for gallery (Stimulus controller)
+- [ ] Dedicated service pages (one per offering, with inline testimonials)
+- [ ] Surface pricing signals when demand exceeds capacity
