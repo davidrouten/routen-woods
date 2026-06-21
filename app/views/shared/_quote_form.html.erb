@@ -32,8 +32,31 @@
   </div>
 
   <div>
-    <%= f.label :service_interested_in, t("business.forms.quote.service_label"), class: "block text-sm font-semibold text-gray-700 mb-1.5" %>
-    <%= f.select :service_interested_in, service_options_for_select, { include_blank: "Select a service..." }, class: "input" %>
+    <p class="block text-sm font-semibold text-gray-700 mb-2"><%= t("business.forms.quote.service_label") %></p>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+      <% service_checkbox_options.each do |name, key| %>
+        <label class="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+          <%= check_box_tag "lead[services_interested_in][]", key, lead.services_interested_in&.include?(key), class: "rounded border-gray-300 text-accent focus:ring-accent" %>
+          <%= name %>
+        </label>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+    <div>
+      <%= f.label :budget_range, "Budget Range", class: "block text-sm font-semibold text-gray-700 mb-1.5" %>
+      <%= f.select :budget_range, budget_range_options, { include_blank: "Select budget..." }, class: "input" %>
+    </div>
+    <div>
+      <%= f.label :timeframe, "Timeframe", class: "block text-sm font-semibold text-gray-700 mb-1.5" %>
+      <%= f.select :timeframe, timeframe_options, { include_blank: "Select timeframe..." }, class: "input" %>
+    </div>
+  </div>
+
+  <div>
+    <%= f.label :zip_code, "Zip Code", class: "block text-sm font-semibold text-gray-700 mb-1.5" %>
+    <%= f.text_field :zip_code, placeholder: "Enter your zip code", class: "input", maxlength: 10 %>
   </div>
 
   <div>

@@ -6,7 +6,7 @@ RSpec.describe SalesEngine do
       lead = SalesEngine.create_lead(
         first_name: "Test",
         email: "test@example.com",
-        service_interested_in: "cabinet_refacing",
+        services_interested_in: ["cabinet_refacing"],
         source: "website"
       )
       expect(lead).to be_persisted

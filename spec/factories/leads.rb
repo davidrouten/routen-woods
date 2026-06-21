@@ -4,7 +4,7 @@ FactoryBot.define do
     last_name { "Smith" }
     email { Faker::Internet.unique.email }
     phone { "813-555-0100" }
-    service_interested_in { "cabinet_refacing" }
+    services_interested_in { ["cabinet_refacing"] }
     message { "I need my cabinets refaced" }
     source { "website" }
     status { :incoming }

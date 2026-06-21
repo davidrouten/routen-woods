@@ -1,4 +1,4 @@
-<h2><%= I18n.t("notifications.#{@event}.email_subject", name: @lead.first_name, service: @lead.service_interested_in, status: @lead.status, from: @context[:from], to: @context[:to]) %></h2>
+<h2><%= I18n.t("notifications.#{@event}.email_subject", name: @lead.first_name, service: @lead.service_names, status: @lead.status, from: @context[:from], to: @context[:to]) %></h2>
 
 <table style="width: 100%; border-collapse: collapse;">
   <tr>
@@ -17,10 +17,10 @@
     <td style="padding: 8px;"><%= @lead.phone %></td>
   </tr>
   <% end %>
-  <% if @lead.service_interested_in.present? %>
+  <% if @lead.services_interested_in.present? %>
   <tr>
-    <td style="padding: 8px; font-weight: bold;">Service:</td>
-    <td style="padding: 8px;"><%= @lead.service_interested_in %></td>
+    <td style="padding: 8px; font-weight: bold;">Services:</td>
+    <td style="padding: 8px;"><%= @lead.service_names %></td>
   </tr>
   <% end %>
   <% if @lead.message.present? %>

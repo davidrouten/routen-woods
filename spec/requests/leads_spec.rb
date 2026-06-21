@@ -8,7 +8,7 @@ RSpec.describe "Leads", type: :request do
           first_name: "Jane",
           email: "jane@example.com",
           phone: "813-555-0100",
-          service_interested_in: "cabinet_refacing",
+          services_interested_in: ["cabinet_refacing"],
           message: "I need my cabinets refaced"
         }
       }

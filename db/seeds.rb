@@ -65,7 +65,7 @@ lead_data.each do |data|
     l.first_name = data[:first_name]
     l.last_name = data[:last_name]
     l.phone = data[:phone]
-    l.service_interested_in = data[:service]
+    l.services_interested_in = [data[:service]]
     l.message = "I'm interested in #{data[:service].titleize.downcase} for my kitchen. Can you provide a quote?"
     l.source = "website"
     l.status = data[:status]

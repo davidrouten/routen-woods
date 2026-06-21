@@ -9,7 +9,7 @@ class SlackNotificationJob < ApplicationJob
     text = I18n.t(
       "notifications.#{event_name}.slack_text",
       name: lead.first_name,
-      service: lead.service_interested_in,
+      service: lead.service_names,
       status: lead.status,
       **context.symbolize_keys
     )

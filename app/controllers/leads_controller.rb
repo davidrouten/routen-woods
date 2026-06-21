@@ -28,8 +28,9 @@ class LeadsController < ApplicationController
   def lead_params
     params.require(:lead).permit(
       :first_name, :last_name, :email, :phone,
-      :service_interested_in, :message,
-      :honeypot_value, :form_completion_seconds
+      :budget_range, :timeframe, :zip_code, :message,
+      :honeypot_value, :form_completion_seconds,
+      services_interested_in: []
     ).merge(
       source: "website",
       ip_address: request.remote_ip,

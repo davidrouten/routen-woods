@@ -8,6 +8,29 @@ module ApplicationHelper
     services.map { |key, service| [service[:name], key.to_s] }
   end
 
+  def service_checkbox_options
+    I18n.t("business.services").map { |key, service| [service[:name], key.to_s] }
+  end
+
+  def budget_range_options
+    I18n.t("business.budget_ranges").map { |key, range| [range[:label], key.to_s] }
+  end
+
+  def timeframe_options
+    I18n.t("business.timeframes").map { |key, tf| [tf[:label], key.to_s] }
+  end
+
+  def budget_range_label(key)
+    return "—" if key.blank?
+    I18n.t("business.budget_ranges.#{key}.label", default: key.titleize)
+  end
+
+  def timeframe_label(key)
+    return "—" if key.blank?
+    I18n.t("business.timeframes.#{key}.label", default: key.titleize)
+  end
+
+
   def status_badge_color(status)
     {
       "incoming" => "bg-blue-100 text-blue-800",

@@ -53,6 +53,12 @@ class Lead < ApplicationRecord
     NotificationService.notify(:status_changed, self, from: old_status, to: new_status)
   end
 
+  def service_names
+    return "" if services_interested_in.blank?
+    services = I18n.t("business.services")
+    services_interested_in.filter_map { |k| services.dig(k.to_sym, :name) }.join(", ")
+  end
+
   def temperature_emoji
     case lead_temperature
     when "hot" then "\u{1F525}"

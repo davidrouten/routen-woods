@@ -21,7 +21,7 @@ module Notifiers
     def message_params
       {
         name: lead.first_name,
-        service: lead.service_interested_in,
+        service: lead.service_names,
         status: lead.status,
         url: Rails.application.routes.url_helpers.admin_lead_url(lead, host: default_host)
       }.merge(context)

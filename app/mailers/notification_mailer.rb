@@ -18,7 +18,7 @@ class NotificationMailer < ApplicationMailer
   def mail_params
     {
       name: @lead.first_name,
-      service: @lead.service_interested_in,
+      service: @lead.service_names,
       status: @lead.status,
       from: @context[:from],
       to: @context[:to]

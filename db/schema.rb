@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_19_144710) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_21_143102) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -58,6 +58,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_19_144710) do
     t.datetime "archived_at"
     t.bigint "assigned_to_id"
     t.datetime "booked_at"
+    t.string "budget_range"
     t.datetime "completed_at"
     t.datetime "contacted_at"
     t.datetime "created_at", null: false
@@ -75,11 +76,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_19_144710) do
     t.datetime "quoted_at"
     t.string "referrer"
     t.datetime "scheduled_at"
-    t.string "service_interested_in"
+    t.string "services_interested_in", default: [], array: true
     t.string "source"
     t.boolean "spam", default: false
     t.float "spam_score", default: 0.0
     t.integer "status", default: 0, null: false
+    t.string "timeframe"
     t.boolean "turnstile_passed"
     t.datetime "updated_at", null: false
     t.string "utm_campaign"
@@ -87,6 +89,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_19_144710) do
     t.string "utm_medium"
     t.string "utm_source"
     t.string "utm_term"
+    t.string "zip_code"
     t.index ["assigned_to_id"], name: "index_leads_on_assigned_to_id"
     t.index ["created_at"], name: "index_leads_on_created_at"
     t.index ["lead_temperature"], name: "index_leads_on_lead_temperature"

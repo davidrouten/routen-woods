@@ -113,31 +113,16 @@
 - [x] Spam button uses custom modal
 - [x] Status change triggers Turbo Stream in-place update (no full page reload)
 
-### 8.4–8.7 — Lead Form Customization (HOLD — needs discussion)
-#### 8.4 — Dynamic services CRUD
-- [ ] Service model (name, description, active boolean)
-- [ ] Admin CRUD for services (Lead Generation Settings page)
-- [ ] Lead form: multi-select for services (checkboxes if ≤6, else dropdown)
-- [ ] Inline edit services via modal on leads index
-
-#### 8.5 — Budget range options
-- [ ] BudgetRange model (label, active boolean, sort_order)
-- [ ] Admin CRUD on Lead Generation Settings page
-- [ ] Lead form: budget range dropdown (active options only)
-- [ ] Inline edit budget via modal on leads index
-
-#### 8.6 — Timeframe options
-- [ ] Timeframe model (label, active boolean, sort_order)
-- [ ] Admin CRUD on Lead Generation Settings page
-- [ ] Lead form: timeframe dropdown (active options only)
-- [ ] Inline edit timeframe via modal on leads index
-- [ ] Default options: ASAP, 1-4 weeks, 2-3 months, 3-6 months, Just browsing
-
-#### 8.7 — LeadFormSettings
-- [ ] LeadFormSettings object to track multiple form configurations
-- [ ] Setting to determine which forms display where in the app
-- [ ] Per-form field requirements (e.g. budget optional, timeframe required)
-- [ ] Field customization per form (A/B testing, seasonal promos)
+### 8.4 — Lead Form Enhancement (COMPLETE)
+- [x] Migration: added `budget_range`, `timeframe`, `services_interested_in` (PG array), `zip_code` to leads
+- [x] Migrated existing `service_interested_in` (singular) data into array, removed old column
+- [x] i18n: budget_ranges (5 tiers: Under $5k through $20k+) and timeframes (ASAP through Just planning)
+- [x] Form: replaced service dropdown with checkboxes, added budget/timeframe dropdowns, zip code field
+- [x] Lead scorer: budget scoring (+0 to +15) and timeframe scoring (+0 to +20)
+- [x] Admin index: replaced Service column with Budget + Timeframe columns
+- [x] Admin show: added budget, timeframe, zip code, services as pill badges
+- [x] Updated all notifiers, mailers, dashboard to use `services_interested_in` (array)
+- [x] Updated factory, seeds, and all specs (97 passing)
 
 ## Phase 8.5: Design System & Styling Revamp (COMPLETE)
 
@@ -414,6 +399,21 @@ The admin "portal" is really a phone app wearing a web page's clothes. Build it 
 - [ ] Single client page for the group with per-location status
 - [ ] Not needed until the use case actually appears — build it then
 
+## Phase 17: Permissions & User-Specific Settings (NOT STARTED)
+
+### 17.1 — Granular permissions
+- [ ] Define permission scopes: `manage:leads`, `manage:projects`, `manage:testimonials`, `manage:gallery`, `manage:settings`
+- [ ] Audit existing `require_permission!` calls and align with new scopes
+- [ ] Admin UI for assigning permissions per user (checklist on user edit page)
+- [ ] Named role templates (e.g. "Sales" = leads only, "Content" = testimonials + gallery, "Full Access" = everything)
+
+### 17.2 — User-specific notification preferences
+- [ ] Move notification prefs from app-wide to per-user (each user controls their own channels)
+- [ ] Keep existing app-wide prefs as defaults for new users
+- [ ] User settings page: "My Notifications" — toggle email/sms/slack per event
+- [ ] Only deliver to users who have the relevant permission AND have that channel enabled
+- [ ] Example: team member with `manage:leads` gets new_lead notifications; content person does not
+
 ## Future / Backlog
 - [ ] CloudFront CDN in front of S3 (needed at 100+ images)
 - [ ] Long cache headers on image assets (revisit with CloudFront)
@@ -423,7 +423,6 @@ The admin "portal" is really a phone app wearing a web page's clothes. Build it 
 - [ ] AI-powered lead scoring (LLM integration)
 - [ ] HubSpot adapter for SalesEngine
 - [ ] Salesforce adapter for SalesEngine
-- [ ] Named permission sets / "role templates"
 - [ ] Multi-tenant support
 - [ ] Analytics dashboard (conversion rates, lead sources, win/loss ratios)
 - [ ] Email drip campaigns for lost leads (re-engagement)

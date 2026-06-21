@@ -8,7 +8,8 @@
     <% if lead.email.present? %><p><%= lead.email %></p><% end %>
     <% if lead.phone.present? %><p><%= lead.phone %></p><% end %>
   </td>
-  <td class="px-6 py-4 text-sm text-gray-500"><%= lead.service_interested_in&.titleize %></td>
+  <td class="px-6 py-4 text-sm text-gray-500"><%= budget_range_label(lead.budget_range) %></td>
+  <td class="px-6 py-4 text-sm text-gray-500"><%= timeframe_label(lead.timeframe) %></td>
   <td class="px-6 py-4">
     <% if current_user_can?(:manage, :leads) %>
       <button class="inline-block px-2 py-1 rounded-full text-xs font-medium cursor-pointer hover:ring-2 hover:ring-accent transition <%= status_badge_color(lead.status) %>"
