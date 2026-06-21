@@ -5,7 +5,7 @@ module Admin
 
     def create
       @lead = Lead.find(params[:lead_id])
-      @note = SalesEngine.add_note(@lead, params[:note][:body], user: current_user)
+      @note = SalesEngine.add_note(@lead, params[:body], user: current_user)
 
       respond_to do |format|
         format.turbo_stream
