@@ -149,6 +149,23 @@
 
   <!-- Right Sidebar -->
   <div class="space-y-6">
+    <!-- Create Project -->
+    <% if current_user_can?(:manage, :leads) %>
+      <div class="bg-white rounded-xl shadow-sm p-6">
+        <h3 class="text-sm font-semibold text-gray-900 mb-3">Convert to Project</h3>
+        <% if @lead.projects.any? %>
+          <div class="space-y-2 mb-3">
+            <% @lead.projects.each do |project| %>
+              <%= link_to admin_project_path(project), class: "block text-sm text-accent hover:text-accent-hover" do %>
+                <%= project.title %> <span class="text-gray-400">(<%= project.status.titleize %>)</span>
+              <% end %>
+            <% end %>
+          </div>
+        <% end %>
+        <%= link_to "Create Project", new_admin_project_path(lead_id: @lead.id), class: "btn-admin w-full text-center" %>
+      </div>
+    <% end %>
+
     <!-- Status Transition -->
     <% if current_user_can?(:manage, :leads) %>
       <div class="bg-white rounded-xl shadow-sm p-6">

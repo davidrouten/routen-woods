@@ -1,0 +1,76 @@
+<div class="mb-6">
+  <%= link_to "&larr; Back to Project".html_safe, admin_project_path(@project), class: "text-sm text-gray-500 hover:text-gray-700" %>
+</div>
+
+<div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+  <div class="flex justify-between items-start mb-4">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900">Order Form: <%= @order_form.supplier_name %></h1>
+      <p class="text-gray-500 text-sm">Project: <%= @project.title %></p>
+    </div>
+    <span class="inline-block px-3 py-1 rounded-full text-sm font-medium <%= order_form_status_color(@order_form.status) %>"><%= @order_form.status.titleize %></span>
+  </div>
+
+  <% if @order_form.notes.present? %>
+    <p class="text-gray-700 text-sm mb-4"><%= @order_form.notes %></p>
+  <% end %>
+
+  <!-- Status Actions -->
+  <div class="flex gap-2 mb-6">
+    <% if @order_form.draft? %>
+      <%= button_to "Mark Submitted", submit_order_admin_project_order_form_path(@project, @order_form), method: :patch, class: "btn-admin" %>
+    <% elsif @order_form.submitted? %>
+      <%= button_to "Mark Confirmed", confirm_order_admin_project_order_form_path(@project, @order_form), method: :patch, class: "btn-admin" %>
+    <% elsif @order_form.confirmed? %>
+      <%= button_to "Mark Received", receive_order_admin_project_order_form_path(@project, @order_form), method: :patch, class: "btn-admin" %>
+    <% end %>
+    <%= link_to "Edit", edit_admin_project_order_form_path(@project, @order_form), class: "px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition" %>
+  </div>
+
+  <!-- Line Items Table -->
+  <div class="overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-200 text-sm">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Item</th>
+          <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Details</th>
+          <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Dimensions</th>
+          <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase">Qty</th>
+          <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase">Cost</th>
+          <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase">Our Price</th>
+          <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase">Profit</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+        <% @order_form.line_items.order(:position).each do |item| %>
+          <tr>
+            <td class="px-4 py-3">
+              <p class="font-medium text-gray-900"><%= item.name %></p>
+              <% if item.category.present? %><p class="text-xs text-gray-500"><%= item.category %></p><% end %>
+              <% if item.specifications.present? %><p class="text-xs text-gray-400"><%= item.specifications %></p><% end %>
+            </td>
+            <td class="px-4 py-3 text-gray-600">
+              <%= [item.color, item.finish, item.material, item.size].compact_blank.join(" / ") %>
+            </td>
+            <td class="px-4 py-3 text-gray-600">
+              <% dims = [item.width, item.height, item.depth].compact_blank %>
+              <%= dims.any? ? dims.join(" × ") : "—" %>
+            </td>
+            <td class="px-4 py-3 text-right"><%= item.quantity %></td>
+            <td class="px-4 py-3 text-right"><%= item.supplier_cost ? number_to_currency(item.total_supplier_cost) : "—" %></td>
+            <td class="px-4 py-3 text-right"><%= item.our_price ? number_to_currency(item.total_our_price) : "—" %></td>
+            <td class="px-4 py-3 text-right font-medium text-green-700"><%= number_to_currency(item.profit) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+      <tfoot class="bg-gray-50 font-semibold">
+        <tr>
+          <td colspan="4" class="px-4 py-3 text-right">Totals:</td>
+          <td class="px-4 py-3 text-right"><%= number_to_currency(@order_form.total_supplier_cost) %></td>
+          <td class="px-4 py-3 text-right"><%= number_to_currency(@order_form.total_our_price) %></td>
+          <td class="px-4 py-3 text-right text-green-700"><%= number_to_currency(@order_form.total_profit) %></td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>

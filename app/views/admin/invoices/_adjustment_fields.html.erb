@@ -1,0 +1,22 @@
+<div class="nested-form-item flex gap-3 items-end mb-3 p-3 border border-gray-200 rounded-lg" data-nested-form-target="item">
+  <div class="flex-1">
+    <%= f.label :label, "Label", class: "block text-xs font-medium text-gray-600 mb-1" %>
+    <%= f.text_field :label, class: "input-admin w-full text-sm", required: true, placeholder: "e.g. Sales Tax (6%)" %>
+  </div>
+  <div class="w-32">
+    <%= f.label :adjustment_type, "Type", class: "block text-xs font-medium text-gray-600 mb-1" %>
+    <%= f.select :adjustment_type, [["Tax", "tax"], ["Fee", "fee"], ["Discount", "discount"]], {}, class: "input-admin w-full text-sm" %>
+  </div>
+  <div class="w-24">
+    <%= f.label :rate, "Rate", class: "block text-xs font-medium text-gray-600 mb-1" %>
+    <%= f.number_field :rate, step: 0.0001, class: "input-admin w-full text-sm", placeholder: "0.06" %>
+  </div>
+  <div class="w-32">
+    <%= f.label :amount, "Amount", class: "block text-xs font-medium text-gray-600 mb-1" %>
+    <%= f.number_field :amount, step: 0.01, class: "input-admin w-full text-sm", required: true %>
+  </div>
+  <div>
+    <button type="button" data-action="nested-form#remove" class="text-red-400 hover:text-red-600 text-sm cursor-pointer mb-2">Remove</button>
+    <%= f.hidden_field :_destroy, value: "0", data: { "nested-form-target": "destroy" } %>
+  </div>
+</div>

@@ -6,7 +6,7 @@ RSpec.describe Note, type: :model do
   end
 
   describe "associations" do
-    it { is_expected.to belong_to(:lead) }
+    it { is_expected.to belong_to(:notable) }
     it { is_expected.to belong_to(:user) }
   end
 
@@ -15,8 +15,8 @@ RSpec.describe Note, type: :model do
     let(:user) { create(:user) }
 
     it ".chronological orders by created_at asc" do
-      old = create(:note, lead: lead, user: user, created_at: 1.day.ago)
-      recent = create(:note, lead: lead, user: user, created_at: Time.current)
+      old = create(:note, notable: lead, user: user, created_at: 1.day.ago)
+      recent = create(:note, notable: lead, user: user, created_at: Time.current)
       expect(Note.chronological).to eq([old, recent])
     end
   end

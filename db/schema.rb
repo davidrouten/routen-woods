@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_21_143102) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_21_192605) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -51,6 +51,53 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_21_143102) do
     t.string "service_category"
     t.string "title"
     t.datetime "updated_at", null: false
+  end
+
+  create_table "invoice_adjustments", force: :cascade do |t|
+    t.string "adjustment_type", null: false
+    t.decimal "amount", precision: 10, scale: 2, null: false
+    t.datetime "created_at", null: false
+    t.bigint "invoice_id", null: false
+    t.string "label", null: false
+    t.integer "position", default: 0
+    t.decimal "rate", precision: 5, scale: 4
+    t.datetime "updated_at", null: false
+    t.index ["invoice_id"], name: "index_invoice_adjustments_on_invoice_id"
+  end
+
+  create_table "invoice_line_items", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "description"
+    t.bigint "invoice_id", null: false
+    t.string "line_type"
+    t.string "name", null: false
+    t.integer "position", default: 0
+    t.integer "quantity", default: 1, null: false
+    t.decimal "total", precision: 10, scale: 2, null: false
+    t.decimal "unit_price", precision: 10, scale: 2, null: false
+    t.datetime "updated_at", null: false
+    t.index ["invoice_id"], name: "index_invoice_line_items_on_invoice_id"
+  end
+
+  create_table "invoices", force: :cascade do |t|
+    t.decimal "amount_paid", precision: 10, scale: 2, default: "0.0"
+    t.datetime "balance_paid_at"
+    t.datetime "created_at", null: false
+    t.decimal "deposit_amount", precision: 10, scale: 2
+    t.datetime "deposit_paid_at"
+    t.date "due_date"
+    t.decimal "fees_total", precision: 10, scale: 2, default: "0.0"
+    t.string "invoice_number", null: false
+    t.date "issued_date"
+    t.text "notes"
+    t.bigint "project_id", null: false
+    t.integer "status", default: 0, null: false
+    t.decimal "subtotal", precision: 10, scale: 2, default: "0.0"
+    t.decimal "tax_total", precision: 10, scale: 2, default: "0.0"
+    t.decimal "total", precision: 10, scale: 2, default: "0.0"
+    t.datetime "updated_at", null: false
+    t.index ["invoice_number"], name: "index_invoices_on_invoice_number", unique: true
+    t.index ["project_id"], name: "index_invoices_on_project_id"
   end
 
   create_table "leads", force: :cascade do |t|
@@ -101,11 +148,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_21_143102) do
   create_table "notes", force: :cascade do |t|
     t.text "body", null: false
     t.datetime "created_at", null: false
-    t.bigint "lead_id", null: false
+    t.bigint "notable_id", null: false
+    t.string "notable_type", null: false
     t.string "note_type", default: "manual"
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
-    t.index ["lead_id"], name: "index_notes_on_lead_id"
+    t.index ["notable_type", "notable_id"], name: "index_notes_on_notable_type_and_notable_id"
     t.index ["user_id"], name: "index_notes_on_user_id"
   end
 
@@ -120,12 +168,77 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_21_143102) do
     t.index ["event_name"], name: "index_notification_preferences_on_event_name", unique: true
   end
 
+  create_table "order_forms", force: :cascade do |t|
+    t.datetime "confirmed_at"
+    t.datetime "created_at", null: false
+    t.text "notes"
+    t.bigint "project_id", null: false
+    t.datetime "received_at"
+    t.integer "status", default: 0, null: false
+    t.datetime "submitted_at"
+    t.string "supplier_name"
+    t.datetime "updated_at", null: false
+    t.index ["project_id"], name: "index_order_forms_on_project_id"
+  end
+
+  create_table "order_line_items", force: :cascade do |t|
+    t.string "category"
+    t.string "color"
+    t.datetime "created_at", null: false
+    t.string "depth"
+    t.string "finish"
+    t.string "height"
+    t.decimal "markup_pct", precision: 5, scale: 2
+    t.string "material"
+    t.string "name", null: false
+    t.text "notes"
+    t.bigint "order_form_id", null: false
+    t.decimal "our_price", precision: 10, scale: 2
+    t.integer "position", default: 0
+    t.integer "quantity", default: 1, null: false
+    t.string "size"
+    t.text "specifications"
+    t.decimal "supplier_cost", precision: 10, scale: 2
+    t.datetime "updated_at", null: false
+    t.string "width"
+    t.index ["order_form_id"], name: "index_order_line_items_on_order_form_id"
+  end
+
   create_table "permissions", force: :cascade do |t|
     t.string "action", null: false
     t.datetime "created_at", null: false
     t.string "resource", null: false
     t.datetime "updated_at", null: false
     t.index ["resource", "action"], name: "index_permissions_on_resource_and_action", unique: true
+  end
+
+  create_table "projects", force: :cascade do |t|
+    t.string "address"
+    t.decimal "agreed_price", precision: 10, scale: 2
+    t.bigint "assigned_to_id"
+    t.decimal "balance_amount", precision: 10, scale: 2
+    t.string "client_token", null: false
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.decimal "deposit_amount", precision: 10, scale: 2
+    t.text "description"
+    t.string "email"
+    t.decimal "estimated_price", precision: 10, scale: 2
+    t.text "internal_notes"
+    t.bigint "lead_id"
+    t.datetime "paid_at"
+    t.string "phone"
+    t.date "scheduled_end_date"
+    t.date "scheduled_start_date"
+    t.datetime "started_at"
+    t.integer "status", default: 0, null: false
+    t.string "time_estimate"
+    t.string "title", null: false
+    t.datetime "updated_at", null: false
+    t.index ["assigned_to_id"], name: "index_projects_on_assigned_to_id"
+    t.index ["client_token"], name: "index_projects_on_client_token", unique: true
+    t.index ["lead_id"], name: "index_projects_on_lead_id"
+    t.index ["status"], name: "index_projects_on_status"
   end
 
   create_table "status_changes", force: :cascade do |t|
@@ -178,9 +291,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_21_143102) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "invoice_adjustments", "invoices"
+  add_foreign_key "invoice_line_items", "invoices"
+  add_foreign_key "invoices", "projects"
   add_foreign_key "leads", "users", column: "assigned_to_id"
-  add_foreign_key "notes", "leads"
   add_foreign_key "notes", "users"
+  add_foreign_key "order_forms", "projects"
+  add_foreign_key "order_line_items", "order_forms"
+  add_foreign_key "projects", "leads"
+  add_foreign_key "projects", "users", column: "assigned_to_id"
   add_foreign_key "status_changes", "leads"
   add_foreign_key "status_changes", "users"
   add_foreign_key "user_permissions", "permissions"

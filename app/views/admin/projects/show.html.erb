@@ -1,0 +1,208 @@
+<div class="mb-6">
+  <%= link_to "&larr; Back to Projects".html_safe, admin_projects_path, class: "text-sm text-gray-500 hover:text-gray-700" %>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+  <!-- Main Content -->
+  <div class="lg:col-span-2 space-y-6">
+    <!-- Header Card -->
+    <div class="bg-white rounded-xl shadow-sm p-6">
+      <div class="flex justify-between items-start mb-4">
+        <div>
+          <h1 class="text-2xl font-bold text-gray-900"><%= @project.title %></h1>
+          <% if @project.lead %>
+            <p class="text-gray-500 text-sm">From lead: <%= link_to "#{@project.lead.first_name} #{@project.lead.last_name}", admin_lead_path(@project.lead), class: "text-accent hover:text-accent-hover" %></p>
+          <% end %>
+        </div>
+        <span class="inline-block px-3 py-1 rounded-full text-sm font-medium <%= project_status_color(@project.status) %>"><%= @project.status.titleize %></span>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4 text-sm">
+        <% if @project.email.present? %>
+          <div>
+            <p class="text-gray-500">Email</p>
+            <p class="font-medium"><%= mail_to @project.email, @project.email, class: "text-accent hover:text-accent-hover" %></p>
+          </div>
+        <% end %>
+        <% if @project.phone.present? %>
+          <div>
+            <p class="text-gray-500">Phone</p>
+            <p class="font-medium"><%= link_to @project.phone, "tel:#{@project.phone}", class: "text-accent hover:text-accent-hover" %></p>
+          </div>
+        <% end %>
+        <% if @project.address.present? %>
+          <div>
+            <p class="text-gray-500">Address</p>
+            <p class="font-medium"><%= @project.address %></p>
+          </div>
+        <% end %>
+        <% if @project.time_estimate.present? %>
+          <div>
+            <p class="text-gray-500">Time Estimate</p>
+            <p class="font-medium"><%= @project.time_estimate %></p>
+          </div>
+        <% end %>
+        <% if @project.scheduled_start_date %>
+          <div>
+            <p class="text-gray-500">Schedule</p>
+            <p class="font-medium"><%= @project.scheduled_start_date.strftime("%b %d, %Y") %><% if @project.scheduled_end_date %> – <%= @project.scheduled_end_date.strftime("%b %d, %Y") %><% end %></p>
+          </div>
+        <% end %>
+      </div>
+
+      <% if @project.description.present? %>
+        <div class="mt-4 pt-4 border-t border-gray-100">
+          <p class="text-gray-500 text-sm mb-1">Description</p>
+          <p class="text-gray-700"><%= @project.description %></p>
+        </div>
+      <% end %>
+
+      <% if @project.internal_notes.present? %>
+        <div class="mt-4 pt-4 border-t border-gray-100">
+          <p class="text-gray-500 text-sm mb-1">Internal Notes</p>
+          <p class="text-gray-700"><%= @project.internal_notes %></p>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Financials Card -->
+    <div class="bg-white rounded-xl shadow-sm p-6">
+      <h2 class="text-lg font-semibold text-gray-900 mb-4">Financials</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+        <div>
+          <p class="text-gray-500">Estimated</p>
+          <p class="text-lg font-bold text-gray-900"><%= @project.estimated_price ? number_to_currency(@project.estimated_price) : "—" %></p>
+        </div>
+        <div>
+          <p class="text-gray-500">Agreed Price</p>
+          <p class="text-lg font-bold text-gray-900"><%= @project.agreed_price ? number_to_currency(@project.agreed_price) : "—" %></p>
+        </div>
+        <div>
+          <p class="text-gray-500">Deposit</p>
+          <p class="text-lg font-bold text-gray-900"><%= @project.deposit_amount ? number_to_currency(@project.deposit_amount) : "—" %></p>
+        </div>
+        <div>
+          <p class="text-gray-500">Balance</p>
+          <p class="text-lg font-bold text-gray-900"><%= @project.balance_amount ? number_to_currency(@project.balance_amount) : "—" %></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Order Forms -->
+    <div class="bg-white rounded-xl shadow-sm p-6">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-semibold text-gray-900">Order Forms</h2>
+        <%= link_to "New Order Form", new_admin_project_order_form_path(@project), class: "btn-admin" %>
+      </div>
+
+      <% if @order_forms.any? %>
+        <div class="space-y-3">
+          <% @order_forms.each do |of| %>
+            <div class="flex items-center justify-between p-3 rounded-lg bg-gray-50">
+              <div>
+                <%= link_to admin_project_order_form_path(@project, of), class: "font-medium text-gray-900 hover:text-accent" do %>
+                  <%= of.supplier_name %>
+                <% end %>
+                <p class="text-xs text-gray-500"><%= of.line_items.count %> items &middot; <%= number_to_currency(of.total_our_price) %></p>
+              </div>
+              <span class="inline-block px-2 py-1 rounded-full text-xs font-medium <%= order_form_status_color(of.status) %>"><%= of.status.titleize %></span>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-gray-400 text-sm text-center py-4">No order forms yet</p>
+      <% end %>
+    </div>
+
+    <!-- Invoices -->
+    <div class="bg-white rounded-xl shadow-sm p-6">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-semibold text-gray-900">Invoices</h2>
+        <%= link_to "New Invoice", new_admin_project_invoice_path(@project), class: "btn-admin" %>
+      </div>
+
+      <% if @invoices.any? %>
+        <div class="space-y-3">
+          <% @invoices.each do |inv| %>
+            <div class="flex items-center justify-between p-3 rounded-lg bg-gray-50">
+              <div>
+                <%= link_to admin_project_invoice_path(@project, inv), class: "font-medium text-gray-900 hover:text-accent" do %>
+                  <%= inv.invoice_number %>
+                <% end %>
+                <p class="text-xs text-gray-500"><%= number_to_currency(inv.total) %> &middot; Due <%= inv.due_date&.strftime("%b %d, %Y") || "TBD" %></p>
+              </div>
+              <span class="inline-block px-2 py-1 rounded-full text-xs font-medium <%= invoice_status_color(inv.status) %>"><%= inv.status.titleize %></span>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-gray-400 text-sm text-center py-4">No invoices yet</p>
+      <% end %>
+    </div>
+
+    <!-- Notes Section -->
+    <div class="bg-white rounded-xl shadow-sm p-6">
+      <h2 class="text-lg font-semibold text-gray-900 mb-4">Notes</h2>
+
+      <% if current_user_can?(:create, :notes) %>
+        <div class="mb-6">
+          <%= form_with url: admin_project_notes_path(@project), class: "flex gap-3" do |f| %>
+            <%= f.text_area :body, placeholder: "Add a note...", rows: 2, class: "flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 input-admin resize-none text-sm", required: true %>
+            <%= f.submit "Add Note", class: "self-end px-4 py-2 bg-primary text-white rounded-lg text-sm hover:bg-primary-light transition cursor-pointer" %>
+          <% end %>
+        </div>
+      <% end %>
+
+      <div id="notes" class="space-y-4">
+        <% @notes.each do |note| %>
+          <div class="flex gap-3 p-3 rounded-lg bg-gray-50" id="<%= dom_id(note) %>">
+            <div class="w-8 h-8 bg-accent rounded-full flex-shrink-0 flex items-center justify-center text-primary text-xs font-bold">
+              <%= note.user.first_name[0] %><%= note.user.last_name[0] %>
+            </div>
+            <div class="flex-1">
+              <div class="flex justify-between items-start">
+                <p class="font-medium text-sm text-gray-900"><%= note.user.full_name %></p>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs text-gray-400"><%= time_ago_in_words(note.created_at) %> ago</span>
+                  <% if current_user.admin? || note.user == current_user %>
+                    <%= render "shared/confirm_button", url: admin_project_note_path(@project, note), method: :delete, label: "&times;".html_safe, title: "Delete Note", message: "Delete this note? This cannot be undone.", danger: true, button_class: "text-red-400 hover:text-red-600 text-xs cursor-pointer" %>
+                  <% end %>
+                </div>
+              </div>
+              <p class="text-sm text-gray-700 mt-1"><%= note.body %></p>
+              <% if note.note_type != "manual" %>
+                <span class="inline-block mt-1 px-2 py-0.5 bg-blue-50 text-blue-600 text-xs rounded"><%= note.note_type %></span>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+        <% if @notes.empty? %>
+          <p class="text-gray-400 text-sm text-center py-4">No notes yet</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Sidebar -->
+  <div class="space-y-6">
+    <!-- Status Transition -->
+    <div class="bg-white rounded-xl shadow-sm p-6">
+      <h3 class="text-sm font-semibold text-gray-900 mb-3">Change Status</h3>
+      <div class="space-y-2">
+        <% Project.statuses.each_key do |status| %>
+          <% next if status == @project.status %>
+          <%= render "shared/confirm_button", url: transition_admin_project_path(@project, status: status), method: :patch, label: status.titleize, title: "Change Status", message: "Move this project to \"#{status.titleize}\"?", confirm_text: "Move to #{status.titleize}", button_class: "w-full text-left px-3 py-2 rounded-lg text-sm font-medium #{project_status_color(status)} hover:opacity-80 transition cursor-pointer" %>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="bg-white rounded-xl shadow-sm p-6">
+      <h3 class="text-sm font-semibold text-gray-900 mb-3">Actions</h3>
+      <div class="space-y-2">
+        <%= link_to "Edit Project", edit_admin_project_path(@project), class: "block w-full text-center px-3 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition" %>
+        <%= render "shared/confirm_button", url: admin_project_path(@project), method: :delete, label: "Delete Project", title: "Delete Project", message: "Permanently delete this project? This cannot be undone.", danger: true, button_class: "w-full text-center px-3 py-2 bg-red-100 text-red-700 rounded-lg text-sm font-medium hover:bg-red-200 transition cursor-pointer" %>
+      </div>
+    </div>
+  </div>
+</div>

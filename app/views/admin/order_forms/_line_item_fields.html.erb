@@ -1,0 +1,57 @@
+<div class="nested-form-item border border-gray-200 rounded-lg p-3 mb-3" data-nested-form-target="item">
+  <%= f.hidden_field :_destroy, value: "0", data: { "nested-form-target": "destroy" } %>
+
+  <div class="grid grid-cols-12 gap-2 mb-2">
+    <div class="col-span-3">
+      <%= f.text_field :name, class: "input-admin w-full text-sm", required: true, placeholder: "Name" %>
+    </div>
+    <div class="col-span-1">
+      <%= f.text_field :category, class: "input-admin w-full text-sm", placeholder: "Type" %>
+    </div>
+    <div class="col-span-1">
+      <%= f.text_field :color, class: "input-admin w-full text-sm", placeholder: "Color" %>
+    </div>
+    <div class="col-span-1">
+      <%= f.text_field :finish, class: "input-admin w-full text-sm", placeholder: "Finish" %>
+    </div>
+    <div class="col-span-1">
+      <%= f.text_field :material, class: "input-admin w-full text-sm", placeholder: "Material" %>
+    </div>
+    <div class="col-span-1">
+      <%= f.text_field :size, class: "input-admin w-full text-sm", placeholder: "Size" %>
+    </div>
+    <div class="col-span-3">
+      <%= f.text_field :specifications, class: "input-admin w-full text-sm", placeholder: "Specs (e.g. hinge: XL, style: shaker)" %>
+    </div>
+    <div class="col-span-1 flex items-center justify-end">
+      <button type="button" data-action="nested-form#remove" class="text-red-400 hover:text-red-600 text-xs cursor-pointer">Remove</button>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-12 gap-2">
+    <div class="col-span-1">
+      <%= f.text_field :width, class: "input-admin w-full text-sm", placeholder: "W" %>
+    </div>
+    <div class="col-span-1">
+      <%= f.text_field :height, class: "input-admin w-full text-sm", placeholder: "H" %>
+    </div>
+    <div class="col-span-1">
+      <%= f.text_field :depth, class: "input-admin w-full text-sm", placeholder: "D" %>
+    </div>
+    <div class="col-span-1">
+      <%= f.number_field :quantity, class: "input-admin w-full text-sm", min: 1, value: f.object.quantity || 1, placeholder: "Qty" %>
+    </div>
+    <div class="col-span-2">
+      <%= f.number_field :supplier_cost, step: 0.01, min: 0, class: "input-admin w-full text-sm", placeholder: "Supplier Cost" %>
+    </div>
+    <div class="col-span-2">
+      <%= f.number_field :our_price, step: 0.01, min: 0, class: "input-admin w-full text-sm", placeholder: "Our Price" %>
+    </div>
+    <div class="col-span-2">
+      <%= f.number_field :markup_pct, step: 0.01, class: "input-admin w-full text-sm", placeholder: "Markup %" %>
+    </div>
+    <div class="col-span-2">
+      <%= f.text_field :notes, class: "input-admin w-full text-sm", placeholder: "Notes" %>
+    </div>
+  </div>
+</div>

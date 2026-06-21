@@ -1,0 +1,88 @@
+<%= form_with(model: [:admin, project, invoice], class: "space-y-6", data: { controller: "nested-form" }) do |f| %>
+  <% if invoice.errors.any? %>
+    <div class="bg-red-50 border border-red-200 rounded-xl p-4">
+      <ul class="list-disc list-inside text-red-700 text-sm">
+        <% invoice.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="bg-white rounded-xl shadow-sm p-6 space-y-5">
+    <h2 class="text-lg font-semibold text-gray-900">Invoice Details</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+      <div>
+        <%= f.label :issued_date, class: "block text-sm font-semibold text-gray-700 mb-1.5" %>
+        <%= f.date_field :issued_date, class: "input-admin w-full" %>
+      </div>
+      <div>
+        <%= f.label :due_date, class: "block text-sm font-semibold text-gray-700 mb-1.5" %>
+        <%= f.date_field :due_date, class: "input-admin w-full" %>
+      </div>
+      <div>
+        <%= f.label :deposit_amount, "Deposit Required", class: "block text-sm font-semibold text-gray-700 mb-1.5" %>
+        <%= f.number_field :deposit_amount, step: 0.01, min: 0, class: "input-admin w-full" %>
+      </div>
+    </div>
+
+    <div>
+      <%= f.label :notes, class: "block text-sm font-semibold text-gray-700 mb-1.5" %>
+      <%= f.text_area :notes, rows: 2, class: "input-admin w-full resize-none", placeholder: "Payment terms, special instructions, etc." %>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-xl shadow-sm p-6">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-lg font-semibold text-gray-900">Line Items</h2>
+    </div>
+
+    <div id="invoice-line-items" data-nested-form-target="container">
+      <%= f.fields_for :line_items do |li| %>
+        <%= render "invoice_line_item_fields", f: li %>
+      <% end %>
+    </div>
+
+    <template data-nested-form-target="template">
+      <%= f.fields_for :line_items, InvoiceLineItem.new, child_index: "NEW_RECORD" do |li| %>
+        <%= render "invoice_line_item_fields", f: li %>
+      <% end %>
+    </template>
+
+    <div class="mt-4">
+      <button type="button" data-action="nested-form#add" class="px-4 py-2 text-sm font-medium text-accent bg-accent/10 rounded-lg hover:bg-accent/20 transition cursor-pointer">
+        + Add Line Item
+      </button>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-xl shadow-sm p-6">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-lg font-semibold text-gray-900">Taxes & Fees</h2>
+    </div>
+
+    <div id="invoice-adjustments" data-nested-form-target="adjustmentContainer">
+      <%= f.fields_for :adjustments do |adj| %>
+        <%= render "adjustment_fields", f: adj %>
+      <% end %>
+    </div>
+
+    <template data-nested-form-target="adjustmentTemplate">
+      <%= f.fields_for :adjustments, InvoiceAdjustment.new, child_index: "NEW_ADJUSTMENT" do |adj| %>
+        <%= render "adjustment_fields", f: adj %>
+      <% end %>
+    </template>
+
+    <div class="mt-4">
+      <button type="button" data-action="nested-form#addAdjustment" class="px-4 py-2 text-sm font-medium text-accent bg-accent/10 rounded-lg hover:bg-accent/20 transition cursor-pointer">
+        + Add Tax/Fee
+      </button>
+    </div>
+  </div>
+
+  <div class="flex justify-end gap-3">
+    <%= link_to "Cancel", admin_project_path(project), class: "px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition" %>
+    <%= f.submit (invoice.persisted? ? "Update Invoice" : "Create Invoice"), class: "btn-admin" %>
+  </div>
+<% end %>

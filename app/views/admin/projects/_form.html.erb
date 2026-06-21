@@ -1,0 +1,99 @@
+<%= form_with(model: [:admin, project], class: "space-y-6") do |f| %>
+  <% if project.errors.any? %>
+    <div class="bg-red-50 border border-red-200 rounded-xl p-4">
+      <ul class="list-disc list-inside text-red-700 text-sm">
+        <% project.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= f.hidden_field :lead_id if project.lead_id %>
+
+  <div class="bg-white rounded-xl shadow-sm p-6 space-y-5">
+    <h2 class="text-lg font-semibold text-gray-900">Project Details</h2>
+
+    <div>
+      <%= f.label :title, class: "block text-sm font-semibold text-gray-700 mb-1.5" %>
+      <%= f.text_field :title, class: "input-admin w-full", required: true %>
+    </div>
+
+    <div>
+      <%= f.label :description, class: "block text-sm font-semibold text-gray-700 mb-1.5" %>
+      <%= f.text_area :description, rows: 3, class: "input-admin w-full resize-none" %>
+    </div>
+
+    <div>
+      <%= f.label :internal_notes, "Internal Notes", class: "block text-sm font-semibold text-gray-700 mb-1.5" %>
+      <%= f.text_area :internal_notes, rows: 2, class: "input-admin w-full resize-none" %>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-xl shadow-sm p-6 space-y-5">
+    <h2 class="text-lg font-semibold text-gray-900">Client Info</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <div>
+        <%= f.label :email, class: "block text-sm font-semibold text-gray-700 mb-1.5" %>
+        <%= f.email_field :email, class: "input-admin w-full" %>
+      </div>
+      <div>
+        <%= f.label :phone, class: "block text-sm font-semibold text-gray-700 mb-1.5" %>
+        <%= f.telephone_field :phone, class: "input-admin w-full" %>
+      </div>
+    </div>
+
+    <div>
+      <%= f.label :address, class: "block text-sm font-semibold text-gray-700 mb-1.5" %>
+      <%= f.text_field :address, class: "input-admin w-full", placeholder: "Full project address" %>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-xl shadow-sm p-6 space-y-5">
+    <h2 class="text-lg font-semibold text-gray-900">Financials</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <div>
+        <%= f.label :estimated_price, "Estimated Price", class: "block text-sm font-semibold text-gray-700 mb-1.5" %>
+        <%= f.number_field :estimated_price, step: 0.01, min: 0, class: "input-admin w-full" %>
+      </div>
+      <div>
+        <%= f.label :agreed_price, "Agreed Price", class: "block text-sm font-semibold text-gray-700 mb-1.5" %>
+        <%= f.number_field :agreed_price, step: 0.01, min: 0, class: "input-admin w-full" %>
+      </div>
+      <div>
+        <%= f.label :deposit_amount, "Deposit Amount", class: "block text-sm font-semibold text-gray-700 mb-1.5" %>
+        <%= f.number_field :deposit_amount, step: 0.01, min: 0, class: "input-admin w-full" %>
+      </div>
+      <div>
+        <%= f.label :balance_amount, "Balance Amount", class: "block text-sm font-semibold text-gray-700 mb-1.5" %>
+        <%= f.number_field :balance_amount, step: 0.01, min: 0, class: "input-admin w-full" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-xl shadow-sm p-6 space-y-5">
+    <h2 class="text-lg font-semibold text-gray-900">Scheduling</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+      <div>
+        <%= f.label :time_estimate, "Time Estimate", class: "block text-sm font-semibold text-gray-700 mb-1.5" %>
+        <%= f.text_field :time_estimate, class: "input-admin w-full", placeholder: "e.g. 3-5 days" %>
+      </div>
+      <div>
+        <%= f.label :scheduled_start_date, "Start Date", class: "block text-sm font-semibold text-gray-700 mb-1.5" %>
+        <%= f.date_field :scheduled_start_date, class: "input-admin w-full" %>
+      </div>
+      <div>
+        <%= f.label :scheduled_end_date, "End Date", class: "block text-sm font-semibold text-gray-700 mb-1.5" %>
+        <%= f.date_field :scheduled_end_date, class: "input-admin w-full" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex justify-end gap-3">
+    <%= link_to "Cancel", (project.persisted? ? admin_project_path(project) : admin_projects_path), class: "px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition" %>
+    <%= f.submit (project.persisted? ? "Update Project" : "Create Project"), class: "btn-admin" %>
+  </div>
+<% end %>

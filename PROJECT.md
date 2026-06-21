@@ -245,43 +245,74 @@ Refine the existing Lead model to be a clean sales pipeline. Lead's job ends at 
 - [ ] TCPA opt-in consent checkbox + language (required if SMS enabled)
 - [ ] Consent tracking: inquiry consent vs marketing opt-in, with timestamps
 
-## Phase 11: Project Model & Execution Pipeline (NOT STARTED)
+## Phase 11: Project Model & Execution Pipeline (IN PROGRESS)
 
 Project is a separate model from Lead. It represents a confirmed job moving through execution to payment.
 
-### 11.1 — Project model
-- [ ] Project model: `belongs_to :lead`, `has_many :project_photos`, `has_many :messages`
-- [ ] Fields: title, description, address, estimated_price, deposit_amount, balance_amount, estimated_duration_days, scheduled_start_date, scheduled_end_date
-- [ ] Status enum via AASM: `scheduled`, `in_progress`, `blocked`, `complete`, `paid`
-- [ ] `has_secure_token :client_token` — stable, revocable token for magic-link client page
-- [ ] Each transition owns its side effects via callbacks (see compound actions principle above)
-- [ ] Testimonial optionally `belongs_to :project` (link reviews to specific jobs)
+### 11.1 — Project model (COMPLETE)
+- [x] Project model: `belongs_to :lead`, `has_many :order_forms`, `has_many :invoices`
+- [x] Fields: title, description, address, email, phone, notes
+- [x] Financial fields: estimated_price, agreed_price, deposit_amount, balance_amount
+- [x] Scheduling: time_estimate, scheduled_start_date, scheduled_end_date
+- [x] Status enum: `scheduled`, `in_progress`, `blocked`, `complete`, `paid`
+- [x] `has_secure_token :client_token` — stable, revocable token for magic-link client page
+- [x] State transition methods with timestamp stamps (start!, complete!, mark_paid!)
+- [ ] Testimonial optionally `belongs_to :project`
 
-### 11.2 — Lead → Project conversion
-- [ ] "Won" on a lead opens a quick-create Project form (prefilled from lead details)
-- [ ] Lead status auto-set to `won` when project is created
-- [ ] One lead can create multiple projects (e.g. multi-site franchise jobs)
-- [ ] Lead becomes read-only history once won — all further work happens on the Project
-- [ ] Project links back to originating lead for audit trail
+### 11.2 — Lead → Project conversion (COMPLETE)
+- [x] "Create Project" button on lead show page (prefills from lead: name, email, phone, services, zip)
+- [x] Lead status auto-set to `booked` when project is created
+- [x] One lead can create multiple projects
+- [x] Project links back to originating lead for audit trail
+- [x] Lead show page displays linked projects with status
 
-### 11.3 — Compound actions on project cards
-- [ ] **Scheduled**: "Add Details" — inline edit scope/price/dates, triggers deposit payment link generation
-- [ ] **In Progress**: "Post Update" — photo upload (camera-native on mobile) + optional note, auto-syncs to client page
+### 11.3 — Order Forms (COMPLETE — admin CRUD)
+Each project can have N order forms. An order form is what gets sent to the supplier to order parts.
+
+- [x] OrderForm model: `belongs_to :project`, `has_many :line_items`
+- [x] OrderForm fields: supplier_name, status (draft/submitted/confirmed/received), notes, submitted_at
+- [x] OrderLineItem: name, category, color, finish, material, size, dimensions (W/H/D), quantity, supplier_cost, our_price, markup_pct, specifications, notes
+- [x] Admin UI: build order form with dynamic nested line items, see totals (cost, price, profit)
+- [x] Status workflow: draft → submitted → confirmed → received
+- [ ] PDF export of order form (formatted for supplier)
+- [ ] Email order form PDF directly to supplier from admin
+- [ ] Order form templates (common configurations to speed up entry)
+
+### 11.4 — Customer Invoice (COMPLETE — admin CRUD)
+Invoice is what the customer sees and pays against. Usually simple — 1-2 line items.
+
+- [x] Invoice model: `belongs_to :project`, auto-generated invoice_number (INV-XXXX)
+- [x] InvoiceLineItem: name, description, quantity, unit_price, total
+- [x] InvoiceAdjustment: label, type (tax/fee/discount), rate, amount
+- [x] Subtotal, taxes, fees, total (auto-calculated)
+- [x] Deposit amount + remaining balance breakdown
+- [x] Record payment UI (deposit or balance type)
+- [x] Status workflow: draft → sent → partially_paid → paid
+- [ ] PDF generation for customer invoice
+- [ ] Send invoice to customer (email + magic link on client page)
+
+### 11.5 — Admin UI (COMPLETE)
+- [x] Projects nav item in admin sidebar
+- [x] Projects index with status filters
+- [x] Project show page: details, financials, order forms, invoices, status transitions
+- [x] Project new/edit forms (prefilled from lead when converting)
+- [x] Order form new/edit with dynamic nested line items (Stimulus controller)
+- [x] Invoice new/edit with line items + tax/fee adjustments
+- [x] 112 specs passing
+
+### 11.5 — Compound actions on project cards
+- [ ] **Scheduled**: "Add Details" — edit scope/price/dates, triggers deposit payment link
+- [ ] **In Progress**: "Post Update" — photo upload + optional note
 - [ ] **Blocked**: "What's blocking?" — prominent text field, returns to in_progress when resolved
-- [ ] **Complete**: "Request Payment" — generates balance payment link + sends review request (single tap, both fire)
-- [ ] **Paid**: no action needed — auto-set by Stripe webhook
+- [ ] **Complete**: "Request Balance" — generates balance payment link + review request (single tap)
+- [ ] **Paid**: terminal — auto-set by Stripe webhook
 
-### 11.4 — Project photos
+### 11.6 — Project photos
 - [ ] ProjectPhoto model (Active Storage, belongs_to :project)
 - [ ] Before/after tagging (enum: before, during, after)
 - [ ] Camera-native upload on mobile (accept="image/*" capture="environment")
 - [ ] Photos auto-appear on client status page
 - [ ] Optional: promote project photos to public gallery
-
-### 11.5 — Job-type templates (later)
-- [ ] Predefined templates: "$5k cabinet refresh", "full refinish + pull-outs", etc.
-- [ ] Templates prefill line items, typical price band, estimated duration
-- [ ] "Add details" becomes mostly confirming, not typing from scratch
 
 ## Phase 12: Client Status Page (NOT STARTED)
 

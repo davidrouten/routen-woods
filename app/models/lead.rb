@@ -10,8 +10,9 @@ class Lead < ApplicationRecord
   }
 
   belongs_to :assigned_to, class_name: "User", optional: true
-  has_many :notes, dependent: :destroy
+  has_many :notes, as: :notable, dependent: :destroy
   has_many :status_changes, dependent: :destroy
+  has_many :projects, dependent: :nullify
 
   validates :first_name, presence: true
   validates :email, presence: true, unless: -> { phone.present? }

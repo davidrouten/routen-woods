@@ -1,0 +1,100 @@
+<div class="mb-6">
+  <%= link_to "&larr; Back to Project".html_safe, admin_project_path(@project), class: "text-sm text-gray-500 hover:text-gray-700" %>
+</div>
+
+<div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+  <div class="flex justify-between items-start mb-6">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900">Invoice <%= @invoice.invoice_number %></h1>
+      <p class="text-gray-500 text-sm">Project: <%= @project.title %></p>
+    </div>
+    <span class="inline-block px-3 py-1 rounded-full text-sm font-medium <%= invoice_status_color(@invoice.status) %>"><%= @invoice.status.titleize %></span>
+  </div>
+
+  <!-- Invoice Meta -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm mb-6">
+    <div>
+      <p class="text-gray-500">Issued</p>
+      <p class="font-medium"><%= @invoice.issued_date&.strftime("%b %d, %Y") || "—" %></p>
+    </div>
+    <div>
+      <p class="text-gray-500">Due</p>
+      <p class="font-medium"><%= @invoice.due_date&.strftime("%b %d, %Y") || "—" %></p>
+    </div>
+    <div>
+      <p class="text-gray-500">Deposit</p>
+      <p class="font-medium">
+        <%= @invoice.deposit_amount ? number_to_currency(@invoice.deposit_amount) : "—" %>
+        <% if @invoice.deposit_paid? %><span class="text-green-600 text-xs ml-1">Paid</span><% end %>
+      </p>
+    </div>
+    <div>
+      <p class="text-gray-500">Balance Due</p>
+      <p class="font-medium text-lg"><%= number_to_currency(@invoice.balance_due) %></p>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="flex gap-2 mb-6">
+    <% if @invoice.draft? %>
+      <%= button_to "Mark Sent", send_invoice_admin_project_invoice_path(@project, @invoice), method: :patch, class: "btn-admin" %>
+    <% end %>
+    <% unless @invoice.paid? %>
+      <%= form_with url: record_payment_admin_project_invoice_path(@project, @invoice), method: :patch, class: "flex gap-2 items-end" do |f| %>
+        <%= f.number_field :amount, step: 0.01, min: 0, placeholder: "Amount", class: "input-admin text-sm w-32" %>
+        <%= f.select :payment_type, [["Deposit", "deposit"], ["Balance", "balance"]], {}, class: "input-admin text-sm" %>
+        <%= f.submit "Record Payment", class: "btn-admin" %>
+      <% end %>
+    <% end %>
+    <%= link_to "Edit", edit_admin_project_invoice_path(@project, @invoice), class: "px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition" %>
+  </div>
+
+  <!-- Line Items -->
+  <div class="overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-200 text-sm">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Item</th>
+          <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
+          <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase">Qty</th>
+          <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase">Unit Price</th>
+          <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase">Total</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+        <% @invoice.line_items.order(:position).each do |item| %>
+          <tr>
+            <td class="px-4 py-3 font-medium text-gray-900"><%= item.name %></td>
+            <td class="px-4 py-3 text-gray-600"><%= item.description %></td>
+            <td class="px-4 py-3 text-right"><%= item.quantity %></td>
+            <td class="px-4 py-3 text-right"><%= number_to_currency(item.unit_price) %></td>
+            <td class="px-4 py-3 text-right font-medium"><%= number_to_currency(item.total) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+      <tfoot class="bg-gray-50">
+        <tr>
+          <td colspan="4" class="px-4 py-2 text-right font-medium text-gray-700">Subtotal:</td>
+          <td class="px-4 py-2 text-right font-medium"><%= number_to_currency(@invoice.subtotal) %></td>
+        </tr>
+        <% @invoice.adjustments.order(:position).each do |adj| %>
+          <tr>
+            <td colspan="4" class="px-4 py-2 text-right text-gray-600"><%= adj.label %>:</td>
+            <td class="px-4 py-2 text-right <%= adj.adjustment_type == 'discount' ? 'text-green-700' : '' %>"><%= number_to_currency(adj.amount) %></td>
+          </tr>
+        <% end %>
+        <tr class="font-bold">
+          <td colspan="4" class="px-4 py-3 text-right text-gray-900">Total:</td>
+          <td class="px-4 py-3 text-right text-gray-900"><%= number_to_currency(@invoice.total) %></td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <% if @invoice.notes.present? %>
+    <div class="mt-4 pt-4 border-t border-gray-100">
+      <p class="text-gray-500 text-sm mb-1">Notes</p>
+      <p class="text-gray-700 text-sm"><%= @invoice.notes %></p>
+    </div>
+  <% end %>
+</div>
