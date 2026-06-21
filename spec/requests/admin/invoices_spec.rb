@@ -20,6 +20,33 @@ RSpec.describe "Admin::Invoices", type: :request do
     end
   end
 
+  describe "GET /admin/invoices/new" do
+    it "renders new form without a project" do
+      get new_admin_invoice_path
+      expect(response).to be_successful
+    end
+  end
+
+  describe "POST /admin/invoices" do
+    it "creates a standalone invoice" do
+      expect {
+        post admin_invoices_path, params: {
+          invoice: {
+            issued_date: Date.current,
+            due_date: Date.current + 30,
+            line_items_attributes: {
+              "0" => { name: "Consulting", quantity: 1, unit_price: 500 }
+            }
+          }
+        }
+      }.to change(Invoice, :count).by(1)
+
+      inv = Invoice.last
+      expect(inv.project).to be_nil
+      expect(inv.line_items.first.name).to eq("Consulting")
+    end
+  end
+
   describe "GET /admin/projects/:project_id/invoices/new" do
     it "renders new form" do
       get new_admin_project_invoice_path(project)

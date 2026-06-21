@@ -17,6 +17,11 @@
         <span class="inline-block px-3 py-1 rounded-full text-sm font-medium <%= project_status_color(@project.status) %>"><%= @project.status.titleize %></span>
       </div>
 
+      <div class="flex gap-2 mb-4">
+        <%= link_to "Edit", edit_admin_project_path(@project), class: "btn-admin-secondary" %>
+        <%= render "shared/confirm_button", url: admin_project_path(@project), method: :delete, label: "Delete", title: "Delete Project", message: "Permanently delete this project? This cannot be undone.", danger: true, button_class: "btn-admin-destructive" %>
+      </div>
+
       <div class="grid grid-cols-2 gap-4 text-sm">
         <% if @project.email.present? %>
           <div>
@@ -196,13 +201,5 @@
       </div>
     </div>
 
-    <!-- Actions -->
-    <div class="bg-white rounded-xl shadow-sm p-6">
-      <h3 class="text-sm font-semibold text-gray-900 mb-3">Actions</h3>
-      <div class="space-y-2">
-        <%= link_to "Edit Project", edit_admin_project_path(@project), class: "block w-full text-center px-3 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition" %>
-        <%= render "shared/confirm_button", url: admin_project_path(@project), method: :delete, label: "Delete Project", title: "Delete Project", message: "Permanently delete this project? This cannot be undone.", danger: true, button_class: "w-full text-center px-3 py-2 bg-red-100 text-red-700 rounded-lg text-sm font-medium hover:bg-red-200 transition cursor-pointer" %>
-      </div>
-    </div>
   </div>
 </div>

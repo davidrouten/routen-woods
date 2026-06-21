@@ -81,7 +81,8 @@
     </div>
   </div>
 
-  <div class="flex justify-end">
-    <%= f.submit class: "btn-admin" %>
+  <div class="flex justify-end gap-3">
+    <%= link_to "Cancel", admin_leads_path, class: "btn-admin-secondary" %>
+    <%= f.submit (lead.persisted? ? "Update Lead" : "Create Lead"), class: "btn-admin" %>
   </div>
 <% end %>

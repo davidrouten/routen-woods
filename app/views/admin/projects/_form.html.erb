@@ -93,7 +93,7 @@
   </div>
 
   <div class="flex justify-end gap-3">
-    <%= link_to "Cancel", (project.persisted? ? admin_project_path(project) : admin_projects_path), class: "px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition" %>
+    <%= link_to "Cancel", (project.persisted? ? admin_project_path(project) : admin_projects_path), class: "btn-admin-secondary" %>
     <%= f.submit (project.persisted? ? "Update Project" : "Create Project"), class: "btn-admin" %>
   </div>
 <% end %>

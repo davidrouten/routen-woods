@@ -1,5 +1,6 @@
 <div class="flex justify-between items-center mb-6">
   <h1 class="text-2xl font-bold text-gray-900">Order Forms</h1>
+  <%= link_to "New Order Form", new_admin_order_form_path, class: "btn-admin" %>
 </div>
 
 <!-- Filters -->
@@ -29,12 +30,16 @@
       <% @order_forms.each do |of| %>
         <tr class="hover:bg-gray-50">
           <td class="px-6 py-4">
-            <%= link_to admin_project_order_form_path(of.project, of), class: "font-medium text-gray-900 hover:text-accent" do %>
+            <%= link_to (of.project ? admin_project_order_form_path(of.project, of) : admin_order_form_path(of)), class: "font-medium text-gray-900 hover:text-accent" do %>
               <%= of.supplier_name %>
             <% end %>
           </td>
           <td class="px-6 py-4 text-sm text-gray-500">
-            <%= link_to of.project.title, admin_project_path(of.project), class: "hover:text-accent" %>
+            <% if of.project %>
+              <%= link_to of.project.title, admin_project_path(of.project), class: "hover:text-accent" %>
+            <% else %>
+              <span class="text-gray-400">—</span>
+            <% end %>
           </td>
           <td class="px-6 py-4 text-sm text-gray-500"><%= of.line_items.size %></td>
           <td class="px-6 py-4">

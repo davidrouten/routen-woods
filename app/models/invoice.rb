@@ -6,7 +6,7 @@ class Invoice < ApplicationRecord
     paid: 3
   }
 
-  belongs_to :project
+  belongs_to :project, optional: true
   has_many :line_items, class_name: "InvoiceLineItem", dependent: :destroy
   has_many :adjustments, class_name: "InvoiceAdjustment", dependent: :destroy
 

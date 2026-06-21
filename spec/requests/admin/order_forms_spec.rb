@@ -20,6 +20,32 @@ RSpec.describe "Admin::OrderForms", type: :request do
     end
   end
 
+  describe "GET /admin/order_forms/new" do
+    it "renders new form without a project" do
+      get new_admin_order_form_path
+      expect(response).to be_successful
+    end
+  end
+
+  describe "POST /admin/order_forms" do
+    it "creates a standalone order form" do
+      expect {
+        post admin_order_forms_path, params: {
+          order_form: {
+            supplier_name: "Standalone Supply",
+            line_items_attributes: {
+              "0" => { name: "Test Item", quantity: 5, supplier_cost: 20.0, our_price: 30.0 }
+            }
+          }
+        }
+      }.to change(OrderForm, :count).by(1)
+
+      of = OrderForm.last
+      expect(of.project).to be_nil
+      expect(of.supplier_name).to eq("Standalone Supply")
+    end
+  end
+
   describe "GET /admin/projects/:project_id/order_forms/new" do
     it "renders new form" do
       get new_admin_project_order_form_path(project)

@@ -1,6 +1,6 @@
 module Admin
   class OrderFormsController < BaseController
-    before_action :set_project, except: [:index]
+    before_action :set_project, if: -> { params[:project_id].present? }
     before_action :set_order_form, only: [:show, :edit, :update, :destroy, :submit_order, :confirm_order, :receive_order]
     before_action -> { require_permission!(:manage, :leads) }
 
@@ -14,14 +14,15 @@ module Admin
     end
 
     def new
-      @order_form = @project.order_forms.build
+      @order_form = OrderForm.new(project: @project)
       @order_form.line_items.build
     end
 
     def create
-      @order_form = @project.order_forms.build(order_form_params)
+      @order_form = OrderForm.new(order_form_params)
+      @order_form.project = @project if @project && @order_form.project_id.blank?
       if @order_form.save
-        redirect_to admin_project_order_form_path(@project, @order_form), notice: "Order form created."
+        redirect_to order_form_path_for(@order_form), notice: "Order form created."
       else
         render :new, status: :unprocessable_entity
       end
@@ -33,7 +34,7 @@ module Admin
 
     def update
       if @order_form.update(order_form_params)
-        redirect_to admin_project_order_form_path(@project, @order_form), notice: "Order form updated."
+        redirect_to order_form_path_for(@order_form), notice: "Order form updated."
       else
         render :edit, status: :unprocessable_entity
       end
@@ -41,22 +42,26 @@ module Admin
 
     def destroy
       @order_form.destroy
-      redirect_to admin_project_path(@project), notice: "Order form deleted."
+      if @order_form.project
+        redirect_to admin_project_path(@order_form.project), notice: "Order form deleted."
+      else
+        redirect_to admin_order_forms_path, notice: "Order form deleted."
+      end
     end
 
     def submit_order
       @order_form.submit!
-      redirect_to admin_project_order_form_path(@project, @order_form), notice: "Order form submitted."
+      redirect_to order_form_path_for(@order_form), notice: "Order form submitted."
     end
 
     def confirm_order
       @order_form.confirm!
-      redirect_to admin_project_order_form_path(@project, @order_form), notice: "Order confirmed."
+      redirect_to order_form_path_for(@order_form), notice: "Order confirmed."
     end
 
     def receive_order
       @order_form.mark_received!
-      redirect_to admin_project_order_form_path(@project, @order_form), notice: "Order marked as received."
+      redirect_to order_form_path_for(@order_form), notice: "Order marked as received."
     end
 
     private
@@ -66,12 +71,24 @@ module Admin
     end
 
     def set_order_form
-      @order_form = @project.order_forms.find(params[:id])
+      @order_form = if @project
+        @project.order_forms.find(params[:id])
+      else
+        OrderForm.find(params[:id])
+      end
+    end
+
+    def order_form_path_for(order_form)
+      if order_form.project
+        admin_project_order_form_path(order_form.project, order_form)
+      else
+        admin_order_form_path(order_form)
+      end
     end
 
     def order_form_params
       params.require(:order_form).permit(
-        :supplier_name, :notes,
+        :supplier_name, :notes, :project_id,
         line_items_attributes: [
           :id, :name, :category, :color, :finish, :material, :size,
           :quantity, :position, :width, :height, :depth,

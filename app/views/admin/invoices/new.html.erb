@@ -1,8 +1,10 @@
 <div class="mb-6">
-  <%= link_to "&larr; Back to Project".html_safe, admin_project_path(@project), class: "text-sm text-gray-500 hover:text-gray-700" %>
+  <%= link_to "&larr; Back".html_safe, (@project ? admin_project_path(@project) : admin_invoices_path), class: "text-sm text-gray-500 hover:text-gray-700" %>
 </div>
 
 <h1 class="text-2xl font-bold text-gray-900 mb-6">New Invoice</h1>
-<p class="text-gray-500 text-sm mb-6">Project: <%= @project.title %></p>
+<% if @project %>
+  <p class="text-gray-500 text-sm mb-6">Project: <%= @project.title %></p>
+<% end %>
 
 <%= render "form", invoice: @invoice, project: @project %>

@@ -31,8 +31,19 @@ Rails.application.routes.draw do
       resources :notes, only: [:create, :destroy]
     end
 
-    resources :order_forms, only: [:index]
-    resources :invoices, only: [:index]
+    resources :order_forms, only: [:index, :new, :create, :show, :edit, :update, :destroy] do
+      member do
+        patch :submit_order
+        patch :confirm_order
+        patch :receive_order
+      end
+    end
+    resources :invoices, only: [:index, :new, :create, :show, :edit, :update, :destroy] do
+      member do
+        patch :send_invoice
+        patch :record_payment
+      end
+    end
 
     resources :projects do
       member do

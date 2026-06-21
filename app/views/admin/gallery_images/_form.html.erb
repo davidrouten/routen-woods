@@ -42,9 +42,9 @@
       </div>
     </div>
 
-    <div class="flex gap-3">
-      <%= f.submit class: "btn-admin" %>
-      <%= link_to "Cancel", admin_gallery_images_path, class: "px-6 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition" %>
+    <div class="flex justify-end gap-3">
+      <%= link_to "Cancel", admin_gallery_images_path, class: "btn-admin-secondary" %>
+      <%= f.submit (gallery_image.persisted? ? "Update Image" : "Upload Image"), class: "btn-admin" %>
     </div>
   <% end %>
 </div>

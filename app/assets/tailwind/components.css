@@ -37,6 +37,16 @@
          hover:bg-accent/20 transition cursor-pointer;
 }
 
+.btn-admin-secondary {
+  @apply px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg
+         hover:bg-gray-200 transition cursor-pointer;
+}
+
+.btn-admin-destructive {
+  @apply px-4 py-2 text-sm font-medium text-red-700 bg-red-100 rounded-lg
+         hover:bg-red-200 transition cursor-pointer;
+}
+
 /* --- Form Inputs --- */
 
 .input {

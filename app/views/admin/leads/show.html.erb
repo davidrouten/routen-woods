@@ -186,7 +186,7 @@
         <% if @lead.spam? %>
           <%= button_to t("admin.leads.unmark_spam"), unmark_spam_admin_lead_path(@lead), method: :patch, class: "w-full px-3 py-2 bg-green-100 text-green-700 rounded-lg text-sm font-medium hover:bg-green-200 transition cursor-pointer" %>
         <% else %>
-          <%= render "shared/confirm_button", url: mark_spam_admin_lead_path(@lead), method: :patch, label: t("admin.leads.mark_spam"), title: "Mark as Spam", message: "Mark this lead as spam? It will be moved to the spam view.", confirm_text: "Mark Spam", danger: true, button_class: "w-full px-3 py-2 bg-red-100 text-red-700 rounded-lg text-sm font-medium hover:bg-red-200 transition cursor-pointer" %>
+          <%= render "shared/confirm_button", url: mark_spam_admin_lead_path(@lead), method: :patch, label: t("admin.leads.mark_spam"), title: "Mark as Spam", message: "Mark this lead as spam? It will be moved to the spam view.", confirm_text: "Mark Spam", danger: true, button_class: "w-full text-center btn-admin-destructive" %>
         <% end %>
       </div>
     <% end %>

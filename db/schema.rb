@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_21_192605) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_21_204656) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -90,7 +90,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_21_192605) do
     t.string "invoice_number", null: false
     t.date "issued_date"
     t.text "notes"
-    t.bigint "project_id", null: false
+    t.bigint "project_id"
     t.integer "status", default: 0, null: false
     t.decimal "subtotal", precision: 10, scale: 2, default: "0.0"
     t.decimal "tax_total", precision: 10, scale: 2, default: "0.0"
@@ -172,7 +172,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_21_192605) do
     t.datetime "confirmed_at"
     t.datetime "created_at", null: false
     t.text "notes"
-    t.bigint "project_id", null: false
+    t.bigint "project_id"
     t.datetime "received_at"
     t.integer "status", default: 0, null: false
     t.datetime "submitted_at"
