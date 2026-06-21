@@ -3,7 +3,7 @@ module Admin
     include ActionView::RecordIdentifier
     before_action :set_lead, only: [:show, :transition, :mark_spam, :unmark_spam, :archive, :restore, :assign]
     before_action -> { require_permission!(:view, :leads) }, only: [:index, :show]
-    before_action -> { require_permission!(:manage, :leads) }, only: [:transition, :mark_spam, :unmark_spam, :archive, :restore, :assign]
+    before_action -> { require_permission!(:manage, :leads) }, only: [:new, :create, :transition, :mark_spam, :unmark_spam, :archive, :restore, :assign]
 
     def index
       scope = if params[:spam] == "true"
@@ -27,6 +27,19 @@ module Admin
       @notes = @lead.notes.reverse_chronological
       @status_changes = @lead.status_changes.chronological
       @note = Note.new
+    end
+
+    def new
+      @lead = Lead.new
+    end
+
+    def create
+      @lead = Lead.new(lead_params)
+      if @lead.save
+        redirect_to admin_lead_path(@lead), notice: "Lead created."
+      else
+        render :new, status: :unprocessable_entity
+      end
     end
 
     def transition
@@ -78,6 +91,14 @@ module Admin
 
     def set_lead
       @lead = Lead.find(params[:id])
+    end
+
+    def lead_params
+      params.require(:lead).permit(
+        :first_name, :last_name, :email, :phone,
+        :budget_range, :timeframe, :zip_code, :message,
+        :status, services_interested_in: []
+      )
     end
   end
 end

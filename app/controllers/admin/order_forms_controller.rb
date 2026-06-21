@@ -1,8 +1,14 @@
 module Admin
   class OrderFormsController < BaseController
-    before_action :set_project
+    before_action :set_project, except: [:index]
     before_action :set_order_form, only: [:show, :edit, :update, :destroy, :submit_order, :confirm_order, :receive_order]
     before_action -> { require_permission!(:manage, :leads) }
+
+    def index
+      scope = OrderForm.includes(:project, :line_items)
+      scope = scope.where(status: params[:status]) if params[:status].present?
+      @order_forms = scope.order(created_at: :desc)
+    end
 
     def show
     end

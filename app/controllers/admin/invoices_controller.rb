@@ -1,8 +1,14 @@
 module Admin
   class InvoicesController < BaseController
-    before_action :set_project
+    before_action :set_project, except: [:index]
     before_action :set_invoice, only: [:show, :edit, :update, :destroy, :send_invoice, :record_payment]
     before_action -> { require_permission!(:manage, :leads) }
+
+    def index
+      scope = Invoice.includes(:project, :line_items)
+      scope = scope.where(status: params[:status]) if params[:status].present?
+      @invoices = scope.order(created_at: :desc)
+    end
 
     def show
     end

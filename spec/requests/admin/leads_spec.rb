@@ -32,6 +32,48 @@ RSpec.describe "Admin::Leads", type: :request do
     end
   end
 
+  describe "GET /admin/leads/new" do
+    before { sign_in admin }
+
+    it "renders the new lead form" do
+      get new_admin_lead_path
+      expect(response).to be_successful
+    end
+  end
+
+  describe "POST /admin/leads" do
+    before { sign_in admin }
+
+    it "creates a lead" do
+      expect {
+        post admin_leads_path, params: {
+          lead: {
+            first_name: "Jane",
+            last_name: "Doe",
+            email: "jane@example.com",
+            phone: "555-1234",
+            budget_range: "10_15k",
+            timeframe: "within_month",
+            zip_code: "90210",
+            services_interested_in: ["refacing", "countertops"],
+            message: "Interested in a kitchen remodel"
+          }
+        }
+      }.to change(Lead, :count).by(1)
+
+      lead = Lead.last
+      expect(lead.first_name).to eq("Jane")
+      expect(lead.budget_range).to eq("10_15k")
+      expect(lead.services_interested_in).to eq(["refacing", "countertops"])
+      expect(response).to redirect_to(admin_lead_path(lead))
+    end
+
+    it "re-renders form on validation error" do
+      post admin_leads_path, params: { lead: { first_name: "" } }
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+  end
+
   describe "PATCH /admin/leads/:id/transition" do
     let(:lead) { create(:lead, status: :incoming) }
 

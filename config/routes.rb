@@ -31,6 +31,9 @@ Rails.application.routes.draw do
       resources :notes, only: [:create, :destroy]
     end
 
+    resources :order_forms, only: [:index]
+    resources :invoices, only: [:index]
+
     resources :projects do
       member do
         patch :transition

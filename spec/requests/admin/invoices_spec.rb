@@ -6,6 +6,20 @@ RSpec.describe "Admin::Invoices", type: :request do
 
   before { sign_in admin }
 
+  describe "GET /admin/invoices" do
+    it "renders the index" do
+      create(:invoice, project: project)
+      get admin_invoices_path
+      expect(response).to be_successful
+    end
+
+    it "filters by status" do
+      create(:invoice, project: project, status: :sent)
+      get admin_invoices_path(status: "sent")
+      expect(response).to be_successful
+    end
+  end
+
   describe "GET /admin/projects/:project_id/invoices/new" do
     it "renders new form" do
       get new_admin_project_invoice_path(project)

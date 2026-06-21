@@ -6,6 +6,20 @@ RSpec.describe "Admin::OrderForms", type: :request do
 
   before { sign_in admin }
 
+  describe "GET /admin/order_forms" do
+    it "renders the index" do
+      create(:order_form, project: project)
+      get admin_order_forms_path
+      expect(response).to be_successful
+    end
+
+    it "filters by status" do
+      create(:order_form, project: project, status: :submitted)
+      get admin_order_forms_path(status: "submitted")
+      expect(response).to be_successful
+    end
+  end
+
   describe "GET /admin/projects/:project_id/order_forms/new" do
     it "renders new form" do
       get new_admin_project_order_form_path(project)

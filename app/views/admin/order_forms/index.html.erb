@@ -1,0 +1,56 @@
+<div class="flex justify-between items-center mb-6">
+  <h1 class="text-2xl font-bold text-gray-900">Order Forms</h1>
+</div>
+
+<!-- Filters -->
+<div class="bg-white rounded-xl shadow-sm p-4 mb-6">
+  <div class="flex flex-wrap gap-3 items-center">
+    <%= link_to "All", admin_order_forms_path, class: "px-3 py-1.5 rounded-full text-sm font-medium #{params[:status].blank? ? 'bg-primary text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'} transition" %>
+    <% OrderForm.statuses.each_key do |status| %>
+      <%= link_to status.titleize, admin_order_forms_path(status: status), class: "px-3 py-1.5 rounded-full text-sm font-medium #{params[:status] == status ? 'bg-primary text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'} transition" %>
+    <% end %>
+  </div>
+</div>
+
+<div class="bg-white rounded-xl shadow-sm overflow-hidden">
+  <table class="min-w-full divide-y divide-gray-200">
+    <thead class="bg-gray-50">
+      <tr>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Supplier</th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Project</th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Items</th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Cost</th>
+        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Our Price</th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-200">
+      <% @order_forms.each do |of| %>
+        <tr class="hover:bg-gray-50">
+          <td class="px-6 py-4">
+            <%= link_to admin_project_order_form_path(of.project, of), class: "font-medium text-gray-900 hover:text-accent" do %>
+              <%= of.supplier_name %>
+            <% end %>
+          </td>
+          <td class="px-6 py-4 text-sm text-gray-500">
+            <%= link_to of.project.title, admin_project_path(of.project), class: "hover:text-accent" %>
+          </td>
+          <td class="px-6 py-4 text-sm text-gray-500"><%= of.line_items.size %></td>
+          <td class="px-6 py-4">
+            <span class="inline-block px-2 py-1 rounded-full text-xs font-medium <%= order_form_status_color(of.status) %>"><%= of.status.titleize %></span>
+          </td>
+          <td class="px-6 py-4 text-sm text-right text-gray-700"><%= number_to_currency(of.total_supplier_cost) %></td>
+          <td class="px-6 py-4 text-sm text-right text-gray-700"><%= number_to_currency(of.total_our_price) %></td>
+          <td class="px-6 py-4 text-sm text-gray-500"><%= of.created_at.strftime("%b %d, %Y") %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <% if @order_forms.empty? %>
+    <div class="text-center py-12">
+      <p class="text-gray-400">No order forms yet.</p>
+    </div>
+  <% end %>
+</div>
