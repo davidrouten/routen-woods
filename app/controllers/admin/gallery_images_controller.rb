@@ -21,6 +21,29 @@ module Admin
       end
     end
 
+    def bulk_new; end
+
+    def bulk_create
+      images_params = params.permit(gallery_images: {}).to_h["gallery_images"] || {}
+      created = 0
+
+      images_params.each_value do |img_attrs|
+        next unless img_attrs["image"].present?
+
+        gi = GalleryImage.new(
+          title: img_attrs["title"].presence || "Untitled",
+          description: img_attrs["description"],
+          category: img_attrs["category"],
+          position: img_attrs["position"],
+          featured: img_attrs["featured"] == "1",
+          image: img_attrs["image"]
+        )
+        created += 1 if gi.save
+      end
+
+      redirect_to admin_gallery_images_path, notice: "#{created} image#{'s' unless created == 1} uploaded."
+    end
+
     def edit; end
 
     def update

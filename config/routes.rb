@@ -76,7 +76,12 @@ Rails.application.routes.draw do
 
     resources :notification_preferences, only: [:index, :update]
     resources :testimonials
-    resources :gallery_images
+    resources :gallery_images do
+      collection do
+        get :bulk_new
+        post :bulk_create
+      end
+    end
   end
 
   # Health check

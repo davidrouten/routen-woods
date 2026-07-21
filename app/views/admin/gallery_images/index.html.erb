@@ -1,7 +1,13 @@
 <div class="flex justify-between items-center mb-6">
   <h1 class="text-2xl font-bold text-gray-900"><%= t("admin.nav.gallery") %></h1>
   <% if current_user_can?(:manage, :gallery) %>
-    <%= link_to "Add Image", new_admin_gallery_image_path, class: "btn-admin" %>
+    <div class="flex items-center gap-3">
+      <%= link_to bulk_new_admin_gallery_images_path, class: "px-5 py-2.5 bg-primary text-white font-semibold rounded-lg hover:bg-primary-light transition text-sm cursor-pointer inline-flex items-center gap-2" do %>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        Bulk Upload
+      <% end %>
+      <%= link_to "Add Image", new_admin_gallery_image_path, class: "btn-admin" %>
+    </div>
   <% end %>
 </div>
 
