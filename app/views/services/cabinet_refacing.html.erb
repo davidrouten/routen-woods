@@ -2,7 +2,170 @@
 <% content_for(:title) { "#{service[:name]} | #{t('business.name')}" } %>
 
 <%= render "shared/service_hero", service: service %>
-<%= render "shared/service_detail", service: service %>
-<%= render "shared/process_steps" %>
+
+<!-- Intro -->
+<section class="py-20">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <p class="section-label">A Professional, High-Impact Upgrade</p>
+    <h2 class="section-heading">What Is Cabinet Refacing?</h2>
+    <p class="text-gray-500 text-lg leading-relaxed max-w-3xl mx-auto">
+      Cabinet refacing delivers a significant visual transformation by updating all the exterior surfaces of your cabinetry while keeping the existing cabinet boxes in place. It's a strategic solution for homeowners who want a modern, refreshed kitchen without the expense, disruption, or downtime of a full remodel.
+    </p>
+  </div>
+</section>
+
+<!-- Benefits -->
+<section class="py-20 bg-gray-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <p class="section-label">Why Refacing?</p>
+      <h2 class="section-heading">The Smart Kitchen Upgrade</h2>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Benefit 1 -->
+      <div class="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+        <div class="w-12 h-12 mb-5 bg-gradient-to-br from-primary to-primary-light rounded-xl flex items-center justify-center shadow-lg">
+          <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <h3 class="text-lg font-bold text-primary mb-2">Major Style Upgrade at a Lower Cost</h3>
+        <p class="text-gray-500 leading-relaxed">Refacing typically costs 30–50% less than full cabinet replacement. Get the look of brand-new custom cabinetry while preserving your budget for other upgrades like countertops, lighting, or appliances.</p>
+      </div>
+
+      <!-- Benefit 2 -->
+      <div class="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+        <div class="w-12 h-12 mb-5 bg-gradient-to-br from-primary to-primary-light rounded-xl flex items-center justify-center shadow-lg">
+          <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <h3 class="text-lg font-bold text-primary mb-2">Fast Turnaround With Minimal Disruption</h3>
+        <p class="text-gray-500 leading-relaxed">Most projects are completed in 2–4 days, allowing the kitchen to remain functional throughout. A major advantage for busy households that can't afford extended construction.</p>
+      </div>
+
+      <!-- Benefit 3 -->
+      <div class="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+        <div class="w-12 h-12 mb-5 bg-gradient-to-br from-primary to-primary-light rounded-xl flex items-center justify-center shadow-lg">
+          <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        </div>
+        <h3 class="text-lg font-bold text-primary mb-2">Clean, Controlled & Non-Invasive</h3>
+        <p class="text-gray-500 leading-relaxed">Because the cabinet boxes stay in place, there's no demolition, no major mess, and no need to modify plumbing or electrical. A streamlined process that avoids the typical chaos of remodeling.</p>
+      </div>
+
+      <!-- Benefit 4 -->
+      <div class="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+        <div class="w-12 h-12 mb-5 bg-gradient-to-br from-primary to-primary-light rounded-xl flex items-center justify-center shadow-lg">
+          <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+        </div>
+        <h3 class="text-lg font-bold text-primary mb-2">High-End Customization Options</h3>
+        <p class="text-gray-500 leading-relaxed mb-4">Choose from a wide range of options for a tailored, designer-level result:</p>
+        <ul class="space-y-2 text-gray-500 text-sm">
+          <li class="flex items-center gap-2"><svg class="w-4 h-4 text-accent flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Door styles</li>
+          <li class="flex items-center gap-2"><svg class="w-4 h-4 text-accent flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Wood species or laminates</li>
+          <li class="flex items-center gap-2"><svg class="w-4 h-4 text-accent flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Finishes and colors</li>
+          <li class="flex items-center gap-2"><svg class="w-4 h-4 text-accent flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Hardware upgrades</li>
+          <li class="flex items-center gap-2"><svg class="w-4 h-4 text-accent flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Soft-close hinges and drawer glides</li>
+        </ul>
+      </div>
+
+      <!-- Benefit 5 -->
+      <div class="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+        <div class="w-12 h-12 mb-5 bg-gradient-to-br from-primary to-primary-light rounded-xl flex items-center justify-center shadow-lg">
+          <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <h3 class="text-lg font-bold text-primary mb-2">Environmentally Responsible Choice</h3>
+        <p class="text-gray-500 leading-relaxed">Refacing reuses existing cabinet structures, reducing landfill waste and conserving materials. A sustainable upgrade that aligns with modern eco-conscious values.</p>
+      </div>
+
+      <!-- Benefit 6: When Refacing Is Ideal -->
+      <div class="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+        <div class="w-12 h-12 mb-5 bg-gradient-to-br from-primary to-primary-light rounded-xl flex items-center justify-center shadow-lg">
+          <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+        </div>
+        <h3 class="text-lg font-bold text-primary mb-2">When Refacing Is the Ideal Solution</h3>
+        <ul class="space-y-2 text-gray-500 text-sm">
+          <li class="flex items-center gap-2"><svg class="w-4 h-4 text-accent flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Cabinet boxes are structurally sound</li>
+          <li class="flex items-center gap-2"><svg class="w-4 h-4 text-accent flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>The current layout works well</li>
+          <li class="flex items-center gap-2"><svg class="w-4 h-4 text-accent flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Goal is a modernized look without major construction</li>
+          <li class="flex items-center gap-2"><svg class="w-4 h-4 text-accent flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Budget and timeline are important factors</li>
+          <li class="flex items-center gap-2"><svg class="w-4 h-4 text-accent flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Sustainability is a priority</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How It Works (refacing-specific) -->
+<section class="py-20 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <p class="section-label">Our Process</p>
+      <h2 class="section-heading">How Cabinet Refacing Works</h2>
+    </div>
+
+    <div class="max-w-4xl mx-auto space-y-8">
+      <% [
+        { num: "01", title: "Assessment & Preparation", desc: "Cabinet boxes are inspected to ensure they're structurally sound. Surfaces are cleaned and prepped for new materials." },
+        { num: "02", title: "Removal of Existing Doors & Hardware", desc: "All doors, drawer fronts, and hardware are removed to expose the cabinet frames." },
+        { num: "03", title: "Application of Veneer or Laminate", desc: "High-quality veneer or laminate is applied to the face frames and any exposed cabinet sides, creating a seamless, updated appearance." },
+        { num: "04", title: "Installation of New Doors & Drawer Fronts", desc: "Custom-sized components are installed, instantly transforming the look of the cabinetry." },
+        { num: "05", title: "Hardware & Functional Upgrades", desc: "New hinges, pulls, knobs, and optional soft-close systems are added for improved performance and aesthetics." },
+        { num: "06", title: "Final Adjustments & Quality Check", desc: "Doors are aligned, edges trimmed, and surfaces polished for a clean, professional finish." }
+      ].each do |step| %>
+        <div class="flex gap-6 items-start group">
+          <div class="w-14 h-14 flex-shrink-0 bg-primary border-4 border-primary rounded-full flex items-center justify-center group-hover:border-accent group-hover:scale-110 transition-all duration-500 shadow-lg">
+            <span class="text-lg font-extrabold text-accent group-hover:text-white transition-colors duration-300"><%= step[:num] %></span>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-primary mb-1"><%= step[:title] %></h3>
+            <p class="text-gray-500 leading-relaxed"><%= step[:desc] %></p>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<!-- Comparison Table -->
+<section class="py-20 bg-gray-50">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+      <p class="section-label">Quick Comparison</p>
+      <h2 class="section-heading">Refacing vs. the Alternatives</h2>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+      <table class="w-full text-left">
+        <thead>
+          <tr class="bg-primary text-white">
+            <th class="px-6 py-4 font-bold text-sm">Option</th>
+            <th class="px-6 py-4 font-bold text-sm">Cost</th>
+            <th class="px-6 py-4 font-bold text-sm">Timeline</th>
+            <th class="px-6 py-4 font-bold text-sm hidden sm:table-cell">Best For</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          <tr class="bg-accent/5">
+            <td class="px-6 py-4 font-bold text-primary">Refacing</td>
+            <td class="px-6 py-4 text-gray-600">$3k–$10k</td>
+            <td class="px-6 py-4 text-gray-600">2–4 days</td>
+            <td class="px-6 py-4 text-gray-600 hidden sm:table-cell">Style upgrade, minimal disruption</td>
+          </tr>
+          <tr>
+            <td class="px-6 py-4 font-bold text-primary">Replacement</td>
+            <td class="px-6 py-4 text-gray-600">$15k–$30k+</td>
+            <td class="px-6 py-4 text-gray-600">Weeks</td>
+            <td class="px-6 py-4 text-gray-600 hidden sm:table-cell">Layout changes, damaged boxes</td>
+          </tr>
+          <tr>
+            <td class="px-6 py-4 font-bold text-primary">DIY Refacing</td>
+            <td class="px-6 py-4 text-gray-600">$1k–$5k</td>
+            <td class="px-6 py-4 text-gray-600">Varies</td>
+            <td class="px-6 py-4 text-gray-600 hidden sm:table-cell">Skilled homeowners</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
 <%= render "shared/cta_inline" %>
 <%= render "shared/contact_section", lead: @lead %>
