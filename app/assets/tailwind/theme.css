@@ -7,9 +7,9 @@
 
 @theme {
   /* --- Raw Palette --- */
-  --color-primary:       #0f1b2d;   /* Dark navy */
-  --color-primary-light: #1b2a4a;   /* Lighter navy (gradients, active states) */
-  --color-primary-dark:  #0a1220;   /* Darkest navy (footer) */
-  --color-accent:        #d4a338;   /* Gold */
-  --color-accent-hover:  #b8860b;   /* Dark gold (hover states) */
+  --color-primary:       #10264c;   /* Dark navy */
+  --color-primary-light: #1a3668;   /* Lighter navy (gradients, active states) */
+  --color-primary-dark:  #0b1a38;   /* Darkest navy (footer) */
+  --color-accent:        #f2cc45;   /* Gold */
+  --color-accent-hover:  #d4a938;   /* Dark gold (hover states) */
 }

@@ -106,11 +106,12 @@ export default class extends Controller {
   }
 
   confirmAndClose() {
-    if (this.pendingFormSelector) {
-      const form = document.querySelector(this.pendingFormSelector)
+    const formSelector = this.pendingFormSelector
+    this.close()
+    if (formSelector) {
+      const form = document.querySelector(formSelector)
       if (form) form.requestSubmit()
     }
-    this.close()
   }
 
   close() {

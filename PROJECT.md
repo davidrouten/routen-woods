@@ -52,7 +52,7 @@
 ## Phase 5: Admin Backend
 - [x] Admin::BaseController with auth + permission checks
 - [x] Admin::DashboardController (leads by status, recent, hot)
-- [x] Admin::LeadsController (index, show, transition, mark_spam, assign)
+- [x] Admin::LeadsController (index, show, new, create, transition, mark_spam, assign)
 - [x] Admin::NotesController (create, destroy via Turbo Stream)
 - [x] Admin layout (sidebar nav with user avatar)
 - [x] Lead index: filterable table with status/temp badges + search
@@ -267,9 +267,9 @@ Project is a separate model from Lead. It represents a confirmed job moving thro
 - [x] Lead show page displays linked projects with status
 
 ### 11.3 — Order Forms (COMPLETE — admin CRUD)
-Each project can have N order forms. An order form is what gets sent to the supplier to order parts.
+Order forms track supplier orders. Can belong to a project or exist standalone.
 
-- [x] OrderForm model: `belongs_to :project`, `has_many :line_items`
+- [x] OrderForm model: `belongs_to :project` (optional), `has_many :line_items`
 - [x] OrderForm fields: supplier_name, status (draft/submitted/confirmed/received), notes, submitted_at
 - [x] OrderLineItem: name, category, color, finish, material, size, dimensions (W/H/D), quantity, supplier_cost, our_price, markup_pct, specifications, notes
 - [x] Admin UI: build order form with dynamic nested line items, see totals (cost, price, profit)
@@ -279,9 +279,9 @@ Each project can have N order forms. An order form is what gets sent to the supp
 - [ ] Order form templates (common configurations to speed up entry)
 
 ### 11.4 — Customer Invoice (COMPLETE — admin CRUD)
-Invoice is what the customer sees and pays against. Usually simple — 1-2 line items.
+Invoice is what the customer sees and pays against. Can belong to a project or exist standalone.
 
-- [x] Invoice model: `belongs_to :project`, auto-generated invoice_number (INV-XXXX)
+- [x] Invoice model: `belongs_to :project` (optional), auto-generated invoice_number (INV-XXXX)
 - [x] InvoiceLineItem: name, description, quantity, unit_price, total
 - [x] InvoiceAdjustment: label, type (tax/fee/discount), rate, amount
 - [x] Subtotal, taxes, fees, total (auto-calculated)
@@ -298,7 +298,14 @@ Invoice is what the customer sees and pays against. Usually simple — 1-2 line 
 - [x] Project new/edit forms (prefilled from lead when converting)
 - [x] Order form new/edit with dynamic nested line items (Stimulus controller)
 - [x] Invoice new/edit with line items + tax/fee adjustments
-- [x] 112 specs passing
+- [x] Top-level Order Forms index with status filters + "New Order Form" button
+- [x] Top-level Invoices index with status filters + "New Invoice" button
+- [x] Order Forms & Invoices nav sub-items under Projects (highlight parent when active)
+- [x] Standalone order form/invoice creation (no project required)
+- [x] Project reassignment dropdown on order form/invoice edit
+- [x] Admin lead creation form (new/create with all fields)
+- [x] UI consistency pass: `btn-admin-secondary`, `btn-admin-destructive` component classes, uniform button order/placement, back links on all new/edit pages
+- [x] 158 specs passing
 
 ### 11.5 — Compound actions on project cards
 - [ ] **Scheduled**: "Add Details" — edit scope/price/dates, triggers deposit payment link

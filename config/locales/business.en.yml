@@ -96,8 +96,8 @@ en:
         label: "Just planning"
 
     hero:
-      heading: "Transform Your Kitchen Without the Renovation"
-      subheading: "Expert cabinet refacing, customization, and repair in %{service_area}"
+      heading: "Cabinets Done Right"
+      subheading: "Expert craftsmanship for every cabinet project in %{service_area} — from a fresh reface to a full install"
       cta_primary: "Get a Free Quote"
       cta_secondary: "View Our Work"
 
