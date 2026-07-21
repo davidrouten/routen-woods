@@ -30,12 +30,14 @@ module Admin
       images_params.each_value do |img_attrs|
         next unless img_attrs["image"].present?
 
+        tags = (img_attrs["page_tags"] || {}).select { |_, v| v == "1" }.keys
+
         gi = GalleryImage.new(
           title: img_attrs["title"].presence || "Untitled",
           description: img_attrs["description"],
-          category: img_attrs["category"],
           position: img_attrs["position"],
           featured: img_attrs["featured"] == "1",
+          page_tags: tags,
           image: img_attrs["image"]
         )
         created += 1 if gi.save
@@ -66,7 +68,7 @@ module Admin
     end
 
     def gallery_image_params
-      params.require(:gallery_image).permit(:title, :description, :category, :service_category, :position, :featured, :image)
+      params.require(:gallery_image).permit(:title, :description, :position, :featured, :image, page_tags: [])
     end
   end
 end

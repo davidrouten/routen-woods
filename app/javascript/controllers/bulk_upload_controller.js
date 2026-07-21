@@ -2,6 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["dropzone", "fileInput", "rows", "submitBtn", "emptyState"]
+  static values = { tags: Array }
 
   connect() {
     this.fileCount = 0
@@ -30,7 +31,6 @@ export default class extends Controller {
 
   selectFiles(event) {
     this.addFiles(event.target.files)
-    // Reset so the same files can be re-selected if removed
     event.target.value = ""
   }
 
@@ -38,9 +38,15 @@ export default class extends Controller {
     const imageFiles = Array.from(fileList).filter(f => f.type.startsWith("image/"))
     if (imageFiles.length === 0) return
 
-    imageFiles.forEach((file, i) => {
+    imageFiles.forEach(() => {
       this.fileCount++
-      this.addRow(file, this.fileCount)
+    })
+
+    // Reset counter so indices match
+    let idx = this.fileCount - imageFiles.length
+    imageFiles.forEach((file) => {
+      idx++
+      this.addRow(file, idx)
     })
 
     this.submitBtnTarget.classList.remove("hidden")
@@ -50,63 +56,71 @@ export default class extends Controller {
   addRow(file, index) {
     const reader = new FileReader()
     reader.onload = (e) => {
-      const row = document.createElement("tr")
-      row.className = "border-b border-gray-100"
-      row.dataset.bulkUploadTarget = "row"
+      const card = document.createElement("div")
+      card.className = "bg-white rounded-xl border border-gray-200 p-4 flex flex-col sm:flex-row gap-4"
+      card.dataset.bulkUploadTarget = "row"
 
-      row.innerHTML = `
-        <td class="px-4 py-3">
-          <div class="flex items-center gap-3">
-            <img src="${e.target.result}" class="w-16 h-16 object-cover rounded-lg border border-gray-200" />
-            <span class="text-xs text-gray-400 truncate max-w-[120px]">${file.name}</span>
+      const tagCheckboxes = this.tagsValue.map(([value, label]) => {
+        const checked = value === "gallery" ? "checked" : ""
+        return `
+          <label class="flex items-center gap-1.5 text-xs text-gray-600 cursor-pointer">
+            <input type="checkbox" name="gallery_images[${index}][page_tags][${value}]" value="1" ${checked}
+                   class="rounded text-accent focus:ring-accent w-3.5 h-3.5" />
+            ${label}
+          </label>`
+      }).join("")
+
+      card.innerHTML = `
+        <div class="flex-shrink-0">
+          <img src="${e.target.result}" class="w-20 h-20 object-cover rounded-lg border border-gray-200" />
+          <p class="text-xs text-gray-400 truncate max-w-[80px] mt-1">${file.name}</p>
+        </div>
+
+        <div class="flex-1 space-y-3">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <input type="text" name="gallery_images[${index}][title]" placeholder="Title (optional)"
+                   class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-accent focus:border-accent" />
+            <input type="text" name="gallery_images[${index}][description]" placeholder="Description (optional)"
+                   class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-accent focus:border-accent" />
           </div>
-        </td>
-        <td class="px-4 py-3">
-          <input type="text" name="gallery_images[${index}][title]" placeholder="Optional title"
-                 class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-accent focus:border-accent" />
-        </td>
-        <td class="px-4 py-3">
-          <input type="text" name="gallery_images[${index}][description]" placeholder="Optional description"
-                 class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-accent focus:border-accent" />
-        </td>
-        <td class="px-4 py-3">
-          <select name="gallery_images[${index}][category]"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-accent focus:border-accent">
-            <option value="">None</option>
-            <option value="before_after">Before & After</option>
-            <option value="completed">Completed</option>
-            <option value="process">Process</option>
-          </select>
-        </td>
-        <td class="px-4 py-3">
-          <input type="number" name="gallery_images[${index}][position]" placeholder="#" min="0"
-                 class="w-20 px-3 py-2 border border-gray-300 rounded-lg text-sm text-center focus:ring-2 focus:ring-accent focus:border-accent" />
-        </td>
-        <td class="px-4 py-3 text-center">
-          <input type="checkbox" name="gallery_images[${index}][featured]" value="1"
-                 class="w-4 h-4 rounded border-gray-300 text-accent focus:ring-accent" />
-        </td>
-        <td class="px-4 py-3 text-center">
-          <button type="button" data-action="bulk-upload#removeRow" class="text-red-400 hover:text-red-600 transition">
+
+          <div class="flex flex-wrap gap-x-4 gap-y-2">
+            ${tagCheckboxes}
+          </div>
+
+          <div class="flex items-center gap-4">
+            <div class="flex items-center gap-2">
+              <label class="text-xs text-gray-500">Position</label>
+              <input type="number" name="gallery_images[${index}][position]" placeholder="#" min="0"
+                     class="w-16 px-2 py-1.5 border border-gray-300 rounded-lg text-sm text-center focus:ring-2 focus:ring-accent focus:border-accent" />
+            </div>
+            <label class="flex items-center gap-1.5 text-xs text-gray-600 cursor-pointer">
+              <input type="checkbox" name="gallery_images[${index}][featured]" value="1"
+                     class="rounded text-accent focus:ring-accent w-3.5 h-3.5" />
+              Featured
+            </label>
+          </div>
+        </div>
+
+        <div class="flex-shrink-0 self-start">
+          <button type="button" data-action="bulk-upload#removeRow" class="text-red-400 hover:text-red-600 transition p-1">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
           </button>
-        </td>
+        </div>
       `
 
-      // Store the File object on the row so we can grab it at submit time
-      row._file = file
-      row._index = index
+      card._file = file
+      card._index = index
 
-      this.rowsTarget.appendChild(row)
+      this.rowsTarget.appendChild(card)
     }
     reader.readAsDataURL(file)
   }
 
   removeRow(event) {
-    const row = event.target.closest("tr")
-    row.remove()
+    const card = event.target.closest("[data-bulk-upload-target='row']")
+    card.remove()
 
-    // Hide submit and show empty state if no rows left
     if (this.rowsTarget.children.length === 0) {
       this.submitBtnTarget.classList.add("hidden")
       if (this.hasEmptyStateTarget) this.emptyStateTarget.classList.remove("hidden")
@@ -116,13 +130,12 @@ export default class extends Controller {
   submit(event) {
     event.preventDefault()
 
-    const rows = this.rowsTarget.querySelectorAll("tr")
+    const rows = this.rowsTarget.querySelectorAll("[data-bulk-upload-target='row']")
     if (rows.length === 0) return
 
     const form = this.element
     const formData = new FormData()
 
-    // Add CSRF token
     const token = document.querySelector('meta[name="csrf-token"]')?.content
     if (token) formData.append("authenticity_token", token)
 
@@ -143,16 +156,13 @@ export default class extends Controller {
       })
     })
 
-    // Disable submit button
     this.submitBtnTarget.disabled = true
     this.submitBtnTarget.textContent = "Uploading..."
 
     fetch(form.action, {
       method: "POST",
       body: formData,
-      headers: {
-        "Accept": "text/html"
-      }
+      headers: { "Accept": "text/html" }
     }).then(response => {
       if (response.redirected) {
         window.location.href = response.url

@@ -1,4 +1,4 @@
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
   <div class="mb-6">
     <%= link_to "← Back to Gallery", admin_gallery_images_path, class: "text-sm text-gray-500 hover:text-accent transition" %>
   </div>
@@ -9,18 +9,16 @@
         method="post"
         enctype="multipart/form-data"
         data-controller="bulk-upload"
+        data-bulk-upload-tags-value="<%= GalleryImage::PAGE_TAGS.to_a.to_json %>"
         data-success-url="<%= admin_gallery_images_path %>"
         data-action="submit->bulk-upload#submit">
 
     <!-- Drop zone -->
     <div data-bulk-upload-target="dropzone"
-         data-action="dragover->bulk-upload#dragover dragleave->bulk-upload#dragleave drop->bulk-upload#drop"
-         class="border-2 border-dashed border-gray-300 rounded-2xl p-12 text-center cursor-pointer hover:border-accent transition-colors duration-200 mb-8"
-         role="button"
-         tabindex="0"
-         data-action-click="bulk-upload#browse">
+         data-action="dragover->bulk-upload#dragover dragleave->bulk-upload#dragleave drop->bulk-upload#drop click->bulk-upload#browse"
+         class="border-2 border-dashed border-gray-300 rounded-2xl p-12 text-center cursor-pointer hover:border-accent transition-colors duration-200 mb-8">
 
-      <div class="flex flex-col items-center gap-3" data-action="click->bulk-upload#browse">
+      <div class="flex flex-col items-center gap-3">
         <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
         </svg>
@@ -34,29 +32,12 @@
              class="hidden" />
     </div>
 
-    <!-- Table of rows -->
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-x-auto mb-8">
-      <table class="w-full text-left text-sm">
-        <thead>
-          <tr class="border-b border-gray-200 bg-gray-50">
-            <th class="px-4 py-3 font-bold text-primary text-xs uppercase tracking-wider">Preview</th>
-            <th class="px-4 py-3 font-bold text-primary text-xs uppercase tracking-wider">Title</th>
-            <th class="px-4 py-3 font-bold text-primary text-xs uppercase tracking-wider">Description</th>
-            <th class="px-4 py-3 font-bold text-primary text-xs uppercase tracking-wider">Category</th>
-            <th class="px-4 py-3 font-bold text-primary text-xs uppercase tracking-wider">Position</th>
-            <th class="px-4 py-3 font-bold text-primary text-xs uppercase tracking-wider text-center">Featured</th>
-            <th class="px-4 py-3 font-bold text-primary text-xs uppercase tracking-wider text-center">Remove</th>
-          </tr>
-        </thead>
-        <tbody data-bulk-upload-target="rows">
-          <!-- Rows inserted by JS -->
-        </tbody>
-      </table>
+    <!-- Image cards -->
+    <div data-bulk-upload-target="rows" class="space-y-4 mb-8"></div>
 
-      <!-- Empty state -->
-      <div data-bulk-upload-target="emptyState" class="px-4 py-12 text-center text-gray-400">
-        Drop images above to get started
-      </div>
+    <!-- Empty state -->
+    <div data-bulk-upload-target="emptyState" class="text-center text-gray-400 py-8">
+      Drop images above to get started
     </div>
 
     <!-- Submit -->

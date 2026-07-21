@@ -93,6 +93,8 @@
   </div>
 </section>
 
+<%= render "shared/gallery_grid", images: @gallery_images if @gallery_images.any? %>
+
 <!-- How It Works (refacing-specific) -->
 <section class="py-20 bg-white">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

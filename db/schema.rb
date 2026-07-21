@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_21_204656) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_21_135405) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -43,12 +43,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_21_204656) do
   end
 
   create_table "gallery_images", force: :cascade do |t|
-    t.string "category"
     t.datetime "created_at", null: false
     t.text "description"
     t.boolean "featured"
+    t.string "page_tags", default: [], array: true
     t.integer "position"
-    t.string "service_category"
     t.string "title"
     t.datetime "updated_at", null: false
   end

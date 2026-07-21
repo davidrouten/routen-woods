@@ -25,11 +25,23 @@
       <%= f.file_field :image, accept: "image/*", class: "w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-accent file:text-primary hover:file:bg-accent-hover" %>
     </div>
 
-    <div class="grid grid-cols-3 gap-4">
-      <div>
-        <%= f.label :category, class: "block text-sm font-medium text-gray-700 mb-1" %>
-        <%= f.select :category, [["Before & After", "before_after"], ["Completed", "completed"], ["Process", "process"]], { include_blank: "Select..." }, class: "input-admin" %>
+    <div>
+      <p class="block text-sm font-medium text-gray-700 mb-2">Show on Pages</p>
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+        <% GalleryImage::PAGE_TAGS.each do |tag, label| %>
+          <label class="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 hover:border-accent/30 transition cursor-pointer text-sm">
+            <input type="checkbox" name="gallery_image[page_tags][]" value="<%= tag %>"
+                   <%= "checked" if gallery_image.page_tags&.include?(tag) || (gallery_image.new_record? && tag == GalleryImage::TAG_GALLERY) %>
+                   class="rounded text-accent focus:ring-accent" />
+            <span class="text-gray-700"><%= label %></span>
+          </label>
+        <% end %>
       </div>
+      <%# Ensure empty array is submitted when nothing checked %>
+      <input type="hidden" name="gallery_image[page_tags][]" value="" />
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
       <div>
         <%= f.label :position, class: "block text-sm font-medium text-gray-700 mb-1" %>
         <%= f.number_field :position, class: "input-admin" %>

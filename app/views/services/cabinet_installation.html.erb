@@ -3,6 +3,7 @@
 
 <%= render "shared/service_hero", service: service %>
 <%= render "shared/service_detail", service: service %>
+<%= render "shared/gallery_grid", images: @gallery_images if @gallery_images.any? %>
 <%= render "shared/process_steps" %>
 <%= render "shared/cta_inline" %>
 <%= render "shared/contact_section", lead: @lead %>
