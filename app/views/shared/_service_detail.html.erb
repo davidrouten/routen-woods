@@ -1,0 +1,22 @@
+<section class="py-20">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center">
+      <h2 class="text-3xl md:text-4xl font-extrabold text-primary mb-6"><%= service[:name] %></h2>
+
+      <% if service[:description].present? %>
+        <p class="text-gray-500 text-lg leading-relaxed"><%= service[:description] %></p>
+      <% end %>
+
+      <% if service[:details].present? %>
+        <ul class="mt-6 space-y-3 text-left max-w-2xl mx-auto">
+          <% service[:details].each do |item| %>
+            <li class="flex items-start gap-3 text-gray-500 text-lg leading-relaxed">
+              <svg class="w-5 h-5 text-accent mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+              <span><%= item %></span>
+            </li>
+          <% end %>
+        </ul>
+      <% end %>
+    </div>
+  </div>
+</section>

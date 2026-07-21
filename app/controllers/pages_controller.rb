@@ -8,9 +8,6 @@ class PagesController < ApplicationController
   def about
   end
 
-  def services
-  end
-
   def gallery
     @images = GalleryImage.positioned
   end

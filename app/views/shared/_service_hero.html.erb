@@ -1,0 +1,44 @@
+<section class="relative min-h-[60vh] flex items-center overflow-hidden pb-20" data-hero>
+  <div class="absolute inset-0 bg-brand-gradient"></div>
+
+  <div class="absolute inset-0 opacity-10">
+    <div class="glow-orb top-20 left-10"></div>
+    <div class="glow-orb bottom-20 right-10 w-96 h-96"></div>
+  </div>
+
+  <div class="absolute inset-0 opacity-5" style="background-image: url('data:image/svg+xml,<svg width=&quot;60&quot; height=&quot;60&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;><rect width=&quot;60&quot; height=&quot;60&quot; fill=&quot;none&quot; stroke=&quot;white&quot; stroke-width=&quot;0.5&quot;/></svg>');"></div>
+
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 w-full">
+    <div class="max-w-3xl">
+      <div class="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full mb-8 border border-white/20">
+        <span class="w-2 h-2 bg-accent rounded-full animate-pulse"></span>
+        <span class="text-accent text-sm font-medium tracking-wide uppercase"><%= service[:name] %></span>
+      </div>
+
+      <h1 class="text-5xl md:text-6xl lg:text-7xl font-extrabold text-white leading-[1.1] mb-6 tracking-tight">
+        <%= service[:hero_heading] %>
+      </h1>
+
+      <p class="text-xl md:text-2xl text-gray-300 mb-10 leading-relaxed max-w-2xl">
+        <%= service[:hero_subheading] %>
+      </p>
+
+      <div class="flex flex-col sm:flex-row gap-4">
+        <%= link_to "#contact", class: "btn-primary group" do %>
+          Get a Free Quote
+          <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+        <% end %>
+        <%= link_to gallery_path, class: "btn-outline group" do %>
+          View Our Work
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="absolute bottom-0 left-0 right-0">
+    <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" class="w-full h-16 md:h-20">
+      <path d="M0 80L1440 80L1440 40C1200 0 240 0 0 40L0 80Z" fill="white"/>
+    </svg>
+  </div>
+</section>

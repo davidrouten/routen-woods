@@ -16,9 +16,9 @@ RSpec.describe "Pages", type: :request do
   end
 
   describe "GET /services" do
-    it "renders the services page" do
-      get services_path
-      expect(response).to have_http_status(:ok)
+    it "redirects to root" do
+      get "/services"
+      expect(response).to redirect_to("/")
     end
   end
 

@@ -4,7 +4,16 @@ Rails.application.routes.draw do
   # Public marketing site
   root "pages#home"
   get "about", to: "pages#about"
-  get "services", to: "pages#services"
+  # Individual service pages
+  scope :services, as: :services do
+    get "/",                              to: redirect("/"), as: :all
+    get "cabinet-refacing",               to: "services#cabinet_refacing",        as: :cabinet_refacing
+    get "cabinet-repainting",             to: "services#cabinet_repainting",      as: :cabinet_repainting
+    get "cabinet-installation",           to: "services#cabinet_installation",    as: :cabinet_installation
+    get "cabinet-customization-and-repair", to: "services#cabinet_customize_repair", as: :cabinet_customize_repair
+    get "custom-closets-and-pantries",    to: "services#custom_closets",          as: :custom_closets
+    get "countertops",                    to: "services#countertops",             as: :countertops
+  end
   get "gallery", to: "pages#gallery"
   get "contact", to: "pages#contact"
 

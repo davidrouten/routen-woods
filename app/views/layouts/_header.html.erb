@@ -5,7 +5,7 @@
       <div class="flex-shrink-0">
         <%= link_to root_path, class: "flex items-center gap-3 group" do %>
           <div class="avatar-accent w-10 h-10 rounded-xl shadow-lg group-hover:scale-105 transition-transform">
-            <span class="font-extrabold text-lg">R</span>
+            <span class="font-extrabold text-lg">RW</span>
           </div>
           <span class="text-white text-xl font-bold tracking-wide"><%= t("business.name") %></span>
         <% end %>
@@ -14,7 +14,25 @@
       <!-- Desktop Nav -->
       <nav class="hidden md:flex items-center space-x-1">
         <%= link_to "Home", root_path, class: "px-4 py-2 text-gray-300 hover:text-white rounded-lg hover:bg-white/10 transition-all duration-200 text-sm font-medium" %>
-        <%= link_to "Services", services_path, class: "px-4 py-2 text-gray-300 hover:text-white rounded-lg hover:bg-white/10 transition-all duration-200 text-sm font-medium" %>
+
+        <!-- Services dropdown -->
+        <div class="relative group/services">
+          <button class="px-4 py-2 text-gray-300 hover:text-white rounded-lg hover:bg-white/10 transition-all duration-200 text-sm font-medium inline-flex items-center gap-1">
+            Services
+            <svg class="w-3.5 h-3.5 group-hover/services:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="invisible group-hover/services:visible opacity-0 group-hover/services:opacity-100 transition-all duration-200 absolute top-full left-0 pt-2 z-50">
+            <div class="bg-primary-light rounded-xl shadow-2xl border border-white/10 py-2 whitespace-nowrap">
+              <%= link_to services_cabinet_refacing_path, class: "block px-4 py-2.5 text-gray-300 hover:text-accent hover:bg-white/5 transition text-sm" do %>Cabinet Refacing<% end %>
+              <%= link_to services_cabinet_repainting_path, class: "block px-4 py-2.5 text-gray-300 hover:text-accent hover:bg-white/5 transition text-sm" do %>Cabinet Repainting<% end %>
+              <%= link_to services_cabinet_installation_path, class: "block px-4 py-2.5 text-gray-300 hover:text-accent hover:bg-white/5 transition text-sm" do %>Cabinet Installation<% end %>
+              <%= link_to services_cabinet_customize_repair_path, class: "block px-4 py-2.5 text-gray-300 hover:text-accent hover:bg-white/5 transition text-sm" do %>Customization, Repair & Accessories<% end %>
+              <%= link_to services_custom_closets_path, class: "block px-4 py-2.5 text-gray-300 hover:text-accent hover:bg-white/5 transition text-sm" do %>Custom Closets & Pantries<% end %>
+              <%= link_to services_countertops_path, class: "block px-4 py-2.5 text-gray-300 hover:text-accent hover:bg-white/5 transition text-sm" do %>Countertops<% end %>
+            </div>
+          </div>
+        </div>
+
         <%= link_to "Gallery", gallery_path, class: "px-4 py-2 text-gray-300 hover:text-white rounded-lg hover:bg-white/10 transition-all duration-200 text-sm font-medium" %>
         <%= link_to "About", about_path, class: "px-4 py-2 text-gray-300 hover:text-white rounded-lg hover:bg-white/10 transition-all duration-200 text-sm font-medium" %>
         <%= link_to "Contact", contact_path, class: "px-4 py-2 text-gray-300 hover:text-white rounded-lg hover:bg-white/10 transition-all duration-200 text-sm font-medium" %>
@@ -40,7 +58,18 @@
   <div data-mobile-menu-target="menu" class="hidden md:hidden bg-primary border-t border-white/10">
     <div class="px-4 pt-2 pb-6 space-y-1">
       <%= link_to "Home", root_path, class: "block text-gray-300 hover:text-white hover:bg-white/10 py-3 px-4 rounded-lg transition" %>
-      <%= link_to "Services", services_path, class: "block text-gray-300 hover:text-white hover:bg-white/10 py-3 px-4 rounded-lg transition" %>
+
+      <!-- Mobile services list -->
+      <div class="py-1">
+        <p class="text-gray-500 text-xs font-bold uppercase tracking-wider px-4 py-2">Services</p>
+        <%= link_to "Cabinet Refacing", services_cabinet_refacing_path, class: "block text-gray-300 hover:text-white hover:bg-white/10 py-2.5 px-6 rounded-lg transition text-sm" %>
+        <%= link_to "Cabinet Repainting", services_cabinet_repainting_path, class: "block text-gray-300 hover:text-white hover:bg-white/10 py-2.5 px-6 rounded-lg transition text-sm" %>
+        <%= link_to "Cabinet Installation", services_cabinet_installation_path, class: "block text-gray-300 hover:text-white hover:bg-white/10 py-2.5 px-6 rounded-lg transition text-sm" %>
+        <%= link_to "Customization, Repair & Accessories", services_cabinet_customize_repair_path, class: "block text-gray-300 hover:text-white hover:bg-white/10 py-2.5 px-6 rounded-lg transition text-sm" %>
+        <%= link_to "Custom Closets & Pantries", services_custom_closets_path, class: "block text-gray-300 hover:text-white hover:bg-white/10 py-2.5 px-6 rounded-lg transition text-sm" %>
+        <%= link_to "Countertops", services_countertops_path, class: "block text-gray-300 hover:text-white hover:bg-white/10 py-2.5 px-6 rounded-lg transition text-sm" %>
+      </div>
+
       <%= link_to "Gallery", gallery_path, class: "block text-gray-300 hover:text-white hover:bg-white/10 py-3 px-4 rounded-lg transition" %>
       <%= link_to "About", about_path, class: "block text-gray-300 hover:text-white hover:bg-white/10 py-3 px-4 rounded-lg transition" %>
       <%= link_to "Contact", contact_path, class: "block text-gray-300 hover:text-white hover:bg-white/10 py-3 px-4 rounded-lg transition" %>

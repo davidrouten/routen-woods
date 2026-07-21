@@ -38,38 +38,55 @@ en:
       cabinet_refacing:
         name: "Cabinet Refacing"
         short_description: "New doors, new finish, same great bones"
-        description: "Our signature service. We replace your cabinet doors and drawer fronts with your choice of style — from contemporary slabs to ornate raised panels to simple shakers — then relaminate the existing cabinet boxes to match. A complete kitchen transformation, typically finished within a week instead of the months a full rebuild takes."
+        description: "Replace your old doors with new 3DL or wood cabinet doors and drawer fronts, and new laminate frames and finished ends on your existing cabinets."
+        hero_heading: "Transform Your Kitchen Without the Renovation"
+        hero_subheading: "Replace your old doors with new 3DL or wood cabinet doors and drawer fronts — a complete kitchen transformation."
         icon: "door-open"
-      cabinet_customization:
-        name: "Cabinet Customization & Accessories"
-        short_description: "Make your cabinets work harder for you"
-        description: "Upgrade your kitchen with custom rollout trays, spice racks, lazy susans, and other accessories that turn wasted cabinet space into smart storage. Simple additions that make a big difference in how your kitchen functions day to day."
-        icon: "adjustments"
-      cabinet_repair:
-        name: "Cabinet Repair"
-        short_description: "Fix what's broken, save what's good"
-        description: "From stripped screws and broken drawer boxes to water-damaged sides and face frames, we handle the repairs other companies won't touch. We can replace drawer sides, rebuild damaged sections, or custom-frame around new appliances like dishwashers — whatever it takes to get your cabinets solid again."
-        icon: "wrench"
       cabinet_repainting:
         name: "Cabinet Repainting"
         short_description: "A fresh coat for a fresh look"
-        description: "Want a specific color or need to match new doors? We offer a white-glove cabinet repainting solution — your cabinets are professionally finished and returned looking factory-new. Perfect when refacing isn't the right fit but your cabinets still have great bones."
+        description: "Stripping and repainting your current doors and drawer fronts with professional finishes, and rolling or spraying frames and finished ends."
+        hero_heading: "A Fresh Coat for a Fresh Kitchen"
+        hero_subheading: "Professional stripping and repainting with finishes that make your cabinets look factory-new."
         icon: "paint-roller"
       cabinet_installation:
         name: "Cabinet Installation"
         short_description: "Professional installs by a licensed builder"
-        description: "Need new cabinets installed? We handle the full installation — something most refacing companies can't offer because it requires a builder's license. Whether you're adding cabinets to a new space or replacing old ones entirely, we do the job right."
+        description: "Need cabinets installed? We handle the full job — something most refacing companies can't offer."
+        hero_heading: "Cabinet Installation by a Licensed Builder"
+        hero_subheading: "Full cabinet installs done right — something most refacing companies can't offer."
         icon: "hammer"
+        details:
+          - "Have cabinets, need them installed?"
+          - "Design, order, and install new cabinets"
+      cabinet_customize_repair:
+        name: "Customization, Repair & Accessories"
+        short_description: "Repairs, modifications, and smart storage add-ons"
+        hero_heading: "Upgrades & Repairs That Make Your Cabinets Work"
+        hero_subheading: "Repairs, custom modifications, and accessories — everything your cabinets need to work at their best."
+        icon: "adjustments"
+        details:
+          - "Repair damaged or broken cabinets"
+          - "Modify existing cabinets for new appliances or build custom for your space"
+          - "Add roll-out trays, drawers, trash pull-outs, spice racks, and more to new or existing cabinets"
       custom_closets:
         name: "Custom Closets & Pantries"
-        short_description: "Custom storage that transforms your space"
-        description: "Full custom closet and pantry systems designed and installed to fit your space perfectly. There's nothing quite like seeing a cluttered closet or bare pantry turned into an organized, beautiful storage solution built exactly to your needs."
+        short_description: "Custom spaces tailored to you"
+        description: "Custom spaces tailored to you and your life's accessories."
+        hero_heading: "Custom Storage Built Exactly to Your Space"
+        hero_subheading: "Closet and pantry systems designed, built, and installed — tailored to you and your life's accessories."
         icon: "template"
       countertops:
         name: "Countertops"
-        short_description: "Premade, laminate, or custom — we do it all"
-        description: "Complete your kitchen transformation with new countertops. We offer premade, laminate, solid surface, and custom wood options — a service most refacing companies won't touch. Pair with a refacing project for a seamless, coordinated result."
+        short_description: "Fabricate and install: wood (butcher's block or veneer), laminate, or solid surface"
+        description: "We fabricate and install countertops to complete your kitchen."
+        hero_heading: "The Perfect Countertop to Complete Your Kitchen"
+        hero_subheading: "Fabricated and installed — the finishing touch most refacing companies can't offer."
         icon: "table"
+        details:
+          - "Wood (butcher's block, veneer)"
+          - "Laminate"
+          - "Solid surface"
 
     budget_ranges:
       under_5k:

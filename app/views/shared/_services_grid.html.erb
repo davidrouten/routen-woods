@@ -3,39 +3,39 @@
   # "cabinet_customize_repair" combines Customization, Accessories & Repair.
   services = [
     {
-      key:   "cabinet_refacing",
+      path:  services_cabinet_refacing_path,
       title: "Cabinet Refacing",
-      blurb: "New doors and finishes on your existing cabinets — a full kitchen transformation in about a week.",
+      blurb: "New 3DL or wood doors and drawer fronts with new laminate frames and finished ends on your existing cabinets.",
       icon:  '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/>'
     },
     {
-      key:   "cabinet_repainting",
+      path:  services_cabinet_repainting_path,
       title: "Cabinet Repainting",
-      blurb: "Professional refinishing that makes your cabinets look factory-new in any color you want.",
+      blurb: "Stripping and repainting your doors and drawer fronts with professional finishes, plus frames and finished ends.",
       icon:  '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>'
     },
     {
-      key:   "cabinet_installation",
+      path:  services_cabinet_installation_path,
       title: "Cabinet Installation",
-      blurb: "Full cabinet installs by a licensed builder — something most refacing companies can't offer.",
+      blurb: "Have cabinets that need installing? Or need to design, order, and install new ones? We handle it all.",
       icon:  '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>'
     },
     {
-      key:   "cabinet_customize_repair",
+      path:  services_cabinet_customize_repair_path,
       title: "Customization, Repair & Accessories",
-      blurb: "Rollout trays, lazy susans, broken drawer fixes, water damage — we make your cabinets work like new.",
+      blurb: "Repairs, custom modifications for new appliances, plus roll-out trays, trash pull-outs, spice racks, and more.",
       icon:  '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>'
     },
     {
-      key:   "custom_closets",
+      path:  services_custom_closets_path,
       title: "Custom Closets & Pantries",
-      blurb: "Designed and built to fit your space — turn any closet or pantry into organized, beautiful storage.",
+      blurb: "Custom spaces tailored to you and your life's accessories.",
       icon:  '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"/>'
     },
     {
-      key:   "countertops",
+      path:  services_countertops_path,
       title: "Countertops",
-      blurb: "Premade, laminate, solid surface, or custom wood — the perfect finishing touch for any kitchen project.",
+      blurb: "Fabricate and install: wood (butcher's block or veneer), laminate, or solid surface countertops.",
       icon:  '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 6v12a2 2 0 002 2h12a2 2 0 002-2V6M4 6l1-2h14l1 2"/>'
     }
   ]
@@ -51,7 +51,7 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       <% services.each do |svc| %>
-        <%= link_to services_path(anchor: svc[:key]),
+        <%= link_to svc[:path],
               class: "group relative block bg-white rounded-2xl p-8 shadow-sm border border-gray-100
                        hover:shadow-2xl hover:border-accent/30 hover:-translate-y-2
                        transition-all duration-500 text-left no-underline" do %>

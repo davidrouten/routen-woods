@@ -1,0 +1,8 @@
+<% service = t("business.services.cabinet_installation") %>
+<% content_for(:title) { "#{service[:name]} | #{t('business.name')}" } %>
+
+<%= render "shared/service_hero", service: service %>
+<%= render "shared/service_detail", service: service %>
+<%= render "shared/process_steps" %>
+<%= render "shared/cta_inline" %>
+<%= render "shared/contact_section", lead: @lead %>
