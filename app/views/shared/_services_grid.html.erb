@@ -1,44 +1,39 @@
 <%
-  # Six service panels — each is one big clickable button.
-  # "cabinet_customize_repair" combines Customization, Accessories & Repair.
-  services = [
-    {
-      path:  services_cabinet_refacing_path,
-      title: "Cabinet Refacing",
+  # Service panels — each is one big clickable button.
+  # Visibility is controlled by the "enabled" flag in config/locales/business.en.yml.
+  all_services = {
+    cabinet_refacing: {
       blurb: "New 3DL or wood doors and drawer fronts with new laminate frames and finished ends on your existing cabinets.",
       icon:  '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/>'
     },
-    {
-      path:  services_cabinet_repainting_path,
-      title: "Cabinet Repainting",
+    cabinet_repainting: {
       blurb: "Love your hardwood doors but want a new color? We strip, prep, and refinish them to a gorgeous factory-quality finish.",
       icon:  '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>'
     },
-    {
-      path:  services_cabinet_installation_path,
-      title: "Cabinet Installation",
+    cabinet_installation: {
       blurb: "Have cabinets that need installing? Or need to design, order, and install new ones? We handle it all.",
       icon:  '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>'
     },
-    {
-      path:  services_cabinet_customize_repair_path,
-      title: "Customization, Repair & Accessories",
+    cabinet_customize_repair: {
       blurb: "Repairs, custom modifications for new appliances, plus roll-out trays, trash pull-outs, spice racks, and more.",
       icon:  '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>'
     },
-    {
-      path:  services_custom_closets_path,
-      title: "Custom Closets & Pantries",
+    custom_closets: {
       blurb: "Custom spaces tailored to you and your life's accessories.",
       icon:  '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"/>'
     },
-    {
-      path:  services_countertops_path,
-      title: "Countertops",
+    countertops: {
       blurb: "Fabricate and install: wood (butcher's block or veneer), laminate, or solid surface countertops.",
       icon:  '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 6v12a2 2 0 002 2h12a2 2 0 002-2V6M4 6l1-2h14l1 2"/>'
     }
-  ]
+  }
+
+  locale_services = I18n.t("business.services")
+  services = all_services.filter_map do |key, svc|
+    config = locale_services[key]
+    next unless config&.dig(:enabled)
+    svc.merge(key: key, title: config[:name], path: send(:"services_#{key}_path"))
+  end
 %>
 
 <section id="services" class="pt-16 pb-24 bg-gray-50">

@@ -4,12 +4,11 @@ module ApplicationHelper
   end
 
   def service_options_for_select
-    services = I18n.t("business.services")
-    services.map { |key, service| [service[:name], key.to_s] }
+    I18n.t("business.services").filter_map { |key, service| [service[:name], key.to_s] if service[:enabled] }
   end
 
   def service_checkbox_options
-    I18n.t("business.services").map { |key, service| [service[:name], key.to_s] }
+    I18n.t("business.services").filter_map { |key, service| [service[:name], key.to_s] if service[:enabled] }
   end
 
   def budget_range_options

@@ -36,6 +36,7 @@ en:
 
     services:
       cabinet_refacing:
+        enabled: true
         name: "Cabinet Refacing"
         short_description: "New doors, new finish, same great bones"
         description: "Replace your old doors with new 3DL or wood cabinet doors and drawer fronts, and new laminate frames and finished ends on your existing cabinets."
@@ -43,6 +44,7 @@ en:
         hero_subheading: "Replace your old doors with new 3DL or wood cabinet doors and drawer fronts — a complete kitchen transformation."
         icon: "door-open"
       cabinet_repainting:
+        enabled: true
         name: "Cabinet Repainting"
         short_description: "Love your doors? Let us give them a stunning new finish."
         description: "Love the look and feel of your hardwood cabinet doors but ready for a new color? While restaining isn't usually an option, our professional repainting process strips your doors down to bare wood and refinishes them in a gorgeous new color, like they were fresh out of the factory."
@@ -76,6 +78,7 @@ en:
               title: "Install & Clean Up"
               description: "Doors come back, get installed, new handles go on, and we clean up. Your kitchen looks brand new."
       cabinet_installation:
+        enabled: false
         name: "Cabinet Installation"
         short_description: "Professional installs by a licensed builder"
         description: "Need cabinets installed? We handle the full job — something most refacing companies can't offer."
@@ -86,6 +89,7 @@ en:
           - "Have cabinets, need them installed?"
           - "Design, order, and install new cabinets"
       cabinet_customize_repair:
+        enabled: true
         name: "Customization, Repair & Accessories"
         short_description: "Repairs, modifications, and smart storage add-ons"
         hero_heading: "Upgrades & Repairs That Make Your Cabinets Work"
@@ -96,6 +100,7 @@ en:
           - "Modify existing cabinets for new appliances or build custom for your space"
           - "Add roll-out trays, drawers, trash pull-outs, spice racks, and more to new or existing cabinets"
       custom_closets:
+        enabled: true
         name: "Custom Closets & Pantries"
         short_description: "Custom spaces tailored to you"
         description: "Custom spaces tailored to you and your life's accessories."
@@ -103,6 +108,7 @@ en:
         hero_subheading: "Closet and pantry systems designed, built, and installed — tailored to you and your life's accessories."
         icon: "template"
       countertops:
+        enabled: false
         name: "Countertops"
         short_description: "Fabricate and install: wood (butcher's block or veneer), laminate, or solid surface"
         description: "We fabricate and install countertops to complete your kitchen."
