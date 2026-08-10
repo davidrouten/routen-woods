@@ -44,11 +44,37 @@ en:
         icon: "door-open"
       cabinet_repainting:
         name: "Cabinet Repainting"
-        short_description: "A fresh coat for a fresh look"
-        description: "Stripping and repainting your current doors and drawer fronts with professional finishes, and rolling or spraying frames and finished ends."
-        hero_heading: "A Fresh Coat for a Fresh Kitchen"
-        hero_subheading: "Professional stripping and repainting with finishes that make your cabinets look factory-new."
+        short_description: "Love your doors? Let us give them a stunning new finish."
+        description: "Love the look and feel of your hardwood cabinet doors but ready for a new color? While restaining isn't usually an option, our professional repainting process strips your doors down to bare wood and refinishes them in a gorgeous new color, like they were fresh out of the factory."
+        hero_heading: "Same Great Doors. Stunning New Color."
+        hero_subheading: "Professional stripping, prep, and refinishing that transforms your existing hardwood cabinet doors into a fresh, factory-quality finish."
         icon: "paint-roller"
+        details:
+          - "You empty the cabinets; we handle everything else"
+          - "All doors, drawer fronts, and trim are removed and delivered to our paint shop for professional stripping, damage repair, and refinishing (typically 7 to 10 business days)"
+          - "While your doors are at the shop, we prep and paint all visible cabinet faces and ends on site: brush and roll or spray, your choice"
+          - "Doors return, get installed with your existing hardware or upgraded hinges and slides, new handles go on, and we leave your kitchen spotless"
+        note: "Cabinet repainting isn't an option for every kitchen. Certain materials can't be painted properly. Give us a call or click \"Get a Quote\" to find out if repainting is right for your space."
+        process:
+          heading: "How It Works"
+          subheading: "From empty cabinets to a stunning new finish. Here's our step by step process."
+          steps:
+            removal:
+              number: "01"
+              title: "Removal & Delivery"
+              description: "You empty the cabinets. We remove all doors, drawer fronts, and trim and take them to our paint shop."
+            refinishing:
+              number: "02"
+              title: "Shop Refinishing"
+              description: "Your doors are stripped, repaired, and refinished in your chosen color. Typically 7 to 10 business days."
+            onsite_prep:
+              number: "03"
+              title: "On-Site Cabinet Painting"
+              description: "While your doors are at the shop, we prep and paint all the cabinet faces and ends in your home. Brush and roll or spray."
+            installation:
+              number: "04"
+              title: "Install & Clean Up"
+              description: "Doors come back, get installed, new handles go on, and we clean up. Your kitchen looks brand new."
       cabinet_installation:
         name: "Cabinet Installation"
         short_description: "Professional installs by a licensed builder"

@@ -17,6 +17,10 @@
           <% end %>
         </ul>
       <% end %>
+
+      <% if service[:note].present? %>
+        <p class="mt-8 text-gray-400 text-sm italic max-w-2xl mx-auto"><%= service[:note] %></p>
+      <% end %>
     </div>
   </div>
 </section>
