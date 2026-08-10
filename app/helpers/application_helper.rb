@@ -78,7 +78,13 @@ module ApplicationHelper
     }[temp] || "bg-gray-100 text-gray-600"
   end
 
-  def responsive_gallery_image(image_attachment, alt:, sizes: "(max-width: 640px) 400px, 800px", eager: false, **html_opts)
+  def responsive_gallery_image(image_attachment, alt:, sizes: "(max-width: 640px) 400px, 800px", eager: false, thumbnail: false, **html_opts)
+    if thumbnail
+      src = url_for(image_attachment.variant(resize_to_fill: [112, 112], format: :webp))
+      opts = { src: src, alt: alt, loading: "lazy", decoding: "async" }.merge(html_opts)
+      return tag.img(**opts)
+    end
+
     small = url_for(image_attachment.variant(resize_to_limit: [400, 400], format: :webp))
     medium = url_for(image_attachment.variant(resize_to_limit: [800, 800], format: :webp))
 

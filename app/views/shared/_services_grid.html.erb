@@ -32,7 +32,8 @@
   services = all_services.filter_map do |key, svc|
     config = locale_services[key]
     next unless config&.dig(:enabled)
-    svc.merge(key: key, title: config[:name], path: send(:"services_#{key}_path"))
+    images = GalleryImage.tagged(key.to_s).positioned.limit(4)
+    svc.merge(key: key, title: config[:name], path: send(:"services_#{key}_path"), images: images)
   end
 %>
 
@@ -46,28 +47,40 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-4xl mx-auto">
       <% services.each do |svc| %>
-        <%= link_to svc[:path],
-              class: "group relative block bg-white rounded-2xl p-8 shadow-sm border border-gray-100
-                       hover:shadow-2xl hover:border-accent/30 hover:-translate-y-2
-                       transition-all duration-500 text-left no-underline" do %>
+        <div class="group relative bg-white rounded-2xl p-8 shadow-sm border border-gray-100
+                    hover:shadow-2xl hover:border-accent/30 hover:-translate-y-2
+                    transition-all duration-500" data-controller="lightbox">
 
-          <%# Accent line on hover %>
           <div class="absolute top-0 left-8 right-8 h-1 bg-gradient-to-r from-accent to-accent-hover rounded-b-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-          <div class="w-14 h-14 mb-5 bg-gradient-to-br from-primary to-primary-light rounded-xl flex items-center justify-center group-hover:from-accent group-hover:to-accent-hover transition-all duration-500 group-hover:rotate-3 group-hover:scale-110 shadow-lg">
-            <svg class="w-7 h-7 text-accent group-hover:text-white transition-colors duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <%= raw(svc[:icon]) %>
-            </svg>
+          <div class="flex items-center gap-2 mb-5">
+            <div class="w-14 h-14 flex-shrink-0 bg-gradient-to-br from-primary to-primary-light rounded-xl flex items-center justify-center group-hover:from-accent group-hover:to-accent-hover transition-all duration-500 group-hover:rotate-3 group-hover:scale-110 shadow-lg">
+              <svg class="w-7 h-7 text-accent group-hover:text-white transition-colors duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <%= raw(svc[:icon]) %>
+              </svg>
+            </div>
+            <% svc[:images].each do |image| %>
+              <% if image.image.attached? %>
+                <button type="button"
+                        class="w-14 h-14 flex-shrink-0 rounded-xl overflow-hidden bg-gray-100 cursor-zoom-in hover:ring-2 hover:ring-accent hover:scale-110 transition-all duration-300"
+                        data-lightbox-target="item"
+                        data-action="click->lightbox#open"
+                        data-lightbox-url="<%= url_for(image.image.variant(resize_to_limit: [1600, 1600], format: :webp)) %>">
+                  <%= responsive_gallery_image image.image, alt: image.title, thumbnail: true,
+                      class: "w-full h-full object-cover" %>
+                </button>
+              <% end %>
+            <% end %>
           </div>
 
           <h3 class="text-lg font-bold text-primary mb-2 group-hover:text-accent transition-colors duration-300"><%= svc[:title] %></h3>
           <p class="text-gray-500 text-sm leading-relaxed mb-4"><%= svc[:blurb] %></p>
 
-          <span class="inline-flex items-center gap-1 text-sm font-semibold text-primary group-hover:text-accent transition-colors">
+          <%= link_to svc[:path], class: "inline-flex items-center gap-1 text-sm font-semibold text-primary group-hover:text-accent transition-colors no-underline" do %>
             Learn More
             <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-          </span>
-        <% end %>
+          <% end %>
+        </div>
       <% end %>
     </div>
   </div>

@@ -27,6 +27,6 @@ class GalleryImage < ApplicationRecord
   }.freeze
 
   scope :featured, -> { where(featured: true) }
-  scope :positioned, -> { order(:position) }
+  scope :positioned, -> { order(Arel.sql("position IS NULL, position ASC")) }
   scope :tagged, ->(tag) { where("? = ANY(page_tags)", tag) }
 end

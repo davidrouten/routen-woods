@@ -26,6 +26,6 @@ class ServicesController < ApplicationController
 
   def set_gallery_images
     tag = ACTION_TAG_MAP[action_name]
-    @gallery_images = GalleryImage.tagged(tag).positioned
+    @gallery_images = GalleryImage.tagged(tag).positioned.limit(8)
   end
 end
