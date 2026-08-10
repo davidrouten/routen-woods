@@ -9,7 +9,7 @@
         method="post"
         enctype="multipart/form-data"
         data-controller="bulk-upload"
-        data-bulk-upload-tags-value="<%= GalleryImage::PAGE_TAGS.to_a.to_json %>"
+        data-bulk-upload-tags-value="<%= GalleryImage::PAGE_TAGS.reject { |tag, _| svc = I18n.t("business.services.#{tag}", default: nil); svc.is_a?(Hash) && !svc[:enabled] }.to_a.to_json %>"
         data-success-url="<%= admin_gallery_images_path %>"
         data-action="submit->bulk-upload#submit">
 

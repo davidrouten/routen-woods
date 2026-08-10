@@ -28,7 +28,10 @@
     <div>
       <p class="block text-sm font-medium text-gray-700 mb-2">Show on Pages</p>
       <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
-        <% GalleryImage::PAGE_TAGS.each do |tag, label| %>
+        <% GalleryImage::PAGE_TAGS.each do |tag, label|
+             service = I18n.t("business.services.#{tag}", default: nil)
+             next if service.is_a?(Hash) && !service[:enabled]
+           %>
           <label class="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 hover:border-accent/30 transition cursor-pointer text-sm">
             <input type="checkbox" name="gallery_image[page_tags][]" value="<%= tag %>"
                    <%= "checked" if gallery_image.page_tags&.include?(tag) || (gallery_image.new_record? && tag == GalleryImage::TAG_GALLERY) %>
@@ -46,12 +49,7 @@
         <%= f.label :position, class: "block text-sm font-medium text-gray-700 mb-1" %>
         <%= f.number_field :position, class: "input-admin" %>
       </div>
-      <div class="flex items-end pb-1">
-        <label class="flex items-center gap-2">
-          <%= f.check_box :featured, class: "rounded text-accent focus:ring-accent" %>
-          <span class="text-sm text-gray-700">Featured</span>
-        </label>
-      </div>
+      <%# Featured checkbox hidden — position controls display order for now %>
     </div>
 
     <div class="flex justify-end gap-3">

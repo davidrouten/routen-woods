@@ -26,7 +26,7 @@
       </div>
       <div class="p-3">
         <p class="font-medium text-sm text-gray-900 truncate"><%= image.title %></p>
-        <% if image.featured? %><span class="text-xs text-accent">Featured</span><% end %>
+        <%# Featured badge hidden — position controls display order for now %>
         <% if current_user_can?(:manage, :gallery) %>
           <div class="flex gap-2 mt-2">
             <%= link_to "Edit", edit_admin_gallery_image_path(image), class: "btn-admin-link" %>
