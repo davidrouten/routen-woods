@@ -29,6 +29,8 @@ Rails.application.routes.draw do
   namespace :admin do
     root "dashboard#index"
 
+    resource :account, only: [:show, :update], controller: "account"
+
     resources :leads do
       member do
         patch :transition
