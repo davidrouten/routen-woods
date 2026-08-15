@@ -3,16 +3,16 @@ en:
     name: "Routen Woods"
     tagline: "Craftsmanship That Transforms Your Kitchen"
     motto: "Where quality meets craftsmanship"
-    email: "generic@email.com"
-    phone: "(813) 111-1111"
-    phone_raw: "+18131111111"
+    email:
+    phone: "(813) 270-2180"
+    phone_raw: "+18132702180"
     address:
-      street: "123 Craftsman Way"
+      street: ""
       city: "Oxford"
       state: "MI"
-      zip: "48371"
-      full: "123 Craftsman Way, Oxford, MI 48371"
-    hours: "Mon-Fri 8AM-6PM, Sat 9AM-2PM"
+      zip: ""
+      full: "Oxford, MI and surrounding areas"
+    hours: "Mon-Fri 8am-5pm, Sat 8am-12pm"
     service_area: "Oxford, Michigan and surrounding areas"
     service_area_cities:
       - "Oxford"

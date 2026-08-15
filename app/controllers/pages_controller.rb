@@ -15,4 +15,7 @@ class PagesController < ApplicationController
   def contact
     @lead = Lead.new
   end
+
+  def resources
+  end
 end

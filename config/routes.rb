@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   end
   get "gallery", to: "pages#gallery"
   get "contact", to: "pages#contact"
+  get "resources", to: "pages#resources"
 
   # Lead submission (public)
   resources :leads, only: [:create] do
