@@ -30,6 +30,7 @@ Rails.application.routes.draw do
     root "dashboard#index"
 
     resource :account, only: [:show, :update], controller: "account"
+    get "search", to: "search#index"
 
     resources :leads do
       member do

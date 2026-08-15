@@ -66,6 +66,11 @@ class Lead < ApplicationRecord
     NotificationService.notify(:status_changed, self, from: old_status, to: new_status)
   end
 
+  def full_name_or_email
+    name = [first_name, last_name].compact_blank.join(" ")
+    name.present? ? name : email
+  end
+
   def service_names
     names = []
     if services_interested_in.present?
