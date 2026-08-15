@@ -114,13 +114,30 @@
       <% end %>
 
       <% if @lead.address_street.present? || @lead.address_city.present? %>
-        <div class="mt-4 pt-4 border-t border-gray-100">
-          <p class="text-gray-500 text-sm mb-1">Address</p>
-          <p class="text-gray-700">
-            <%= @lead.address_street %><br>
-            <% if @lead.address_street2.present? %><%= @lead.address_street2 %><br><% end %>
-            <%= [@lead.address_city, @lead.address_state].compact_blank.join(", ") %> <%= @lead.address_zip %>
-          </p>
+        <div class="mt-4 pt-4 border-t border-gray-100"
+             data-controller="address-map"
+             data-address-map-business-lat-value="<%= t('business.geo.latitude') %>"
+             data-address-map-business-lng-value="<%= t('business.geo.longitude') %>"
+             data-address-map-business-label-value="<%= t('business.address.full') %>">
+          <div class="flex flex-col md:flex-row gap-4">
+            <div class="flex-1">
+              <p class="text-gray-500 text-sm mb-1">Address</p>
+              <p class="text-gray-700">
+                <%= @lead.address_street %><br>
+                <% if @lead.address_street2.present? %><%= @lead.address_street2 %><br><% end %>
+                <%= [@lead.address_city, @lead.address_state].compact_blank.join(", ") %> <%= @lead.address_zip %>
+              </p>
+              <p data-address-map-target="distance" class="hidden text-sm text-gray-500 font-medium mt-2"></p>
+              <p data-address-map-target="error" class="hidden text-sm text-red-500 font-medium mt-2"></p>
+            </div>
+            <div class="md:w-64">
+              <div data-address-map-target="map" class="hidden rounded-lg overflow-hidden" style="min-height: 180px;"></div>
+            </div>
+          </div>
+          <input type="hidden" value="<%= @lead.address_street %>" data-address-map-target="street" />
+          <input type="hidden" value="<%= @lead.address_city %>" data-address-map-target="city" />
+          <input type="hidden" value="<%= @lead.address_state %>" data-address-map-target="state" />
+          <input type="hidden" value="<%= @lead.address_zip %>" data-address-map-target="zip" />
         </div>
       <% end %>
 

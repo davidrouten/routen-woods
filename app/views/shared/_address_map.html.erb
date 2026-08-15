@@ -1,0 +1,20 @@
+<%# Renders a map + distance panel for an address.
+    Usage for separate fields (leads):
+      render "shared/address_map", mode: :fields
+    Usage for single field (projects):
+      render "shared/address_map", mode: :full_address
+%>
+<% business_lat = t("business.geo.latitude").to_f %>
+<% business_lng = t("business.geo.longitude").to_f %>
+<% business_label = t("business.address.full") %>
+
+<div class="bg-white rounded-xl shadow-sm p-6"
+     data-controller="address-map"
+     data-address-map-business-lat-value="<%= business_lat %>"
+     data-address-map-business-lng-value="<%= business_lng %>"
+     data-address-map-business-label-value="<%= business_label %>">
+  <h2 class="text-lg font-semibold text-gray-900 mb-3">Location</h2>
+  <div data-address-map-target="map" class="hidden rounded-lg overflow-hidden mb-3"></div>
+  <p data-address-map-target="distance" class="hidden text-sm text-gray-500 font-medium"></p>
+  <p data-address-map-target="error" class="hidden text-sm text-red-500 font-medium"></p>
+</div>

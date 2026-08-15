@@ -44,9 +44,20 @@
       </div>
     </div>
 
-    <div>
-      <%= f.label :address, class: "block text-sm font-semibold text-gray-700 mb-1.5" %>
-      <%= f.text_field :address, class: "input-admin w-full", placeholder: "Full project address" %>
+    <div data-controller="address-map"
+         data-address-map-business-lat-value="<%= t('business.geo.latitude') %>"
+         data-address-map-business-lng-value="<%= t('business.geo.longitude') %>"
+         data-address-map-business-label-value="<%= t('business.address.full') %>"
+         class="flex flex-col md:flex-row gap-4 items-start">
+      <div class="flex-1">
+        <%= f.label :address, class: "block text-sm font-semibold text-gray-700 mb-1.5" %>
+        <%= f.text_field :address, class: "input-admin w-full", placeholder: "Full project address", data: { address_map_target: "fullAddress", action: "input->address-map#onAddressChange" } %>
+        <p data-address-map-target="distance" class="hidden text-sm text-gray-500 font-medium mt-2"></p>
+        <p data-address-map-target="error" class="hidden text-sm text-red-500 font-medium mt-2"></p>
+      </div>
+      <div class="md:w-72">
+        <div data-address-map-target="map" class="hidden rounded-lg overflow-hidden" style="min-height: 200px;"></div>
+      </div>
     </div>
   </div>
 
