@@ -10,54 +10,60 @@
   <%= stylesheet_link_tag "leaflet", "data-turbo-track": "reload" %>
   <%= javascript_importmap_tags %>
 </head>
-<body class="font-sans bg-gray-100" data-controller="modal">
+<body class="font-sans bg-gray-100" data-controller="modal admin-sidebar">
   <div class="flex h-screen overflow-hidden">
+    <!-- Mobile overlay -->
+    <div class="hidden fixed inset-0 bg-black/50 z-40 md:hidden"
+         data-admin-sidebar-target="overlay"
+         data-action="click->admin-sidebar#close"></div>
+
     <!-- Sidebar -->
-    <aside class="w-64 bg-primary text-white flex-shrink-0 overflow-y-auto">
+    <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-primary text-white flex flex-col -translate-x-full md:translate-x-0 md:static md:z-auto transition-transform duration-200 ease-in-out"
+           data-admin-sidebar-target="sidebar">
       <div class="p-6">
         <h1 class="text-lg font-bold"><%= t("business.name") %></h1>
         <p class="text-gray-400 text-sm">Admin Panel</p>
       </div>
-      <nav class="px-4 space-y-1">
-        <%= link_to admin_root_path, class: "flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm #{request.path == admin_root_path ? 'bg-primary-light text-white' : 'text-gray-400 hover:text-white hover:bg-primary-light'} transition" do %>
+      <nav class="px-4 space-y-1 flex-1 overflow-y-auto">
+        <%= link_to admin_root_path, data: { action: "click->admin-sidebar#navigate" }, class: "flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm #{request.path == admin_root_path ? 'bg-primary-light text-white' : 'text-gray-400 hover:text-white hover:bg-primary-light'} transition" do %>
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
           <%= t("admin.nav.dashboard") %>
         <% end %>
-        <%= link_to admin_leads_path, class: "flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm #{request.path.start_with?(admin_leads_path) ? 'bg-primary-light text-white' : 'text-gray-400 hover:text-white hover:bg-primary-light'} transition" do %>
+        <%= link_to admin_leads_path, data: { action: "click->admin-sidebar#navigate" }, class: "flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm #{request.path.start_with?(admin_leads_path) ? 'bg-primary-light text-white' : 'text-gray-400 hover:text-white hover:bg-primary-light'} transition" do %>
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
           <%= t("admin.nav.leads") %>
         <% end %>
-        <%= link_to admin_leads_path(spam: true), class: "flex items-center gap-3 pl-12 py-2 rounded-lg text-xs #{params[:spam] == 'true' ? 'bg-primary-light text-white' : 'text-gray-500 hover:text-white hover:bg-primary-light'} transition" do %>
+        <%= link_to admin_leads_path(spam: true), data: { action: "click->admin-sidebar#navigate" }, class: "flex items-center gap-3 pl-12 py-2 rounded-lg text-xs #{params[:spam] == 'true' ? 'bg-primary-light text-white' : 'text-gray-500 hover:text-white hover:bg-primary-light'} transition" do %>
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
           <%= t("admin.nav.spam") %>
         <% end %>
         <% projects_active = request.path.start_with?(admin_projects_path) || request.path == admin_order_forms_path || request.path == admin_invoices_path %>
-        <%= link_to admin_projects_path, class: "flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm #{projects_active ? 'bg-primary-light text-white' : 'text-gray-400 hover:text-white hover:bg-primary-light'} transition" do %>
+        <%= link_to admin_projects_path, data: { action: "click->admin-sidebar#navigate" }, class: "flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm #{projects_active ? 'bg-primary-light text-white' : 'text-gray-400 hover:text-white hover:bg-primary-light'} transition" do %>
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
           Projects
         <% end %>
-        <%= link_to admin_order_forms_path, class: "flex items-center gap-3 pl-12 py-2 rounded-lg text-xs #{request.path == admin_order_forms_path ? 'bg-primary-light text-white' : 'text-gray-500 hover:text-white hover:bg-primary-light'} transition" do %>
+        <%= link_to admin_order_forms_path, data: { action: "click->admin-sidebar#navigate" }, class: "flex items-center gap-3 pl-12 py-2 rounded-lg text-xs #{request.path == admin_order_forms_path ? 'bg-primary-light text-white' : 'text-gray-500 hover:text-white hover:bg-primary-light'} transition" do %>
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
           Order Forms
         <% end %>
-        <%= link_to admin_invoices_path, class: "flex items-center gap-3 pl-12 py-2 rounded-lg text-xs #{request.path == admin_invoices_path ? 'bg-primary-light text-white' : 'text-gray-500 hover:text-white hover:bg-primary-light'} transition" do %>
+        <%= link_to admin_invoices_path, data: { action: "click->admin-sidebar#navigate" }, class: "flex items-center gap-3 pl-12 py-2 rounded-lg text-xs #{request.path == admin_invoices_path ? 'bg-primary-light text-white' : 'text-gray-500 hover:text-white hover:bg-primary-light'} transition" do %>
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
           Invoices
         <% end %>
         <% if current_user_can?(:view, :testimonials) %>
-          <%= link_to admin_testimonials_path, class: "flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm #{request.path.start_with?(admin_testimonials_path) ? 'bg-primary-light text-white' : 'text-gray-400 hover:text-white hover:bg-primary-light'} transition" do %>
+          <%= link_to admin_testimonials_path, data: { action: "click->admin-sidebar#navigate" }, class: "flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm #{request.path.start_with?(admin_testimonials_path) ? 'bg-primary-light text-white' : 'text-gray-400 hover:text-white hover:bg-primary-light'} transition" do %>
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
             <%= t("admin.nav.testimonials") %>
           <% end %>
         <% end %>
         <% if current_user_can?(:view, :gallery) %>
-          <%= link_to admin_gallery_images_path, class: "flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm #{request.path.start_with?(admin_gallery_images_path) ? 'bg-primary-light text-white' : 'text-gray-400 hover:text-white hover:bg-primary-light'} transition" do %>
+          <%= link_to admin_gallery_images_path, data: { action: "click->admin-sidebar#navigate" }, class: "flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm #{request.path.start_with?(admin_gallery_images_path) ? 'bg-primary-light text-white' : 'text-gray-400 hover:text-white hover:bg-primary-light'} transition" do %>
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
             <%= t("admin.nav.gallery") %>
           <% end %>
         <% end %>
         <% if current_user_can?(:manage, :settings) %>
-          <%= link_to admin_notification_preferences_path, class: "flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-primary-light transition" do %>
+          <%= link_to admin_notification_preferences_path, data: { action: "click->admin-sidebar#navigate" }, class: "flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-primary-light transition" do %>
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
             <%= t("admin.nav.settings") %>
           <% end %>
@@ -65,7 +71,7 @@
       </nav>
 
       <!-- User info at bottom -->
-      <div class="absolute bottom-0 w-64 p-4 border-t border-gray-700">
+      <div class="p-4 border-t border-gray-700">
         <div class="flex items-center gap-3">
           <%= link_to admin_account_path, class: "flex items-center gap-3 flex-1 min-w-0 hover:opacity-80 transition" do %>
             <div class="avatar-accent w-8 h-8 text-sm">
@@ -84,37 +90,44 @@
     </aside>
 
     <!-- Main content -->
-    <main class="flex-1 overflow-y-auto">
+    <main class="flex-1 overflow-y-auto min-w-0">
       <!-- Top bar with search -->
-      <div class="sticky top-0 z-30 bg-white border-b border-gray-200 px-6 py-3">
-        <div class="relative max-w-md" data-controller="global-search">
-          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+      <div class="sticky top-0 z-30 bg-white border-b border-gray-200 px-4 md:px-6 py-3">
+        <div class="flex items-center gap-3">
+          <!-- Mobile hamburger -->
+          <button class="md:hidden p-1.5 -ml-1.5 text-gray-600 hover:text-gray-900" data-action="click->admin-sidebar#open">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+
+          <div class="relative flex-1 max-w-md" data-controller="global-search">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            </div>
+            <input type="text"
+                   placeholder="Search leads, projects, invoices..."
+                   class="w-full pl-9 pr-4 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition"
+                   data-global-search-target="input"
+                   data-action="input->global-search#search focus->global-search#onFocus keydown->global-search#onKeydown"
+                   autocomplete="off" />
+            <div class="hidden absolute top-full left-0 right-0 mt-1 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden z-50 max-h-80 overflow-y-auto"
+                 data-global-search-target="results"></div>
           </div>
-          <input type="text"
-                 placeholder="Search leads, projects, invoices..."
-                 class="w-full pl-9 pr-4 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition"
-                 data-global-search-target="input"
-                 data-action="input->global-search#search focus->global-search#onFocus keydown->global-search#onKeydown"
-                 autocomplete="off" />
-          <div class="hidden absolute top-full left-0 right-0 mt-1 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden z-50 max-h-80 overflow-y-auto"
-               data-global-search-target="results"></div>
         </div>
       </div>
 
       <!-- Flash messages -->
       <% if notice %>
-        <div class="bg-green-50 border-b border-green-200 px-6 py-3">
+        <div class="bg-green-50 border-b border-green-200 px-4 md:px-6 py-3">
           <p class="text-green-700 text-sm"><%= notice %></p>
         </div>
       <% end %>
       <% if alert %>
-        <div class="bg-red-50 border-b border-red-200 px-6 py-3">
+        <div class="bg-red-50 border-b border-red-200 px-4 md:px-6 py-3">
           <p class="text-red-700 text-sm"><%= alert %></p>
         </div>
       <% end %>
 
-      <div class="p-6">
+      <div class="p-4 md:p-6">
         <%= yield %>
       </div>
     </main>
