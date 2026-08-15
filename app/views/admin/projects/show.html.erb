@@ -168,7 +168,7 @@
               <div class="flex justify-between items-start">
                 <p class="font-medium text-sm text-gray-900"><%= note.user.full_name %></p>
                 <div class="flex items-center gap-2">
-                  <span class="text-xs text-gray-400"><%= time_ago_in_words(note.created_at) %> ago</span>
+                  <span class="text-xs text-gray-400"><%= note.created_at.strftime("%-m-%-d-%y @ %l:%M%P") %></span>
                   <% if current_user.admin? || note.user == current_user %>
                     <%= render "shared/confirm_button", url: admin_project_note_path(@project, note), method: :delete, label: "&times;".html_safe, title: "Delete Note", message: "Delete this note? This cannot be undone.", danger: true, button_class: "text-red-400 hover:text-red-600 text-xs cursor-pointer" %>
                   <% end %>
