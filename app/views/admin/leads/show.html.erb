@@ -49,8 +49,14 @@
         <% end %>
         <div>
           <p class="text-gray-500">Source</p>
-          <p class="font-medium"><%= @lead.source&.titleize || "—" %></p>
+          <p class="font-medium"><%= @lead.lead_source.present? ? @lead.lead_source : (@lead.source&.titleize || "—") %></p>
         </div>
+        <% if @lead.lead_source_reference.present? %>
+          <div>
+            <p class="text-gray-500">Reference #</p>
+            <p class="font-medium"><%= @lead.lead_source_reference %></p>
+          </div>
+        <% end %>
         <div>
           <p class="text-gray-500">Submitted</p>
           <p class="font-medium"><%= @lead.created_at.strftime("%B %d, %Y at %I:%M %p") %></p>
@@ -71,12 +77,15 @@
         <% end %>
       </div>
 
-      <% if @lead.services_interested_in.present? %>
+      <% if @lead.services_interested_in.present? || @lead.other_service.present? %>
         <div class="mt-4 pt-4 border-t border-gray-100">
           <p class="text-gray-500 text-sm mb-2">Services Interested In</p>
           <div class="flex flex-wrap gap-2">
-            <% @lead.services_interested_in.each do |svc| %>
+            <% @lead.services_interested_in&.each do |svc| %>
               <span class="inline-block bg-accent/10 text-accent px-2.5 py-1 rounded-full text-xs font-medium"><%= I18n.t("business.services.#{svc}.name", default: svc.titleize) %></span>
+            <% end %>
+            <% if @lead.other_service.present? %>
+              <span class="inline-block bg-accent/10 text-accent px-2.5 py-1 rounded-full text-xs font-medium">Other: <%= @lead.other_service %></span>
             <% end %>
           </div>
         </div>
@@ -86,6 +95,17 @@
         <div class="mt-4 pt-4 border-t border-gray-100">
           <p class="text-gray-500 text-sm mb-1">Message</p>
           <p class="text-gray-700"><%= @lead.message %></p>
+        </div>
+      <% end %>
+
+      <% if @lead.address_street.present? || @lead.address_city.present? %>
+        <div class="mt-4 pt-4 border-t border-gray-100">
+          <p class="text-gray-500 text-sm mb-1">Address</p>
+          <p class="text-gray-700">
+            <%= @lead.address_street %><br>
+            <% if @lead.address_street2.present? %><%= @lead.address_street2 %><br><% end %>
+            <%= [@lead.address_city, @lead.address_state].compact_blank.join(", ") %> <%= @lead.address_zip %>
+          </p>
         </div>
       <% end %>
 

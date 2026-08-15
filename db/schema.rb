@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_21_135405) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_15_131754) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -100,6 +100,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_21_135405) do
   end
 
   create_table "leads", force: :cascade do |t|
+    t.string "address_city"
+    t.string "address_state"
+    t.string "address_street"
+    t.string "address_street2"
+    t.string "address_zip"
     t.float "ai_score", default: 0.0
     t.datetime "archived_at"
     t.bigint "assigned_to_id"
@@ -115,9 +120,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_21_135405) do
     t.string "ip_address"
     t.string "landing_page"
     t.string "last_name"
+    t.string "lead_source"
+    t.string "lead_source_reference"
     t.string "lead_temperature"
     t.datetime "lost_at"
     t.text "message"
+    t.string "other_service"
     t.string "phone"
     t.datetime "quoted_at"
     t.string "referrer"

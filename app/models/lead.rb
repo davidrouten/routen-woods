@@ -9,6 +9,17 @@ class Lead < ApplicationRecord
     lost: 6
   }
 
+  LEAD_SOURCES = [
+    "Routenwoods.com",
+    "Angi",
+    "Word of Mouth",
+    "Referral",
+    "Google Search",
+    "Next Door",
+    "Facebook",
+    "Other"
+  ].freeze
+
   belongs_to :assigned_to, class_name: "User", optional: true
   has_many :notes, as: :notable, dependent: :destroy
   has_many :status_changes, dependent: :destroy
@@ -55,9 +66,13 @@ class Lead < ApplicationRecord
   end
 
   def service_names
-    return "" if services_interested_in.blank?
-    services = I18n.t("business.services")
-    services_interested_in.filter_map { |k| services.dig(k.to_sym, :name) }.join(", ")
+    names = []
+    if services_interested_in.present?
+      services = I18n.t("business.services")
+      names = services_interested_in.filter_map { |k| services.dig(k.to_sym, :name) }
+    end
+    names << "Other: #{other_service}" if other_service.present?
+    names.join(", ")
   end
 
   def temperature_emoji

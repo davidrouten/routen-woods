@@ -97,7 +97,9 @@ module Admin
       params.require(:lead).permit(
         :first_name, :last_name, :email, :phone,
         :budget_range, :timeframe, :zip_code, :message,
-        :status, services_interested_in: []
+        :status, :lead_source, :lead_source_reference, :other_service,
+        :address_street, :address_street2, :address_city, :address_state, :address_zip,
+        services_interested_in: []
       )
     end
   end

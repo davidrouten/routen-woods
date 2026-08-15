@@ -6,7 +6,7 @@
           <li><%= msg %></li>
         <% end %>
       </ul>
-      <p class="text-red-600 text-sm mt-3">If you are having trouble submitting this form, email us directly at <%= mail_to t("business.email"), t("business.email"), class: "font-semibold underline" %> and we'll reach out to you as soon as we can!</p>
+      <p class="text-red-600 text-sm mt-3">If you are having trouble submitting this form, please call us at <%= link_to t("business.phone"), "tel:#{t('business.phone_raw')}", class: "font-semibold underline" %> and we'll help you out!</p>
     </div>
   <% end %>
 
@@ -32,7 +32,7 @@
     </div>
   </div>
 
-  <div>
+  <div data-controller="other-service">
     <p class="block text-sm font-semibold text-gray-700 mb-2"><%= t("business.forms.quote.service_label") %></p>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
       <% service_checkbox_options.each do |name, key| %>
@@ -41,6 +41,13 @@
           <%= name %>
         </label>
       <% end %>
+      <label class="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+        <%= check_box_tag "other_service_toggle", "1", lead.other_service.present?, class: "rounded border-gray-300 text-accent focus:ring-accent", data: { action: "other-service#toggle", "other-service-target": "checkbox" } %>
+        Other
+      </label>
+    </div>
+    <div class="mt-2 <%= 'hidden' unless lead.other_service.present? %>" data-other-service-target="field">
+      <%= text_field_tag "lead[other_service]", lead.other_service, placeholder: "Please specify...", class: "input w-full" %>
     </div>
   </div>
 
@@ -56,8 +63,14 @@
   </div>
 
   <div>
-    <%= f.label :zip_code, "Zip Code", class: "block text-sm font-semibold text-gray-700 mb-1.5" %>
-    <%= f.text_field :zip_code, placeholder: "Enter your zip code", class: "input", maxlength: 10 %>
+    <%= f.label :address_street, "Address (optional)", class: "block text-sm font-semibold text-gray-700 mb-1.5" %>
+    <%= f.text_field :address_street, placeholder: "Street address", class: "input mb-2" %>
+    <%= f.text_field :address_street2, placeholder: "Apt, suite, unit, etc.", class: "input mb-2" %>
+    <div class="grid grid-cols-3 gap-2">
+      <%= f.text_field :address_city, placeholder: "City", class: "input" %>
+      <%= f.text_field :address_state, placeholder: "State", class: "input" %>
+      <%= f.text_field :address_zip, placeholder: "Zip", class: "input", maxlength: 10 %>
+    </div>
   </div>
 
   <div>
