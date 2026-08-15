@@ -6,7 +6,7 @@
     <div class="flex-1">
       <div class="flex justify-between items-start">
         <p class="font-medium text-sm text-gray-900"><%= @note.user.full_name %></p>
-        <span class="text-xs text-gray-400"><%= @note.created_at.strftime("%-m-%-d-%y @ %l:%M%P") %></span>
+        <span class="text-xs text-gray-400"><%= format_datetime(@note.created_at) %></span>
       </div>
       <p class="text-sm text-gray-700 mt-1 whitespace-pre-line"><%= @note.body %></p>
     </div>

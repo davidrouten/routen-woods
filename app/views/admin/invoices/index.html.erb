@@ -46,8 +46,8 @@
           </td>
           <td class="px-6 py-4 text-sm text-right text-gray-700"><%= number_to_currency(invoice.total) %></td>
           <td class="px-6 py-4 text-sm text-right text-gray-700"><%= number_to_currency(invoice.balance_due) %></td>
-          <td class="px-6 py-4 text-sm text-gray-500"><%= invoice.issued_date&.strftime("%b %d, %Y") %></td>
-          <td class="px-6 py-4 text-sm text-gray-500"><%= invoice.due_date&.strftime("%b %d, %Y") %></td>
+          <td class="px-6 py-4 text-sm text-gray-500"><%= format_date(invoice.issued_date) %></td>
+          <td class="px-6 py-4 text-sm text-gray-500"><%= format_date(invoice.due_date) %></td>
         </tr>
       <% end %>
     </tbody>

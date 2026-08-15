@@ -1,8 +1,15 @@
 <tr class="hover:bg-gray-50" id="<%= dom_id(lead) %>">
   <td class="px-6 py-4">
-    <%= link_to admin_lead_path(lead), class: "font-medium text-gray-900 hover:text-accent" do %>
-      <%= lead.first_name %> <%= lead.last_name %>
-    <% end %>
+    <div class="flex items-center gap-1.5">
+      <%= link_to admin_lead_path(lead), class: "font-medium text-gray-900 hover:text-accent" do %>
+        <%= lead.first_name %> <%= lead.last_name %>
+      <% end %>
+      <% if (lead.spam_score || 0) >= 0.7 %>
+        <span class="tooltip text-red-400" data-tip="Spam likelihood: <%= ((lead.spam_score || 0) * 100).round %>%">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.168 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 6a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 6zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/></svg>
+        </span>
+      <% end %>
+    </div>
   </td>
   <td class="px-6 py-4 text-sm text-gray-500">
     <% if lead.email.present? %><p><%= lead.email %></p><% end %>
@@ -40,19 +47,16 @@
   </td>
   <td class="px-6 py-4">
     <% if lead.lead_temperature.present? %>
-      <span class="inline-block px-2 py-1 rounded-full text-xs font-medium <%= temperature_badge_color(lead.lead_temperature) %>"><%= lead.temperature_emoji %> <%= lead.lead_temperature.capitalize %></span>
+      <span class="inline-flex items-center gap-1 whitespace-nowrap px-2 py-1 rounded-full text-xs font-medium <%= temperature_badge_color(lead.lead_temperature) %>"><%= lead.temperature_emoji %> <%= lead.lead_temperature.capitalize %></span>
     <% end %>
   </td>
-  <td class="px-6 py-4">
-    <% score = lead.spam_score || 0 %>
-    <div class="flex items-center gap-2">
-      <div class="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
-        <div class="h-full rounded-full <%= score >= 0.7 ? 'bg-red-500' : score >= 0.4 ? 'bg-yellow-500' : 'bg-green-500' %>" style="width: <%= (score * 100).round %>%"></div>
-      </div>
-      <span class="text-xs text-gray-500"><%= (score * 100).round %>%</span>
-    </div>
+  <td class="px-6 py-4 text-sm text-gray-500">
+    <% location = [lead.address_city, lead.address_state].compact_blank.join(", ") %>
+    <%= location.present? ? location : "—" %>
   </td>
-  <td class="px-6 py-4 text-sm text-gray-500"><%= lead.created_at.strftime("%b %d, %Y") %></td>
+  <td class="px-6 py-4 text-sm text-gray-500">
+    <span class="tooltip" data-tip="<%= format_datetime(lead.created_at) %>"><%= time_ago_in_words(lead.created_at) %> ago</span>
+  </td>
   <td class="px-6 py-4 text-sm">
     <div class="flex items-center gap-2">
       <% if current_user_can?(:manage, :leads) %>

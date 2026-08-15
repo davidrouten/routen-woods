@@ -47,7 +47,7 @@
           </td>
           <td class="px-6 py-4 text-sm text-right text-gray-700"><%= number_to_currency(of.total_supplier_cost) %></td>
           <td class="px-6 py-4 text-sm text-right text-gray-700"><%= number_to_currency(of.total_our_price) %></td>
-          <td class="px-6 py-4 text-sm text-gray-500"><%= of.created_at.strftime("%b %d, %Y") %></td>
+          <td class="px-6 py-4 text-sm text-gray-500"><%= format_date(of.created_at) %></td>
         </tr>
       <% end %>
     </tbody>

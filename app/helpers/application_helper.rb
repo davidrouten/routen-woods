@@ -78,6 +78,16 @@ module ApplicationHelper
     }[temp] || "bg-gray-100 text-gray-600"
   end
 
+  def format_datetime(dt)
+    return "—" if dt.nil?
+    dt.in_time_zone("Eastern Time (US & Canada)").strftime("%b %d, %Y @ %l:%M%P").squish
+  end
+
+  def format_date(dt)
+    return "—" if dt.nil?
+    dt.to_date.strftime("%b %d, %Y")
+  end
+
   def responsive_gallery_image(image_attachment, alt:, sizes: "(max-width: 640px) 400px, 800px", eager: false, thumbnail: false, **html_opts)
     if thumbnail
       src = url_for(image_attachment.variant(resize_to_fill: [112, 112], format: :webp))

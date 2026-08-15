@@ -64,7 +64,7 @@
         <% end %>
         <div>
           <p class="text-gray-500">Submitted</p>
-          <p class="font-medium"><%= @lead.created_at.strftime("%-m-%-d-%y @ %l:%M%P") %></p>
+          <p class="font-medium"><%= format_datetime(@lead.created_at) %></p>
         </div>
         <div>
           <p class="text-gray-500">Entered By</p>
@@ -179,7 +179,7 @@
               <div class="flex justify-between items-start">
                 <p class="font-medium text-sm text-gray-900"><%= note.user.full_name %></p>
                 <div class="flex items-center gap-2">
-                  <span class="text-xs text-gray-400"><%= note.created_at.strftime("%-m-%-d-%y @ %l:%M%P") %></span>
+                  <span class="text-xs text-gray-400"><%= format_datetime(note.created_at) %></span>
                   <% if current_user.admin? || note.user == current_user %>
                     <%= render "shared/confirm_button", url: admin_lead_note_path(@lead, note), method: :delete, label: "&times;".html_safe, title: "Delete Note", message: "Delete this note? This cannot be undone.", danger: true, button_class: "text-red-400 hover:text-red-600 text-xs cursor-pointer" %>
                   <% end %>
@@ -256,7 +256,7 @@
                 &rarr;
                 <span class="font-medium"><%= change.to_status.titleize %></span>
               </p>
-              <p class="text-xs text-gray-400"><%= change.user&.full_name || "System" %> &middot; <%= change.created_at.strftime("%-m-%-d-%y @ %l:%M%P") %></p>
+              <p class="text-xs text-gray-400"><%= change.user&.full_name || "System" %> &middot; <%= format_datetime(change.created_at) %></p>
             </div>
           </div>
         <% end %>

@@ -44,7 +44,7 @@
         <% if @project.scheduled_start_date %>
           <div>
             <p class="text-gray-500">Schedule</p>
-            <p class="font-medium"><%= @project.scheduled_start_date.strftime("%b %d, %Y") %><% if @project.scheduled_end_date %> – <%= @project.scheduled_end_date.strftime("%b %d, %Y") %><% end %></p>
+            <p class="font-medium"><%= format_date(@project.scheduled_start_date) %><% if @project.scheduled_end_date %> – <%= format_date(@project.scheduled_end_date) %><% end %></p>
           </div>
         <% end %>
       </div>
@@ -149,7 +149,7 @@
                 <%= link_to admin_project_invoice_path(@project, inv), class: "font-medium text-gray-900 hover:text-accent" do %>
                   <%= inv.invoice_number %>
                 <% end %>
-                <p class="text-xs text-gray-500"><%= number_to_currency(inv.total) %> &middot; Due <%= inv.due_date&.strftime("%b %d, %Y") || "TBD" %></p>
+                <p class="text-xs text-gray-500"><%= number_to_currency(inv.total) %> &middot; Due <%= inv.due_date ? format_date(inv.due_date) : "TBD" %></p>
               </div>
               <span class="inline-block px-2 py-1 rounded-full text-xs font-medium <%= invoice_status_color(inv.status) %>"><%= inv.status.titleize %></span>
             </div>
@@ -183,7 +183,7 @@
               <div class="flex justify-between items-start">
                 <p class="font-medium text-sm text-gray-900"><%= note.user.full_name %></p>
                 <div class="flex items-center gap-2">
-                  <span class="text-xs text-gray-400"><%= note.created_at.strftime("%-m-%-d-%y @ %l:%M%P") %></span>
+                  <span class="text-xs text-gray-400"><%= format_datetime(note.created_at) %></span>
                   <% if current_user.admin? || note.user == current_user %>
                     <%= render "shared/confirm_button", url: admin_project_note_path(@project, note), method: :delete, label: "&times;".html_safe, title: "Delete Note", message: "Delete this note? This cannot be undone.", danger: true, button_class: "text-red-400 hover:text-red-600 text-xs cursor-pointer" %>
                   <% end %>

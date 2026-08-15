@@ -21,11 +21,11 @@
   <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm mb-6">
     <div>
       <p class="text-gray-500">Issued</p>
-      <p class="font-medium"><%= @invoice.issued_date&.strftime("%b %d, %Y") || "—" %></p>
+      <p class="font-medium"><%= format_date(@invoice.issued_date) %></p>
     </div>
     <div>
       <p class="text-gray-500">Due</p>
-      <p class="font-medium"><%= @invoice.due_date&.strftime("%b %d, %Y") || "—" %></p>
+      <p class="font-medium"><%= format_date(@invoice.due_date) %></p>
     </div>
     <div>
       <p class="text-gray-500">Deposit</p>
