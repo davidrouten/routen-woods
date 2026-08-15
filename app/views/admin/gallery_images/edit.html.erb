@@ -4,4 +4,17 @@
 
 <h1 class="text-2xl font-bold text-gray-900 mb-6">Edit Image</h1>
 
-<%= render "form", gallery_image: @gallery_image %>
+<div class="flex flex-col lg:flex-row gap-6">
+  <div class="lg:w-1/2">
+    <%= render "form", gallery_image: @gallery_image %>
+  </div>
+
+  <% if @gallery_image.image.attached? %>
+    <div class="lg:w-1/2">
+      <div class="bg-white rounded-xl shadow-sm p-4 sticky top-6">
+        <%= image_tag @gallery_image.image.variant(resize_to_limit: [800, 800], format: :webp),
+            class: "rounded-lg w-full h-auto" %>
+      </div>
+    </div>
+  <% end %>
+</div>
