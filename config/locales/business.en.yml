@@ -24,6 +24,9 @@ en:
     founded_year: "2010"
     price_range: "$$"
     geo:
+      latitude: "42.8206"
+      longitude: "-83.2647"
+    admin_geo:
       latitude: "42.8340"
       longitude: "-83.3428"
     working_hours:

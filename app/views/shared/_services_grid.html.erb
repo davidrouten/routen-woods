@@ -65,15 +65,15 @@
           <div class="absolute top-0 left-8 right-8 h-1 bg-gradient-to-r from-accent to-accent-hover rounded-b-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
           <div class="flex items-center gap-2 mb-5">
-            <div class="w-14 h-14 flex-shrink-0 bg-gradient-to-br from-primary to-primary-light rounded-xl flex items-center justify-center group-hover:from-accent group-hover:to-accent-hover transition-all duration-500 group-hover:rotate-3 group-hover:scale-110 shadow-lg">
+            <%= link_to svc[:path], class: "w-14 h-14 flex-shrink-0 bg-gradient-to-br from-primary to-primary-light rounded-xl flex items-center justify-center group-hover:from-accent group-hover:to-accent-hover transition-all duration-500 group-hover:rotate-3 group-hover:scale-110 shadow-lg" do %>
               <svg class="w-7 h-7 text-accent group-hover:text-white transition-colors duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <%= raw(svc[:icon]) %>
               </svg>
-            </div>
+            <% end %>
             <% svc[:images].each do |image| %>
               <% if image.image.attached? %>
                 <button type="button"
-                        class="w-14 h-14 flex-shrink-0 rounded-xl overflow-hidden bg-gray-100 cursor-zoom-in hover:ring-2 hover:ring-accent hover:scale-110 transition-all duration-300"
+                        class="relative z-10 w-14 h-14 flex-shrink-0 rounded-xl overflow-hidden bg-gray-100 cursor-zoom-in hover:ring-2 hover:ring-accent hover:scale-110 transition-all duration-300"
                         data-lightbox-target="item"
                         data-action="click->lightbox#open"
                         data-lightbox-url="<%= url_for(image.image.variant(resize_to_limit: [1600, 1600], format: :webp)) %>">
@@ -84,12 +84,13 @@
             <% end %>
           </div>
 
-          <h3 class="text-lg font-bold text-primary mb-2 group-hover:text-accent transition-colors duration-300"><%= svc[:title] %></h3>
-          <p class="text-gray-500 text-sm leading-relaxed mb-4"><%= svc[:blurb] %></p>
-
-          <%= link_to svc[:path], class: "inline-flex items-center gap-1 text-sm font-semibold text-primary group-hover:text-accent transition-colors no-underline" do %>
-            Learn More
-            <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          <%= link_to svc[:path], class: "block no-underline" do %>
+            <h3 class="text-lg font-bold text-primary mb-2 group-hover:text-accent transition-colors duration-300"><%= svc[:title] %></h3>
+            <p class="text-gray-500 text-sm leading-relaxed mb-4"><%= svc[:blurb] %></p>
+            <span class="inline-flex items-center gap-1 text-sm font-semibold text-primary group-hover:text-accent transition-colors">
+              Learn More
+              <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </span>
           <% end %>
         </div>
       <% end %>
