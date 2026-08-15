@@ -74,6 +74,58 @@ RSpec.describe "Admin::Leads", type: :request do
     end
   end
 
+  describe "GET /admin/leads/:id/edit" do
+    let(:lead) { create(:lead) }
+    before { sign_in admin }
+
+    it "renders the edit form" do
+      get edit_admin_lead_path(lead)
+      expect(response).to be_successful
+    end
+
+    context "when not authenticated" do
+      before { sign_out admin }
+
+      it "redirects to login" do
+        get edit_admin_lead_path(lead)
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+  end
+
+  describe "PATCH /admin/leads/:id" do
+    let(:lead) { create(:lead, first_name: "Jane") }
+    before { sign_in admin }
+
+    it "updates the lead" do
+      patch admin_lead_path(lead), params: {
+        lead: {
+          first_name: "Janet",
+          lead_source: "Angi",
+          lead_source_reference: "ANG-12345",
+          other_service: "Custom pantry",
+          address_street: "123 Main St",
+          address_city: "Oxford",
+          address_state: "MI",
+          address_zip: "48371"
+        }
+      }
+      lead.reload
+      expect(lead.first_name).to eq("Janet")
+      expect(lead.lead_source).to eq("Angi")
+      expect(lead.lead_source_reference).to eq("ANG-12345")
+      expect(lead.other_service).to eq("Custom pantry")
+      expect(lead.address_street).to eq("123 Main St")
+      expect(lead.address_city).to eq("Oxford")
+      expect(response).to redirect_to(admin_lead_path(lead))
+    end
+
+    it "re-renders form on validation error" do
+      patch admin_lead_path(lead), params: { lead: { first_name: "", email: "", phone: "" } }
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+  end
+
   describe "PATCH /admin/leads/:id/transition" do
     let(:lead) { create(:lead, status: :incoming) }
 

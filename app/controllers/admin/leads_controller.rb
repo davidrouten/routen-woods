@@ -1,9 +1,9 @@
 module Admin
   class LeadsController < BaseController
     include ActionView::RecordIdentifier
-    before_action :set_lead, only: [:show, :transition, :mark_spam, :unmark_spam, :archive, :restore, :assign]
+    before_action :set_lead, only: [:show, :edit, :update, :transition, :mark_spam, :unmark_spam, :archive, :restore, :assign]
     before_action -> { require_permission!(:view, :leads) }, only: [:index, :show]
-    before_action -> { require_permission!(:manage, :leads) }, only: [:new, :create, :transition, :mark_spam, :unmark_spam, :archive, :restore, :assign]
+    before_action -> { require_permission!(:manage, :leads) }, only: [:new, :create, :edit, :update, :transition, :mark_spam, :unmark_spam, :archive, :restore, :assign]
 
     def index
       scope = if params[:spam] == "true"
@@ -35,10 +35,22 @@ module Admin
 
     def create
       @lead = Lead.new(lead_params)
+      @lead.created_by = current_user
       if @lead.save
         redirect_to admin_lead_path(@lead), notice: "Lead created."
       else
         render :new, status: :unprocessable_entity
+      end
+    end
+
+    def edit
+    end
+
+    def update
+      if @lead.update(lead_params)
+        redirect_to admin_lead_path(@lead), notice: "Lead updated."
+      else
+        render :edit, status: :unprocessable_entity
       end
     end
 

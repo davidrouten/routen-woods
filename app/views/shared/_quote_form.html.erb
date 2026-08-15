@@ -91,6 +91,9 @@
   <%# Form timing for spam detection %>
   <%= f.hidden_field :form_completion_seconds, value: "", data: { "form-timing-target": "completionField" } %>
 
+  <%# Track which page the form was submitted from %>
+  <%= f.hidden_field :form_page, value: local_assigns[:form_page] || "unknown" %>
+
   <%# Cloudflare Turnstile - only rendered when configured %>
   <% if ENV["TURNSTILE_SITE_KEY"].present? %>
     <div class="cf-turnstile" data-sitekey="<%= ENV["TURNSTILE_SITE_KEY"] %>" data-theme="light" data-size="flexible"></div>

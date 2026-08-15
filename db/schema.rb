@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_15_131754) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_15_143957) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -113,9 +113,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_15_131754) do
     t.datetime "completed_at"
     t.datetime "contacted_at"
     t.datetime "created_at", null: false
+    t.bigint "created_by_id"
     t.string "email"
     t.string "first_name", null: false
     t.float "form_completion_seconds"
+    t.string "form_page"
     t.string "honeypot_value"
     t.string "ip_address"
     t.string "landing_page"
@@ -146,6 +148,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_15_131754) do
     t.string "zip_code"
     t.index ["assigned_to_id"], name: "index_leads_on_assigned_to_id"
     t.index ["created_at"], name: "index_leads_on_created_at"
+    t.index ["created_by_id"], name: "index_leads_on_created_by_id"
     t.index ["lead_temperature"], name: "index_leads_on_lead_temperature"
     t.index ["spam"], name: "index_leads_on_spam"
     t.index ["status"], name: "index_leads_on_status"

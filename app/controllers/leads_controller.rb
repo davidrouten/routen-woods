@@ -29,7 +29,7 @@ class LeadsController < ApplicationController
     params.require(:lead).permit(
       :first_name, :last_name, :email, :phone,
       :budget_range, :timeframe, :zip_code, :message,
-      :other_service, :lead_source,
+      :other_service, :lead_source, :form_page,
       :address_street, :address_street2, :address_city, :address_state, :address_zip,
       :honeypot_value, :form_completion_seconds,
       services_interested_in: []
