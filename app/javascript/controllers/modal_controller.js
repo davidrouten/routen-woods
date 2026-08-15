@@ -46,22 +46,25 @@ export default class extends Controller {
   openContent(event) {
     if (this.isOpen) return
     event.preventDefault()
-    const targetSelector = event.currentTarget.dataset.modalTarget
+    const el = event.currentTarget
+    const targetSelector = el.dataset.modalTarget
     const template = document.querySelector(targetSelector)
     if (template) {
       this.pendingFormSelector = null
-      this.render(template.innerHTML)
+      this.render(template.innerHTML, { size: el.dataset.modalSize })
     }
   }
 
-  render(bodyHTML) {
+  render(bodyHTML, options = {}) {
+    const maxW = options.size === "lg" ? "max-w-2xl" : "max-w-md"
+
     this.overlay = document.createElement("div")
     this.overlay.style.cssText = "position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(15,27,45,0.5);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);"
 
     this.overlay.innerHTML = `
-      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden transform" style="animation: modalIn 0.2s ease-out;">
-        <div class="h-1 bg-gradient-to-r from-[#d4a338] to-[#b8860b]"></div>
-        <div class="p-6">
+      <div class="bg-white rounded-2xl shadow-2xl w-full ${maxW} mx-4 overflow-hidden transform max-h-[90vh] flex flex-col" style="animation: modalIn 0.2s ease-out;">
+        <div class="h-1 bg-gradient-to-r from-[#d4a338] to-[#b8860b] flex-shrink-0"></div>
+        <div class="p-6 overflow-y-auto">
           ${bodyHTML}
         </div>
       </div>
