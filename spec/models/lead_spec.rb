@@ -63,6 +63,18 @@ RSpec.describe Lead, type: :model do
       expect(change.from_status).to eq("incoming")
       expect(change.to_status).to eq("contacted")
     end
+
+    it "does not create a status change when status is the same" do
+      lead.transition_to!(:contacted, user: user)
+      expect { lead.transition_to!(:contacted, user: user) }
+        .not_to change { lead.status_changes.count }
+    end
+
+    it "does not update the record when status is the same" do
+      lead.transition_to!(:contacted, user: user)
+      expect { lead.transition_to!(:contacted, user: user) }
+        .not_to change { lead.reload.updated_at }
+    end
   end
 
   describe "after_create callbacks" do

@@ -81,6 +81,8 @@ class Lead < ApplicationRecord
 
   def transition_to!(new_status, user: nil)
     old_status = status
+    return if old_status == new_status.to_s
+
     update!(status: new_status)
     timestamp_col = "#{new_status}_at"
     update_column(timestamp_col, Time.current) if has_attribute?(timestamp_col)
