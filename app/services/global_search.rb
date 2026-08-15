@@ -1,6 +1,9 @@
 class GlobalSearch
   LIMIT = 10
 
+  # Order matters: first model's results appear first in the dropdown
+  MODELS = [Lead, Project, Invoice].freeze
+
   def initialize(query)
     @query = query.to_s.strip
   end
@@ -8,17 +11,7 @@ class GlobalSearch
   def results
     return [] if @query.length < 2
 
-    found = {}
-
-    # Order matters: first match sets the subtitle, so highest-priority context goes first
-    search_leads_by_name(found)
-    search_leads_by_email(found)
-    search_leads_by_phone(found)
-    search_leads_by_address(found)
-    search_leads_by_message(found)
-    search_leads_by_notes(found)
-
-    found.values.first(LIMIT)
+    MODELS.flat_map { |model| search_model(model) }.first(LIMIT)
   end
 
   private
@@ -27,58 +20,44 @@ class GlobalSearch
     "%#{@query}%"
   end
 
-  def search_leads_by_name(found)
-    Lead.where("first_name ILIKE :q OR last_name ILIKE :q", q: pattern)
-      .not_spam.recent.limit(LIMIT).each do |lead|
-      add_lead(found, lead, "Name")
+  def search_model(model)
+    found = {}
+
+    # Order matters: first match sets the subtitle, so highest-priority context goes first
+    model._search_fields.each do |defn|
+      conditions = defn[:columns].map { |c| "#{c} ILIKE :q" }.join(" OR ")
+      model.search_scope.where(conditions, q: pattern).limit(LIMIT).each do |record|
+        context = resolve_context(defn[:context], record)
+        add_result(found, record, context)
+      end
+    end
+
+    search_by_notes(model, found) if model._search_includes_notes
+
+    found.values
+  end
+
+  def resolve_context(context, record)
+    case context
+    when String then context
+    when Proc then context.call(record, method(:snippet), @query)
     end
   end
 
-  def search_leads_by_email(found)
-    Lead.where("email ILIKE :q", q: pattern)
-      .not_spam.recent.limit(LIMIT).each do |lead|
-      add_lead(found, lead, "Email: #{lead.email}")
-    end
-  end
-
-  def search_leads_by_phone(found)
-    Lead.where("phone ILIKE :q", q: pattern)
-      .not_spam.recent.limit(LIMIT).each do |lead|
-      add_lead(found, lead, "Phone: #{lead.phone}")
-    end
-  end
-
-  def search_leads_by_address(found)
-    Lead.where(
-      "address_street ILIKE :q OR address_city ILIKE :q OR address_state ILIKE :q OR address_zip ILIKE :q",
-      q: pattern
-    ).not_spam.recent.limit(LIMIT).each do |lead|
-      parts = [lead.address_street, lead.address_city, lead.address_state, lead.address_zip].compact_blank
-      add_lead(found, lead, "Address: #{parts.join(', ')}")
-    end
-  end
-
-  def search_leads_by_message(found)
-    Lead.where("message ILIKE :q", q: pattern)
-      .not_spam.recent.limit(LIMIT).each do |lead|
-      add_lead(found, lead, "Message: #{snippet(lead.message)}")
-    end
-  end
-
-  def search_leads_by_notes(found)
+  def search_by_notes(model, found)
     notes = Note.joins(:user)
-      .where(notable_type: "Lead")
+      .where(notable_type: model.name)
       .where("notes.body ILIKE :q OR users.first_name ILIKE :q OR users.last_name ILIKE :q", q: pattern)
       .preload(:user)
       .order(created_at: :desc)
       .limit(LIMIT)
 
-    lead_ids = notes.map(&:notable_id).uniq
-    leads_by_id = Lead.where(id: lead_ids).not_spam.index_by(&:id)
+    notable_ids = notes.map(&:notable_id).uniq
+    records = model.search_scope.where(id: notable_ids).index_by(&:id)
 
     notes.each do |note|
-      lead = leads_by_id[note.notable_id]
-      next unless lead
+      record = records[note.notable_id]
+      next unless record
 
       context = if note.body.downcase.include?(@query.downcase)
         "Note: #{snippet(note.body)}"
@@ -86,21 +65,21 @@ class GlobalSearch
         "Note by #{note.user.full_name}: #{snippet(note.body)}"
       end
 
-      add_lead(found, lead, context)
+      add_result(found, record, context)
     end
   end
 
-  def add_lead(found, lead, match_context)
-    if found[lead.id]
-      found[lead.id][:match_contexts] << match_context unless found[lead.id][:match_contexts].include?(match_context)
+  def add_result(found, record, context)
+    if found[record.id]
+      found[record.id][:match_contexts] << context unless found[record.id][:match_contexts].include?(context)
     else
-      found[lead.id] = {
-        type: "Lead",
-        title: lead.full_name_or_email,
-        subtitle: match_context,
-        match_contexts: [match_context],
-        url: "/admin/leads/#{lead.id}",
-        status: lead.status
+      found[record.id] = {
+        type: record.search_type,
+        title: record.search_title,
+        subtitle: context,
+        match_contexts: [context],
+        url: record.search_url,
+        status: record.status
       }
     end
   end

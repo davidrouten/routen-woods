@@ -1,4 +1,21 @@
 class Project < ApplicationRecord
+  include Searchable
+
+  searchable :title, context: "Title"
+  searchable :description, context: ->(r, snip, _) { "Description: #{snip.call(r.description)}" }
+  searchable :email, :phone,
+             context: ->(r, _, query) { "Contact: #{r.email&.downcase&.include?(query.downcase) ? r.email : r.phone}" }
+  searchable :address, context: ->(r, _, _) { "Address: #{r.address}" }
+  searchable_notes!
+
+  def search_title
+    title
+  end
+
+  def search_url
+    "/admin/projects/#{id}"
+  end
+
   enum :status, {
     scheduled: 0,
     in_progress: 1,

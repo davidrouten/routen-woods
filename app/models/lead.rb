@@ -1,4 +1,26 @@
 class Lead < ApplicationRecord
+  include Searchable
+
+  searchable :first_name, :last_name, context: "Name"
+  searchable :email, context: ->(r, _, _) { "Email: #{r.email}" }
+  searchable :phone, context: ->(r, _, _) { "Phone: #{r.phone}" }
+  searchable :address_street, :address_city, :address_state, :address_zip,
+             context: ->(r, _, _) { "Address: #{[r.address_street, r.address_city, r.address_state, r.address_zip].compact_blank.join(', ')}" }
+  searchable :message, context: ->(r, snip, _) { "Message: #{snip.call(r.message)}" }
+  searchable_notes!
+
+  def self.search_scope
+    not_spam.recent
+  end
+
+  def search_title
+    full_name_or_email
+  end
+
+  def search_url
+    "/admin/leads/#{id}"
+  end
+
   enum :status, {
     incoming: 0,
     contacted: 1,

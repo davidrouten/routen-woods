@@ -14,13 +14,16 @@ RSpec.describe GlobalSearch do
       expect(GlobalSearch.new("   ").results).to eq([])
     end
 
-    context "matching by name" do
+    # -- Lead search --
+
+    context "lead: matching by name" do
       it "finds leads by first name" do
-        lead = create(:lead, first_name: "Marcus", last_name: "Green")
+        create(:lead, first_name: "Marcus", last_name: "Green")
         results = GlobalSearch.new("Marcus").results
         expect(results.length).to eq(1)
         expect(results.first[:title]).to eq("Marcus Green")
         expect(results.first[:subtitle]).to eq("Name")
+        expect(results.first[:type]).to eq("Lead")
       end
 
       it "finds leads by last name" do
@@ -37,7 +40,7 @@ RSpec.describe GlobalSearch do
       end
     end
 
-    context "matching by email" do
+    context "lead: matching by email" do
       it "finds leads by email" do
         create(:lead, first_name: "Tom", email: "tom@bigbend.com")
         results = GlobalSearch.new("bigbend").results
@@ -46,7 +49,7 @@ RSpec.describe GlobalSearch do
       end
     end
 
-    context "matching by phone" do
+    context "lead: matching by phone" do
       it "finds leads by phone number" do
         create(:lead, first_name: "Tom", phone: "248-999-1234")
         results = GlobalSearch.new("999-1234").results
@@ -55,7 +58,7 @@ RSpec.describe GlobalSearch do
       end
     end
 
-    context "matching by address" do
+    context "lead: matching by address" do
       it "finds leads by city" do
         create(:lead, first_name: "Tom", address_city: "Oxford")
         results = GlobalSearch.new("Oxford").results
@@ -86,7 +89,7 @@ RSpec.describe GlobalSearch do
       end
     end
 
-    context "matching by message" do
+    context "lead: matching by message" do
       it "finds leads by message content" do
         create(:lead, first_name: "Tom", message: "Need help with my superstar kitchen project")
         results = GlobalSearch.new("superstar").results
@@ -96,7 +99,7 @@ RSpec.describe GlobalSearch do
       end
     end
 
-    context "matching by notes" do
+    context "lead: matching by notes" do
       it "finds leads through note body text" do
         lead = create(:lead, first_name: "Tom")
         create(:note, notable: lead, user: user, body: "Discussed the marble countertop options")
@@ -124,30 +127,33 @@ RSpec.describe GlobalSearch do
       end
     end
 
-    context "deduplication" do
+    context "lead: deduplication" do
       it "returns one result per lead even with multiple matches" do
         lead = create(:lead, first_name: "Wilson", email: "wilson@test.com", message: "Wilson project")
         create(:note, notable: lead, user: user, body: "Wilson called back")
         results = GlobalSearch.new("Wilson").results
-        expect(results.length).to eq(1)
-        expect(results.first[:match_contexts]).to include("Name")
+        lead_results = results.select { |r| r[:type] == "Lead" }
+        expect(lead_results.length).to eq(1)
+        expect(lead_results.first[:match_contexts]).to include("Name")
       end
 
       it "uses the highest-priority match as subtitle" do
-        lead = create(:lead, first_name: "Wilson", message: "Wilson project details")
+        create(:lead, first_name: "Wilson", message: "Wilson project details")
         results = GlobalSearch.new("Wilson").results
-        expect(results.first[:subtitle]).to eq("Name")
+        lead_result = results.find { |r| r[:type] == "Lead" }
+        expect(lead_result[:subtitle]).to eq("Name")
       end
 
       it "collects all match contexts" do
-        lead = create(:lead, first_name: "Wilson", email: "wilson@test.com")
+        create(:lead, first_name: "Wilson", email: "wilson@test.com")
         results = GlobalSearch.new("Wilson").results
-        expect(results.first[:match_contexts]).to include("Name")
-        expect(results.first[:match_contexts]).to include("Email: wilson@test.com")
+        lead_result = results.find { |r| r[:type] == "Lead" }
+        expect(lead_result[:match_contexts]).to include("Name")
+        expect(lead_result[:match_contexts]).to include("Email: wilson@test.com")
       end
     end
 
-    context "spam exclusion" do
+    context "lead: spam exclusion" do
       it "excludes spam leads from direct matches" do
         create(:lead, :spam, first_name: "Spammy")
         expect(GlobalSearch.new("Spammy").results).to be_empty
@@ -160,8 +166,166 @@ RSpec.describe GlobalSearch do
       end
     end
 
+    # -- Project search --
+
+    context "project: matching by title" do
+      it "finds projects by title" do
+        create(:project, title: "Henderson Kitchen Reface")
+        results = GlobalSearch.new("Henderson").results
+        expect(results.length).to eq(1)
+        expect(results.first[:type]).to eq("Project")
+        expect(results.first[:title]).to eq("Henderson Kitchen Reface")
+        expect(results.first[:subtitle]).to eq("Title")
+        expect(results.first[:url]).to start_with("/admin/projects/")
+      end
+    end
+
+    context "project: matching by description" do
+      it "finds projects by description content" do
+        create(:project, title: "Kitchen Job", description: "Full quartzite countertop replacement")
+        results = GlobalSearch.new("quartzite").results
+        expect(results.length).to eq(1)
+        expect(results.first[:type]).to eq("Project")
+        expect(results.first[:subtitle]).to start_with("Description:")
+        expect(results.first[:subtitle]).to include("quartzite")
+      end
+    end
+
+    context "project: matching by contact" do
+      it "finds projects by email" do
+        create(:project, title: "Kitchen Job", email: "client@hendersonfamily.com")
+        results = GlobalSearch.new("hendersonfamily").results
+        expect(results.length).to eq(1)
+        expect(results.first[:subtitle]).to eq("Contact: client@hendersonfamily.com")
+      end
+
+      it "finds projects by phone" do
+        create(:project, title: "Kitchen Job", phone: "248-777-9999")
+        results = GlobalSearch.new("777-9999").results
+        expect(results.length).to eq(1)
+        expect(results.first[:subtitle]).to eq("Contact: 248-777-9999")
+      end
+    end
+
+    context "project: matching by address" do
+      it "finds projects by address" do
+        create(:project, title: "Kitchen Job", address: "456 Elm Street, Rochester MI")
+        results = GlobalSearch.new("Elm Street").results
+        expect(results.length).to eq(1)
+        expect(results.first[:subtitle]).to start_with("Address:")
+      end
+    end
+
+    context "project: matching by notes" do
+      it "finds projects through note body text" do
+        project = create(:project, title: "Big Renovation")
+        create(:note, notable: project, user: user, body: "Customer wants waterfall edge on island")
+        results = GlobalSearch.new("waterfall").results
+        expect(results.length).to eq(1)
+        expect(results.first[:type]).to eq("Project")
+        expect(results.first[:title]).to eq("Big Renovation")
+        expect(results.first[:subtitle]).to start_with("Note:")
+        expect(results.first[:url]).to eq("/admin/projects/#{project.id}")
+      end
+    end
+
+    context "project: deduplication" do
+      it "returns one result per project even with multiple matches" do
+        project = create(:project, title: "Zenith Remodel", description: "Zenith kitchen update")
+        create(:note, notable: project, user: user, body: "Zenith client confirmed")
+        results = GlobalSearch.new("Zenith").results
+        project_results = results.select { |r| r[:type] == "Project" }
+        expect(project_results.length).to eq(1)
+        expect(project_results.first[:match_contexts]).to include("Title")
+      end
+    end
+
+    context "project: status" do
+      it "includes the project status" do
+        create(:project, title: "Henderson Job", status: :in_progress)
+        result = GlobalSearch.new("Henderson").results.first
+        expect(result[:status]).to eq("in_progress")
+      end
+    end
+
+    # -- Invoice search --
+
+    context "invoice: matching by invoice number" do
+      it "finds invoices by invoice number" do
+        invoice = create(:invoice, invoice_number: "INV-2050")
+        results = GlobalSearch.new("INV-2050").results
+        expect(results.length).to eq(1)
+        expect(results.first[:type]).to eq("Invoice")
+        expect(results.first[:title]).to eq("INV-2050")
+        expect(results.first[:subtitle]).to eq("Invoice #")
+      end
+
+      it "finds invoices by partial invoice number" do
+        create(:invoice, invoice_number: "INV-2050")
+        results = GlobalSearch.new("2050").results
+        expect(results.length).to eq(1)
+        expect(results.first[:type]).to eq("Invoice")
+      end
+    end
+
+    context "invoice: matching by notes field" do
+      it "finds invoices by notes content" do
+        create(:invoice, invoice_number: "INV-3000", notes: "Deposit received via Zelle transfer")
+        results = GlobalSearch.new("Zelle").results
+        expect(results.length).to eq(1)
+        expect(results.first[:type]).to eq("Invoice")
+        expect(results.first[:subtitle]).to start_with("Notes:")
+        expect(results.first[:subtitle]).to include("Zelle")
+      end
+    end
+
+    context "invoice: URL routing" do
+      it "routes to project-scoped path when project exists" do
+        project = create(:project, title: "Kitchen Job")
+        invoice = create(:invoice, invoice_number: "INV-4000", project: project)
+        result = GlobalSearch.new("INV-4000").results.first
+        expect(result[:url]).to eq("/admin/projects/#{project.id}/invoices/#{invoice.id}")
+      end
+
+      it "routes to standalone path when no project" do
+        invoice = create(:invoice, invoice_number: "INV-4001", project: nil)
+        result = GlobalSearch.new("INV-4001").results.first
+        expect(result[:url]).to eq("/admin/invoices/#{invoice.id}")
+      end
+    end
+
+    context "invoice: status" do
+      it "includes the invoice status" do
+        create(:invoice, invoice_number: "INV-5000", status: :sent)
+        result = GlobalSearch.new("INV-5000").results.first
+        expect(result[:status]).to eq("sent")
+      end
+    end
+
+    # -- Cross-model --
+
+    context "cross-model results" do
+      it "returns leads, projects, and invoices together" do
+        create(:lead, first_name: "Zenith", last_name: "Corp")
+        create(:project, title: "Zenith Remodel")
+        results = GlobalSearch.new("Zenith").results
+        types = results.map { |r| r[:type] }.uniq
+        expect(types).to contain_exactly("Lead", "Project")
+      end
+
+      it "orders leads first, then projects, then invoices" do
+        create(:project, title: "Alphaville Kitchen")
+        create(:lead, first_name: "Alphaville", last_name: "Buyer")
+        results = GlobalSearch.new("Alphaville").results
+        expect(results.first[:type]).to eq("Lead")
+        expect(results.last[:type]).to eq("Project")
+      end
+    end
+
+    # -- Shared behavior --
+
     context "result structure" do
-      it "includes type, title, subtitle, url, status, and match_contexts" do
+      it "includes type, title, subtitle, url, status, and match_contexts for leads" do
         create(:lead, first_name: "Tom", status: :contacted)
         result = GlobalSearch.new("Tom").results.first
         expect(result[:type]).to eq("Lead")
@@ -169,6 +333,17 @@ RSpec.describe GlobalSearch do
         expect(result[:subtitle]).to be_present
         expect(result[:url]).to start_with("/admin/leads/")
         expect(result[:status]).to eq("contacted")
+        expect(result[:match_contexts]).to be_an(Array)
+      end
+
+      it "includes type, title, subtitle, url, status, and match_contexts for projects" do
+        create(:project, title: "Henderson Job", status: :scheduled)
+        result = GlobalSearch.new("Henderson").results.first
+        expect(result[:type]).to eq("Project")
+        expect(result[:title]).to be_present
+        expect(result[:subtitle]).to be_present
+        expect(result[:url]).to start_with("/admin/projects/")
+        expect(result[:status]).to eq("scheduled")
         expect(result[:match_contexts]).to be_an(Array)
       end
     end
@@ -186,8 +361,9 @@ RSpec.describe GlobalSearch do
     end
 
     context "limit" do
-      it "returns at most LIMIT results" do
+      it "returns at most LIMIT results across all types" do
         12.times { |i| create(:lead, first_name: "Alex#{i}", email: "alex#{i}@test.com") }
+        3.times { |i| create(:project, title: "Alex Project #{i}") }
         results = GlobalSearch.new("Alex").results
         expect(results.length).to be <= GlobalSearch::LIMIT
       end

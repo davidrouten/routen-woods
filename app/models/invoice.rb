@@ -1,4 +1,21 @@
 class Invoice < ApplicationRecord
+  include Searchable
+
+  searchable :invoice_number, context: "Invoice #"
+  searchable :notes, context: ->(r, snip, _) { "Notes: #{snip.call(r.notes)}" }
+
+  def search_title
+    invoice_number
+  end
+
+  def search_url
+    if project_id
+      "/admin/projects/#{project_id}/invoices/#{id}"
+    else
+      "/admin/invoices/#{id}"
+    end
+  end
+
   enum :status, {
     draft: 0,
     sent: 1,
