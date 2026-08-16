@@ -66,7 +66,8 @@
 /* --- Section Headings --- */
 
 .section-label {
-  @apply text-accent font-semibold tracking-wider uppercase text-sm mb-3;
+  @apply inline-block text-accent font-semibold tracking-wider uppercase text-sm mb-3
+         bg-primary/90 px-4 py-1.5 rounded-full;
 }
 
 .section-heading {
