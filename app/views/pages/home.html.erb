@@ -1,5 +1,6 @@
 <% content_for(:structured_data) { faq_jsonld(t("business.faq")) } %>
 
+<h1 class="sr-only"><%= t("business.name") %> &mdash; <%= t("business.tagline") %></h1>
 <%= render "shared/services_grid" %>
 <%= render "shared/cta_inline" %>
 <%= render "shared/about_section" %>

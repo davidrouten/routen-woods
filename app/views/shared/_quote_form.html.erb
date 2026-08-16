@@ -32,8 +32,8 @@
     </div>
   </div>
 
-  <div data-controller="other-service">
-    <p class="block text-sm font-semibold text-gray-700 mb-2"><%= t("business.forms.quote.service_label") %></p>
+  <fieldset data-controller="other-service">
+    <legend class="block text-sm font-semibold text-gray-700 mb-2"><%= t("business.forms.quote.service_label") %></legend>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
       <% service_checkbox_options.each do |name, key| %>
         <label class="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
@@ -47,9 +47,10 @@
       </label>
     </div>
     <div class="mt-2 <%= 'hidden' unless lead.other_service.present? %>" data-other-service-target="field">
-      <%= text_field_tag "lead[other_service]", lead.other_service, placeholder: "Please specify...", class: "input w-full" %>
+      <label for="lead_other_service" class="sr-only">Other service description</label>
+      <%= text_field_tag "lead[other_service]", lead.other_service, placeholder: "Please specify...", class: "input w-full", id: "lead_other_service" %>
     </div>
-  </div>
+  </fieldset>
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
     <div>
@@ -70,10 +71,14 @@
   <div>
     <%= f.label :address_street, "Address (optional)", class: "block text-sm font-semibold text-gray-700 mb-1.5" %>
     <%= f.text_field :address_street, placeholder: "Street address", class: "input mb-2" %>
+    <%= f.label :address_street2, "Apartment, suite, unit", class: "sr-only" %>
     <%= f.text_field :address_street2, placeholder: "Apt, suite, unit, etc.", class: "input mb-2" %>
     <div class="grid grid-cols-3 gap-2">
+      <%= f.label :address_city, "City", class: "sr-only" %>
       <%= f.text_field :address_city, placeholder: "City", class: "input" %>
+      <%= f.label :address_state, "State", class: "sr-only" %>
       <%= f.text_field :address_state, placeholder: "State", class: "input" %>
+      <%= f.label :address_zip, "Zip code", class: "sr-only" %>
       <%= f.text_field :address_zip, placeholder: "Zip", class: "input", maxlength: 10 %>
     </div>
   </div>

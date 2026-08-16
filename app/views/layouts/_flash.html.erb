@@ -1,16 +1,16 @@
 <% if notice %>
-  <div class="bg-green-50 border-l-4 border-green-400 p-4 mx-auto max-w-7xl mt-4" data-controller="dismissable" data-action="click->dismissable#dismiss">
+  <div class="bg-green-50 border-l-4 border-green-400 p-4 mx-auto max-w-7xl mt-4" role="status" aria-live="polite" data-controller="dismissable">
     <div class="flex items-center">
       <p class="text-green-700 flex-1"><%= notice %></p>
-      <button class="text-green-500 hover:text-green-700">&times;</button>
+      <button class="text-green-500 hover:text-green-700" data-action="click->dismissable#dismiss" aria-label="Dismiss notification">&times;</button>
     </div>
   </div>
 <% end %>
 <% if alert %>
-  <div class="bg-red-50 border-l-4 border-red-400 p-4 mx-auto max-w-7xl mt-4" data-controller="dismissable" data-action="click->dismissable#dismiss">
+  <div class="bg-red-50 border-l-4 border-red-400 p-4 mx-auto max-w-7xl mt-4" role="alert" aria-live="assertive" data-controller="dismissable">
     <div class="flex items-center">
       <p class="text-red-700 flex-1"><%= alert %></p>
-      <button class="text-red-500 hover:text-red-700">&times;</button>
+      <button class="text-red-500 hover:text-red-700" data-action="click->dismissable#dismiss" aria-label="Dismiss notification">&times;</button>
     </div>
   </div>
 <% end %>
