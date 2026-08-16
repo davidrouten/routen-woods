@@ -9,10 +9,12 @@
     <% if images.any? %>
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" data-controller="lightbox">
         <% images.each_with_index do |image, idx| %>
-          <div class="group relative overflow-hidden rounded-2xl aspect-square bg-gray-200 shadow-sm hover:shadow-xl transition-all duration-500 cursor-pointer"
+          <button type="button" class="group relative overflow-hidden rounded-2xl aspect-square bg-gray-200 shadow-sm hover:shadow-xl transition-all duration-500 cursor-pointer w-full text-left p-0"
                data-lightbox-target="item"
                data-action="click->lightbox#open"
-               data-lightbox-url="<%= image.image.attached? ? url_for(image.image.variant(resize_to_limit: [1600, 1600], format: :webp)) : '' %>">
+               data-lightbox-url="<%= image.image.attached? ? url_for(image.image.variant(resize_to_limit: [1600, 1600], format: :webp)) : '' %>"
+               data-lightbox-alt="<%= image.title %>"
+               aria-label="View <%= image.title %> in lightbox">
             <% if image.image.attached? %>
               <%= responsive_gallery_image image.image, alt: image.title, eager: idx == 0,
                   class: "w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" %>
@@ -26,7 +28,7 @@
             <div class="absolute inset-0 bg-gradient-to-t from-primary/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-5">
               <p class="text-white font-semibold"><%= image.title %></p>
             </div>
-          </div>
+          </button>
         <% end %>
       </div>
     <% else %>

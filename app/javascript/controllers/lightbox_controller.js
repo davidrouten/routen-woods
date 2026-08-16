@@ -6,11 +6,13 @@ export default class extends Controller {
 
   connect() {
     this.handleKeydown = this.handleKeydown.bind(this)
+    this.handleFocusTrap = this.handleFocusTrap.bind(this)
   }
 
   open(event) {
     event.preventDefault()
     event.stopPropagation()
+    this.triggerElement = event.currentTarget
     const idx = this.itemTargets.indexOf(event.currentTarget)
     this.indexValue = idx
     this.show()
@@ -19,43 +21,51 @@ export default class extends Controller {
   show() {
     const item = this.itemTargets[this.indexValue]
     const url = item.dataset.lightboxUrl
+    const alt = item.dataset.lightboxAlt || item.querySelector("img")?.alt || ""
     const total = this.itemTargets.length
     const current = this.indexValue + 1
 
     this.overlay = document.createElement("div")
+    this.overlay.setAttribute("role", "dialog")
+    this.overlay.setAttribute("aria-modal", "true")
+    this.overlay.setAttribute("aria-label", alt ? `${alt} — image ${current} of ${total}` : `Image ${current} of ${total}`)
     this.overlay.style.cssText = "position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(15,27,45,0.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);cursor:zoom-out;"
 
     const closeBtn = document.createElement("button")
     closeBtn.type = "button"
+    closeBtn.setAttribute("aria-label", "Close lightbox")
     closeBtn.style.cssText = "position:absolute;top:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.8);font-size:1.25rem;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;z-index:10;"
-    closeBtn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
+    closeBtn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
     closeBtn.addEventListener("click", (e) => { e.stopPropagation(); this.close() })
     this.overlay.appendChild(closeBtn)
 
     if (total > 1) {
       const prevBtn = document.createElement("button")
       prevBtn.type = "button"
+      prevBtn.setAttribute("aria-label", "Previous image")
       prevBtn.style.cssText = "position:absolute;left:1.5rem;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.8);font-size:1.25rem;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;z-index:10;"
-      prevBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>'
+      prevBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>'
       prevBtn.addEventListener("click", (e) => { e.stopPropagation(); this.prev() })
       this.overlay.appendChild(prevBtn)
 
       const nextBtn = document.createElement("button")
       nextBtn.type = "button"
+      nextBtn.setAttribute("aria-label", "Next image")
       nextBtn.style.cssText = "position:absolute;right:1.5rem;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.8);font-size:1.25rem;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;z-index:10;"
-      nextBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>'
+      nextBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>'
       nextBtn.addEventListener("click", (e) => { e.stopPropagation(); this.next() })
       this.overlay.appendChild(nextBtn)
     }
 
     const counter = document.createElement("div")
+    counter.setAttribute("aria-hidden", "true")
     counter.style.cssText = "position:absolute;bottom:1.5rem;left:50%;transform:translateX(-50%);"
     counter.innerHTML = `<span style="color:rgba(255,255,255,0.7);font-size:0.875rem;font-weight:500;letter-spacing:0.05em;">${current} of ${total}</span>`
     this.overlay.appendChild(counter)
 
     const img = document.createElement("img")
     img.src = url
-    img.alt = ""
+    img.alt = alt
     img.style.cssText = "max-height:85vh;max-width:85vw;object-fit:contain;border-radius:0.75rem;box-shadow:0 25px 50px -12px rgba(0,0,0,0.5);"
     this.overlay.appendChild(img)
 
@@ -79,6 +89,9 @@ export default class extends Controller {
     document.body.appendChild(this.overlay)
     document.body.style.overflow = "hidden"
     document.addEventListener("keydown", this.handleKeydown)
+    document.addEventListener("keydown", this.handleFocusTrap)
+
+    closeBtn.focus()
   }
 
   close() {
@@ -87,6 +100,11 @@ export default class extends Controller {
       this.overlay = null
       document.body.style.overflow = ""
       document.removeEventListener("keydown", this.handleKeydown)
+      document.removeEventListener("keydown", this.handleFocusTrap)
+      if (this.triggerElement) {
+        this.triggerElement.focus()
+        this.triggerElement = null
+      }
     }
   }
 
@@ -106,6 +124,21 @@ export default class extends Controller {
     if (event.key === "Escape") this.close()
     if (event.key === "ArrowRight") this.next()
     if (event.key === "ArrowLeft") this.prev()
+  }
+
+  handleFocusTrap(event) {
+    if (event.key !== "Tab" || !this.overlay) return
+    const focusable = this.overlay.querySelectorAll("button")
+    if (focusable.length === 0) return
+    const first = focusable[0]
+    const last = focusable[focusable.length - 1]
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault()
+      last.focus()
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault()
+      first.focus()
+    }
   }
 
   disconnect() {
