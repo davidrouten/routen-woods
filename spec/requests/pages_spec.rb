@@ -35,4 +35,14 @@ RSpec.describe "Pages", type: :request do
       expect(response).to have_http_status(:ok)
     end
   end
+
+  describe "GET /sitemap.xml" do
+    it "renders the sitemap" do
+      get sitemap_path(format: :xml)
+      expect(response).to have_http_status(:ok)
+      expect(response.content_type).to include("application/xml")
+      expect(response.body).to include("<urlset")
+      expect(response.body).to include("<loc>")
+    end
+  end
 end

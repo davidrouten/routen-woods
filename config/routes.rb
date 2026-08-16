@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   get "gallery", to: "pages#gallery"
   get "contact", to: "pages#contact"
   get "resources", to: "pages#resources"
+  get "sitemap", to: "pages#sitemap", defaults: { format: :xml }, as: :sitemap
 
   # Lead submission (public)
   resources :leads, only: [:create] do
