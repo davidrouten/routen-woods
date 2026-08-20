@@ -1,5 +1,6 @@
 <% service = t("business.services.cabinet_installation") %>
 <% content_for(:title) { "#{service[:name]} | #{t('business.name')}" } %>
+<% content_for(:meta_description) { service[:hero_subheading] } %>
 
 <%= render "shared/service_hero", service: service %>
 <%= render "shared/service_detail", service: service %>

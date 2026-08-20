@@ -3,11 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= content_for?(:title) ? yield(:title) : t("business.seo.title", business_name: t("business.name")) %></title>
-  <meta name="description" content="<%= t("business.seo.description") %>">
+  <% page_title = content_for?(:title) ? yield(:title) : t("business.seo.title", business_name: t("business.name")) %>
+  <% page_description = content_for?(:meta_description) ? yield(:meta_description) : t("business.seo.description") %>
+  <title><%= page_title %></title>
+  <meta name="description" content="<%= page_description %>">
   <meta name="keywords" content="<%= t("business.seo.keywords") %>">
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
+
+  <%= render "layouts/open_graph", page_title: page_title, page_description: page_description %>
+  <%= render "layouts/twitter_card", page_title: page_title, page_description: page_description %>
+
+  <link rel="canonical" href="<%= request.original_url.split("?").first %>"
   <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
   <%= javascript_importmap_tags %>
   <% if ENV["TURNSTILE_SITE_KEY"].present? %>

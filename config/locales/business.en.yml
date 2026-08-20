@@ -248,8 +248,18 @@ en:
 
     seo:
       title: "%{business_name} | Cabinet Refacing & Renovation"
-      description: "Professional cabinet refacing, customization, repair, and installation services. Transform your kitchen in a week — not months."
-      keywords: "cabinet refacing, cabinet repair, kitchen cabinet installation, custom closets, cabinet repainting, countertops"
+      description: "Professional cabinet refacing, customization, repair, and installation services in Oxford, MI. Transform your kitchen in a week — not months."
+      keywords: "cabinet refacing, cabinet repair, kitchen cabinet installation, custom closets, cabinet repainting, countertops, Oxford MI"
+      og_image: ""
+      pages:
+        about:
+          description: "Family-owned cabinet company in Oxford, MI with over a decade of experience in custom cabinetry, refacing, and kitchen renovation."
+        gallery:
+          description: "See before-and-after photos of cabinet refacing, repainting, and custom closet projects by Routen Woods in Oxford, MI."
+        contact:
+          description: "Request a free quote for cabinet refacing, repainting, or custom closets. Serving Oxford, MI and surrounding areas."
+        resources:
+          description: "Helpful resources for homeowners considering cabinet refacing, repainting, or kitchen renovation in Oxford, MI."
 
     footer:
       copyright: "© %{year} %{business_name}. All rights reserved."
