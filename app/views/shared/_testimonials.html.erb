@@ -12,7 +12,8 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       <% testimonials.each do |testimonial| %>
-        <div class="group bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10 hover:bg-white/10 hover:border-accent/30 transition-all duration-500 hover:-translate-y-1">
+        <div class="group bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10 hover:bg-white/10 hover:border-accent/30 transition-all duration-500 hover:-translate-y-1 flex flex-col"
+             data-controller="expandable-text">
           <!-- Stars -->
           <div class="flex gap-1 mb-5" role="img" aria-label="Rating: <%= testimonial.rating %> out of 5 stars">
             <% testimonial.rating.times do %>
@@ -23,13 +24,19 @@
           </div>
 
           <!-- Quote -->
-          <div class="relative mb-6">
+          <div class="relative mb-4 flex-1">
             <svg class="absolute -top-2 -left-2 w-8 h-8 text-accent/20" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10H14.017zM0 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151C7.546 6.068 5.983 8.789 5.983 11H10v10H0z"/></svg>
-            <p class="text-gray-300 leading-relaxed italic pl-4"><%= testimonial.body %></p>
+            <p class="text-gray-300 leading-relaxed italic pl-4 line-clamp-5 transition-all duration-300"
+               data-expandable-text-target="text"><%= testimonial.body %></p>
           </div>
+          <button type="button"
+                  class="text-accent hover:text-accent-hover text-sm font-semibold mb-4 text-left cursor-pointer transition-colors"
+                  data-expandable-text-target="toggle"
+                  data-action="expandable-text#toggle"
+                  aria-expanded="false">Read more</button>
 
           <!-- Author -->
-          <div class="flex items-center gap-3">
+          <div class="flex items-center gap-3 mt-auto">
             <div class="avatar-accent w-10 h-10 text-sm">
               <%= testimonial.author_name.split.map(&:first).join %>
             </div>

@@ -33,9 +33,10 @@ en:
       - "Mo-Fr 08:00-18:00"
       - "Sa 09:00-14:00"
     social:
-      facebook: "https://facebook.com/routenwoods"
-      instagram: "https://instagram.com/routenwoods"
+      facebook: ""
+      instagram: ""
       google_business: ""
+      angis_list: ""
 
     services:
       cabinet_refacing:
