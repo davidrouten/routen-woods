@@ -36,9 +36,10 @@ module ApplicationHelper
       "contacted" => "bg-yellow-100 text-yellow-800",
       "scheduled" => "bg-purple-100 text-purple-800",
       "quoted" => "bg-indigo-100 text-indigo-800",
-      "booked" => "bg-green-100 text-green-800",
+      "booked" => "bg-orange-100 text-orange-800",
       "completed" => "bg-emerald-100 text-emerald-800",
-      "lost" => "bg-red-100 text-red-800"
+      "lost" => "bg-red-100 text-red-800",
+      "lost_no_contact" => "bg-gray-200 text-gray-700"
     }[status] || "bg-gray-100 text-gray-800"
   end
 

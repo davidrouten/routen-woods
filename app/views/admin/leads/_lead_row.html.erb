@@ -1,4 +1,4 @@
-<tr class="hover:bg-gray-50" id="<%= dom_id(lead) %>">
+<tr class="<%= lead.status == 'booked' ? 'bg-orange-50 hover:bg-orange-100' : 'hover:bg-gray-50' %>" id="<%= dom_id(lead) %>">
   <td class="px-6 py-4">
     <div class="flex items-center gap-1.5">
       <%= link_to admin_lead_path(lead), class: "font-medium text-gray-900 hover:text-accent" do %>

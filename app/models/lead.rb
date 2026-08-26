@@ -28,7 +28,8 @@ class Lead < ApplicationRecord
     quoted: 3,
     booked: 4,
     completed: 5,
-    lost: 6
+    lost: 6,
+    lost_no_contact: 7
   }
 
   LEAD_SOURCES = [
@@ -56,7 +57,7 @@ class Lead < ApplicationRecord
   scope :spam_only, -> { where(spam: true) }
   scope :not_archived, -> { where(archived_at: nil) }
   scope :archived_only, -> { where.not(archived_at: nil) }
-  scope :open_leads, -> { not_spam.not_archived.where.not(status: [:completed, :lost]) }
+  scope :open_leads, -> { not_spam.not_archived.where.not(status: [:completed, :lost, :lost_no_contact]) }
   scope :by_status, ->(s) { where(status: s) }
   scope :hot, -> { where(lead_temperature: "hot") }
   scope :warm, -> { where(lead_temperature: "warm") }

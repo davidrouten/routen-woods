@@ -31,6 +31,7 @@ en:
         booked: "Booked"
         completed: "Completed"
         lost: "Lost"
+        lost_no_contact: "Lost - No Contact"
       temperature:
         hot: "Hot"
         warm: "Warm"

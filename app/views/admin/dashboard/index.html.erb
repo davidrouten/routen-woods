@@ -42,7 +42,7 @@
     </div>
     <div class="space-y-3">
       <% @recent_leads.each do |lead| %>
-        <%= link_to admin_lead_path(lead), class: "block p-3 hover:bg-gray-50 rounded-lg transition" do %>
+        <%= link_to admin_lead_path(lead), class: "block p-3 rounded-lg transition #{lead.status == 'booked' ? 'bg-orange-50 hover:bg-orange-100' : 'hover:bg-gray-50'}" do %>
           <div class="flex justify-between items-start">
             <div>
               <p class="font-medium text-gray-900"><%= lead.first_name %> <%= lead.last_name %></p>
@@ -63,7 +63,7 @@
     <h2 class="text-lg font-semibold text-gray-900 mb-4">Hot Leads</h2>
     <div class="space-y-3">
       <% @hot_leads.each do |lead| %>
-        <%= link_to admin_lead_path(lead), class: "block p-3 hover:bg-gray-50 rounded-lg transition" do %>
+        <%= link_to admin_lead_path(lead), class: "block p-3 rounded-lg transition #{lead.status == 'booked' ? 'bg-orange-50 hover:bg-orange-100' : 'hover:bg-gray-50'}" do %>
           <div class="flex justify-between items-start">
             <div>
               <p class="font-medium text-gray-900"><%= lead.temperature_emoji %> <%= lead.first_name %> <%= lead.last_name %></p>
