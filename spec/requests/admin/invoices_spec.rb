@@ -106,4 +106,35 @@ RSpec.describe "Admin::Invoices", type: :request do
       }.to change(Invoice, :count).by(-1)
     end
   end
+
+  describe "GET /admin/invoices/:id/pdf" do
+    let(:invoice) { create(:invoice, :with_items, project: project) }
+
+    it "returns a PDF" do
+      get pdf_admin_invoice_path(invoice)
+      expect(response).to be_successful
+      expect(response.content_type).to include("application/pdf")
+    end
+
+    it "renders inline by default" do
+      get pdf_admin_invoice_path(invoice)
+      expect(response.headers["Content-Disposition"]).to include("inline")
+    end
+
+    it "downloads when requested" do
+      get pdf_admin_invoice_path(invoice, download: true)
+      expect(response.headers["Content-Disposition"]).to include("attachment")
+      expect(response.headers["Content-Disposition"]).to include(invoice.invoice_number)
+    end
+  end
+
+  describe "GET /admin/projects/:project_id/invoices/:id/pdf" do
+    let(:invoice) { create(:invoice, :with_items, project: project) }
+
+    it "returns a PDF via the nested route" do
+      get pdf_admin_project_invoice_path(project, invoice)
+      expect(response).to be_successful
+      expect(response.content_type).to include("application/pdf")
+    end
+  end
 end

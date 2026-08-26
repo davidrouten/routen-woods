@@ -91,4 +91,34 @@ RSpec.describe "Admin::OrderForms", type: :request do
       }.to change(OrderForm, :count).by(-1)
     end
   end
+
+  describe "GET /admin/order_forms/:id/pdf" do
+    let(:order_form) { create(:order_form, :with_items, project: project) }
+
+    it "returns a PDF" do
+      get pdf_admin_order_form_path(order_form)
+      expect(response).to be_successful
+      expect(response.content_type).to include("application/pdf")
+    end
+
+    it "renders inline by default" do
+      get pdf_admin_order_form_path(order_form)
+      expect(response.headers["Content-Disposition"]).to include("inline")
+    end
+
+    it "downloads when requested" do
+      get pdf_admin_order_form_path(order_form, download: true)
+      expect(response.headers["Content-Disposition"]).to include("attachment")
+    end
+  end
+
+  describe "GET /admin/projects/:project_id/order_forms/:id/pdf" do
+    let(:order_form) { create(:order_form, :with_items, project: project) }
+
+    it "returns a PDF via the nested route" do
+      get pdf_admin_project_order_form_path(project, order_form)
+      expect(response).to be_successful
+      expect(response.content_type).to include("application/pdf")
+    end
+  end
 end

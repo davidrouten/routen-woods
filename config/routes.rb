@@ -50,6 +50,7 @@ Rails.application.routes.draw do
         patch :submit_order
         patch :confirm_order
         patch :receive_order
+        get :pdf
       end
     end
     resources :invoices, only: [:index, :new, :create, :show, :edit, :update, :destroy] do
@@ -70,6 +71,7 @@ Rails.application.routes.draw do
           patch :submit_order
           patch :confirm_order
           patch :receive_order
+          get :pdf
         end
       end
       resources :invoices, except: [:index] do

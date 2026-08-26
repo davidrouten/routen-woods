@@ -38,6 +38,20 @@ RSpec.describe ApplicationHelper, type: :helper do
     end
   end
 
+  describe "#status_badge_color" do
+    it "returns orange for booked" do
+      expect(helper.status_badge_color("booked")).to include("orange")
+    end
+
+    it "returns gray for lost_no_contact" do
+      expect(helper.status_badge_color("lost_no_contact")).to include("gray")
+    end
+
+    it "returns a default for unknown statuses" do
+      expect(helper.status_badge_color("unknown")).to eq("bg-gray-100 text-gray-800")
+    end
+  end
+
   describe "#format_date" do
     it "returns em dash for nil" do
       expect(helper.format_date(nil)).to eq("—")

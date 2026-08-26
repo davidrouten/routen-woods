@@ -1,7 +1,7 @@
 module Admin
   class OrderFormsController < BaseController
     before_action :set_project, if: -> { params[:project_id].present? }
-    before_action :set_order_form, only: [:show, :edit, :update, :destroy, :submit_order, :confirm_order, :receive_order]
+    before_action :set_order_form, only: [:show, :edit, :update, :destroy, :submit_order, :confirm_order, :receive_order, :pdf]
     before_action -> { require_permission!(:manage, :leads) }
 
     def index
@@ -62,6 +62,15 @@ module Admin
     def receive_order
       @order_form.mark_received!
       redirect_to order_form_path_for(@order_form), notice: "Order marked as received."
+    end
+
+    def pdf
+      html = render_to_string(template: "pdfs/order_form", layout: "pdf")
+      pdf_data = PdfService.render(html)
+      send_data pdf_data,
+        filename: "Order-#{@order_form.supplier_name.parameterize}-#{@order_form.id}.pdf",
+        type: :pdf,
+        disposition: params[:download] ? :attachment : :inline
     end
 
     private

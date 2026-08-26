@@ -31,6 +31,8 @@
       <%= button_to "Mark Received", receive_order_admin_order_form_path(@order_form), method: :patch, class: "btn-admin" %>
     <% end %>
     <%= link_to "Edit", edit_admin_order_form_path(@order_form), class: "btn-admin-secondary" %>
+    <%= link_to "Preview PDF", pdf_admin_order_form_path(@order_form), target: "_blank", class: "btn-admin-secondary" %>
+    <%= link_to "Download PDF", pdf_admin_order_form_path(@order_form, download: true), class: "btn-admin-secondary" %>
   </div>
 
   <!-- Line Items Table -->

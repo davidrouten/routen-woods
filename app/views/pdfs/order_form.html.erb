@@ -1,0 +1,92 @@
+<div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;">
+  <div>
+    <div class="doc-title">Order Form</div>
+    <div class="doc-number"><%= @order_form.supplier_name %></div>
+  </div>
+  <div>
+    <span class="badge badge-<%= @order_form.status.dasherize %>"><%= @order_form.status.titleize %></span>
+  </div>
+</div>
+
+<div class="meta-grid">
+  <div>
+    <% if @order_form.project %>
+      <div class="meta-block">
+        <div class="label">Project</div>
+        <div class="value"><%= @order_form.project.title %></div>
+      </div>
+    <% end %>
+  </div>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+    <% if @order_form.submitted_at %>
+      <div class="meta-block">
+        <div class="label">Submitted</div>
+        <div class="value"><%= @order_form.submitted_at.strftime("%B %-d, %Y") %></div>
+      </div>
+    <% end %>
+    <% if @order_form.confirmed_at %>
+      <div class="meta-block">
+        <div class="label">Confirmed</div>
+        <div class="value"><%= @order_form.confirmed_at.strftime("%B %-d, %Y") %></div>
+      </div>
+    <% end %>
+    <% if @order_form.received_at %>
+      <div class="meta-block">
+        <div class="label">Received</div>
+        <div class="value"><%= @order_form.received_at.strftime("%B %-d, %Y") %></div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Item</th>
+      <th>Details</th>
+      <th>Dimensions</th>
+      <th class="text-right">Qty</th>
+      <th class="text-right">Cost</th>
+      <th class="text-right">Our Price</th>
+      <th class="text-right">Profit</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @order_form.line_items.order(:position).each do |item| %>
+      <tr>
+        <td>
+          <span style="font-weight: 500;"><%= item.name %></span>
+          <% if item.category.present? %><br><span style="font-size: 8pt; color: #888;"><%= item.category %></span><% end %>
+          <% if item.specifications.present? %><br><span style="font-size: 8pt; color: #aaa;"><%= item.specifications %></span><% end %>
+        </td>
+        <td style="color: #555;">
+          <%= [item.color, item.finish, item.material, item.size].compact_blank.join(" / ") %>
+        </td>
+        <td style="color: #555;">
+          <% dims = [item.width, item.height, item.depth].compact_blank %>
+          <%= dims.any? ? dims.join(" × ") : "—" %>
+        </td>
+        <td class="text-right"><%= item.quantity %></td>
+        <td class="text-right"><%= item.supplier_cost ? number_to_currency(item.total_supplier_cost) : "—" %></td>
+        <td class="text-right"><%= item.our_price ? number_to_currency(item.total_our_price) : "—" %></td>
+        <td class="text-right" style="font-weight: 500; color: #047857;"><%= number_to_currency(item.profit) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+  <tfoot>
+    <tr class="totals-row grand-total">
+      <td colspan="3" class="text-right">Totals:</td>
+      <td></td>
+      <td class="text-right"><%= number_to_currency(@order_form.total_supplier_cost) %></td>
+      <td class="text-right"><%= number_to_currency(@order_form.total_our_price) %></td>
+      <td class="text-right" style="color: #047857;"><%= number_to_currency(@order_form.total_profit) %></td>
+    </tr>
+  </tfoot>
+</table>
+
+<% if @order_form.notes.present? %>
+  <div class="notes">
+    <div class="notes-label">Notes</div>
+    <%= simple_format(@order_form.notes) %>
+  </div>
+<% end %>
