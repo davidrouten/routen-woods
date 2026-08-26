@@ -6,6 +6,18 @@ module Admin
       @hot_leads = Lead.not_spam.hot.recent.limit(5)
       @spam_count = Lead.spam_only.count
       @leads_today = Lead.not_spam.where("created_at >= ?", Date.current.beginning_of_day).count
+
+      @booked_leads = Lead.not_spam.where(status: :booked).includes(projects: :invoices).order(booked_at: :desc)
+      @completed_leads = Lead.not_spam.where(status: :completed).includes(:projects).order(completed_at: :desc).limit(10)
+
+      booked_project_ids = @booked_leads.flat_map { |l| l.projects.map(&:id) }
+      @booked_revenue = Project.where(id: booked_project_ids).sum(:agreed_price)
+
+      active_invoices = Invoice.where(project_id: booked_project_ids)
+      @total_outstanding = active_invoices.sum("total - amount_paid")
+
+      month_start = Date.current.beginning_of_month
+      @collected_this_month = Invoice.where("deposit_paid_at >= ? OR balance_paid_at >= ?", month_start, month_start).sum(:amount_paid)
     end
   end
 end

@@ -33,7 +33,7 @@
   </div>
 </div>
 
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
   <!-- Recent Leads -->
   <div class="bg-white rounded-xl shadow-sm p-6">
     <div class="flex justify-between items-center mb-4">
@@ -58,23 +58,83 @@
     </div>
   </div>
 
-  <!-- Hot Leads -->
+  <!-- Job Board -->
   <div class="bg-white rounded-xl shadow-sm p-6">
-    <h2 class="text-lg font-semibold text-gray-900 mb-4">Hot Leads</h2>
-    <div class="space-y-3">
-      <% @hot_leads.each do |lead| %>
-        <%= link_to admin_lead_path(lead), class: "block p-3 rounded-lg transition #{lead.status == 'booked' ? 'bg-orange-50 hover:bg-orange-100' : 'hover:bg-gray-50'}" do %>
+    <div class="flex justify-between items-center mb-3">
+      <h2 class="text-lg font-semibold text-gray-900">Job Board</h2>
+      <%= link_to "View all", admin_leads_path(status: :booked), class: "text-sm text-accent hover:text-accent-hover" %>
+    </div>
+
+    <div class="grid grid-cols-3 gap-3 mb-4 p-3 bg-gray-50 rounded-lg">
+      <div>
+        <p class="text-xs text-gray-500">Booked Revenue</p>
+        <p class="text-lg font-bold text-orange-700"><%= number_to_currency(@booked_revenue, precision: 0) %></p>
+      </div>
+      <div>
+        <p class="text-xs text-gray-500">Outstanding</p>
+        <p class="text-lg font-bold text-red-600"><%= number_to_currency(@total_outstanding, precision: 0) %></p>
+      </div>
+      <div>
+        <p class="text-xs text-gray-500">Collected (<%= Date.current.strftime("%b") %>)</p>
+        <p class="text-lg font-bold text-emerald-700"><%= number_to_currency(@collected_this_month, precision: 0) %></p>
+      </div>
+    </div>
+
+    <div class="space-y-2">
+      <% @booked_leads.each do |lead| %>
+        <% project = lead.projects.first %>
+        <% invoice = project&.invoices&.first %>
+        <%= link_to admin_lead_path(lead), class: "block p-3 rounded-lg bg-orange-50 hover:bg-orange-100 transition" do %>
           <div class="flex justify-between items-start">
-            <div>
-              <p class="font-medium text-gray-900"><%= lead.temperature_emoji %> <%= lead.first_name %> <%= lead.last_name %></p>
-              <p class="text-sm text-gray-500"><%= lead.email || lead.phone %></p>
+            <div class="min-w-0 flex-1">
+              <p class="font-medium text-gray-900 truncate"><%= lead.first_name %> <%= lead.last_name %></p>
+              <p class="text-xs text-gray-500 truncate"><%= lead.service_names %></p>
             </div>
-            <span class="inline-block px-2 py-1 rounded-full text-xs font-medium <%= status_badge_color(lead.status) %>"><%= lead.status.titleize %></span>
+            <div class="text-right ml-3 shrink-0">
+              <% if invoice&.total&.positive? %>
+                <p class="text-sm"><span class="font-semibold <%= invoice.amount_paid >= invoice.total ? 'text-emerald-700' : 'text-gray-900' %>"><%= number_to_currency(invoice.amount_paid) %></span><span class="text-gray-400"> / <%= number_to_currency(invoice.total) %></span></p>
+              <% elsif project&.agreed_price %>
+                <p class="font-semibold text-gray-900 text-sm"><%= number_to_currency(project.agreed_price) %></p>
+              <% end %>
+              <% if invoice&.due_date %>
+                <p class="text-xs <%= invoice.due_date < Date.current ? 'text-red-600 font-medium' : 'text-gray-400' %>">Due <%= invoice.due_date.strftime("%-m/%-d") %></p>
+              <% elsif project&.scheduled_start_date %>
+                <p class="text-xs text-gray-400">Starts <%= project.scheduled_start_date.strftime("%-m/%-d") %></p>
+              <% end %>
+            </div>
           </div>
+          <% deposit = project&.deposit_amount.to_d > 0 ? project.deposit_amount : invoice&.deposit_amount.to_d > 0 ? invoice.deposit_amount : nil %>
+          <% if deposit || invoice&.due_date %>
+            <div class="flex gap-3 mt-1.5 text-xs text-gray-500">
+              <% if deposit %>
+                <span>Dep: <%= number_to_currency(deposit) %><% if invoice&.deposit_paid? %> <span class="text-emerald-600">paid</span><% end %></span>
+              <% end %>
+            </div>
+          <% end %>
         <% end %>
       <% end %>
-      <% if @hot_leads.empty? %>
-        <p class="text-gray-400 text-sm text-center py-4">No hot leads right now</p>
+
+      <% if @completed_leads.any? %>
+        <div class="border-t border-gray-100 pt-2 mt-2">
+          <p class="text-xs font-semibold text-emerald-700 uppercase tracking-wide mb-2">Completed</p>
+          <% @completed_leads.each do |lead| %>
+            <% project = lead.projects.first %>
+            <%= link_to admin_lead_path(lead), class: "block p-2 rounded-lg hover:bg-emerald-50 transition" do %>
+              <div class="flex justify-between items-center">
+                <p class="text-sm text-gray-700 truncate"><%= lead.first_name %> <%= lead.last_name %></p>
+                <div class="text-right ml-3 shrink-0">
+                  <% if project&.agreed_price %>
+                    <span class="text-sm font-medium text-emerald-700"><%= number_to_currency(project.agreed_price) %></span>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+
+      <% if @booked_leads.empty? && @completed_leads.empty? %>
+        <p class="text-gray-400 text-sm text-center py-4">No booked or completed jobs yet</p>
       <% end %>
     </div>
   </div>
