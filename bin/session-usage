@@ -1,0 +1,133 @@
+#!/usr/bin/env bash
+# Usage: bin/session-usage [session-id]
+# Shows live cost and context window usage for a Claude Code session.
+# Defaults to the most recent session in this project directory.
+
+set -euo pipefail
+
+CLAUDE_DIR="$HOME/.claude/projects"
+
+find_session_file() {
+  local id="$1"
+  # Search all project dirs for this session's jsonl
+  find "$CLAUDE_DIR" -maxdepth 2 -name "${id}.jsonl" -print -quit 2>/dev/null
+}
+
+find_latest_session() {
+  # Get the project dir matching the current working directory
+  local cwd_slug
+  cwd_slug=$(pwd | sed 's|/|-|g')
+  # Find the most recently modified jsonl across matching project dirs
+  find "$CLAUDE_DIR" -maxdepth 2 -name "*.jsonl" -path "*${cwd_slug}*" -print0 2>/dev/null \
+    | xargs -0 ls -t 2>/dev/null \
+    | head -1
+}
+
+if [[ $# -ge 1 ]]; then
+  SESSION_FILE=$(find_session_file "$1")
+  SESSION_ID="$1"
+else
+  SESSION_FILE=$(find_latest_session)
+  SESSION_ID=$(basename "${SESSION_FILE:-.}" .jsonl)
+fi
+
+if [[ -z "$SESSION_FILE" || ! -f "$SESSION_FILE" ]]; then
+  echo "No session file found. Pass a session ID or run from a project directory." >&2
+  exit 1
+fi
+
+REFRESH=${REFRESH:-5}
+
+while true; do
+  clear
+
+  read -r msgs input cache_create cache_read output thinking model < <(
+    python3 -c "
+import json
+
+f = '$SESSION_FILE'
+inp = out = cc = cr = think = 0
+msgs = 0
+model = 'unknown'
+
+with open(f) as fh:
+    for line in fh:
+        d = json.loads(line)
+        if d.get('type') == 'assistant':
+            u = d.get('message', {}).get('usage', {})
+            m = d.get('message', {}).get('model', '')
+            if m:
+                model = m
+            if u:
+                msgs += 1
+                inp   += u.get('input_tokens', 0)
+                cc    += u.get('cache_creation_input_tokens', 0)
+                cr    += u.get('cache_read_input_tokens', 0)
+                out   += u.get('output_tokens', 0)
+                think += u.get('output_tokens_details', {}).get('thinking_tokens', 0)
+
+print(msgs, inp, cc, cr, out, think, model)
+"
+  )
+
+  # Pricing per million tokens — adjust if model changes
+  case "$model" in
+    *opus*)
+      INPUT_PRICE=15.00; OUTPUT_PRICE=75.00
+      CACHE_CREATE_PRICE=18.75; CACHE_READ_PRICE=1.50 ;;
+    *sonnet*)
+      INPUT_PRICE=3.00; OUTPUT_PRICE=15.00
+      CACHE_CREATE_PRICE=3.75; CACHE_READ_PRICE=0.30 ;;
+    *haiku*)
+      INPUT_PRICE=0.80; OUTPUT_PRICE=4.00
+      CACHE_CREATE_PRICE=1.00; CACHE_READ_PRICE=0.08 ;;
+    *)
+      INPUT_PRICE=15.00; OUTPUT_PRICE=75.00
+      CACHE_CREATE_PRICE=18.75; CACHE_READ_PRICE=1.50 ;;
+  esac
+
+  total_context=$((input + cache_create + cache_read))
+
+  cost=$(python3 -c "
+cost = ($input*$INPUT_PRICE + $cache_create*$CACHE_CREATE_PRICE + $cache_read*$CACHE_READ_PRICE + $output*$OUTPUT_PRICE) / 1_000_000
+print(f'{cost:.4f}')
+")
+
+  cost_input=$(python3 -c "print(f'{$input * $INPUT_PRICE / 1_000_000:.4f}')")
+  cost_cache_create=$(python3 -c "print(f'{$cache_create * $CACHE_CREATE_PRICE / 1_000_000:.4f}')")
+  cost_cache_read=$(python3 -c "print(f'{$cache_read * $CACHE_READ_PRICE / 1_000_000:.4f}')")
+  cost_output=$(python3 -c "print(f'{$output * $OUTPUT_PRICE / 1_000_000:.4f}')")
+
+  max_tokens=15000000
+  pct=$((total_context * 100 / max_tokens))
+  bar_width=40
+  filled=$((pct * bar_width / 100))
+  empty=$((bar_width - filled))
+
+  fmt_num() { printf '%d' "$1" | rev | sed 's/.\{3\}/&,/g' | rev | sed 's/^,//'; }
+
+  printf '\033[1m  Claude Code Session Usage\033[0m\n'
+  printf '  Session: %.8s...\n' "$SESSION_ID"
+  printf '  Model:   %s\n' "$model"
+  printf '  ─────────────────────────────────────────────\n'
+  printf '\n'
+  printf '\033[1m  Cost Breakdown\033[0m\n'
+  printf '  Input tokens:       %12s   $%s\n' "$(fmt_num "$input")" "$cost_input"
+  printf '  Cache create:       %12s   $%s\n' "$(fmt_num "$cache_create")" "$cost_cache_create"
+  printf '  Cache read:         %12s   $%s\n' "$(fmt_num "$cache_read")" "$cost_cache_read"
+  printf '  Output tokens:      %12s   $%s\n' "$(fmt_num "$output")" "$cost_output"
+  printf '  (thinking):         %12s\n' "$(fmt_num "$thinking")"
+  printf '  ─────────────────────────────────────────────\n'
+  printf '\033[1m  Total Cost:                          $%s\033[0m\n' "$cost"
+  printf '  API calls:          %12s\n' "$msgs"
+  printf '\n'
+  printf '\033[1m  Context Window\033[0m  (%s / 15M tokens)\n' "$(python3 -c "print(f'{$total_context:,}')")"
+  printf '  ['
+  for ((i=0; i<filled; i++)); do printf '█'; done
+  for ((i=0; i<empty; i++)); do printf '░'; done
+  printf '] %d%%\n' "$pct"
+  printf '\n'
+  printf '  Refreshing every %ds. Ctrl+C to exit.\n' "$REFRESH"
+
+  sleep "$REFRESH"
+done
