@@ -52,6 +52,9 @@ gem "pagy"
 gem "twilio-ruby"
 gem "slack-notifier"
 
+# PDF generation (headless Chrome, no Node.js dependency)
+gem "ferrum_pdf"
+
 # Forms
 gem "simple_form"
 

@@ -53,6 +53,8 @@
       <% end %>
     <% end %>
     <%= link_to "Edit", edit_admin_invoice_path(@invoice), class: "btn-admin-secondary" %>
+    <%= link_to "Preview PDF", pdf_admin_invoice_path(@invoice), target: "_blank", class: "btn-admin-secondary" %>
+    <%= link_to "Download PDF", pdf_admin_invoice_path(@invoice, download: true), class: "btn-admin-secondary" %>
   </div>
 
   <!-- Line Items -->

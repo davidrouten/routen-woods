@@ -1,0 +1,89 @@
+<div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;">
+  <div>
+    <div class="doc-title">Invoice</div>
+    <div class="doc-number"><%= @invoice.invoice_number %></div>
+  </div>
+  <div>
+    <span class="badge badge-<%= @invoice.status.dasherize %>"><%= @invoice.status.titleize %></span>
+  </div>
+</div>
+
+<div class="meta-grid">
+  <div>
+    <% if @invoice.project %>
+      <div class="meta-block">
+        <div class="label">Project</div>
+        <div class="value"><%= @invoice.project.title %></div>
+      </div>
+    <% end %>
+  </div>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+    <div class="meta-block">
+      <div class="label">Issued</div>
+      <div class="value"><%= @invoice.issued_date&.strftime("%B %-d, %Y") || "—" %></div>
+    </div>
+    <div class="meta-block">
+      <div class="label">Due</div>
+      <div class="value"><%= @invoice.due_date&.strftime("%B %-d, %Y") || "—" %></div>
+    </div>
+    <% if @invoice.deposit_amount&.positive? %>
+      <div class="meta-block">
+        <div class="label">Deposit</div>
+        <div class="value">
+          <%= number_to_currency(@invoice.deposit_amount) %>
+          <% if @invoice.deposit_paid? %> <span style="color: #059669; font-size: 8pt;">(Paid)</span><% end %>
+        </div>
+      </div>
+    <% end %>
+    <div class="meta-block">
+      <div class="label">Balance Due</div>
+      <div class="value" style="font-size: 12pt; font-weight: 700;"><%= number_to_currency(@invoice.balance_due) %></div>
+    </div>
+  </div>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Item</th>
+      <th>Description</th>
+      <th class="text-right">Qty</th>
+      <th class="text-right">Unit Price</th>
+      <th class="text-right">Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @invoice.line_items.order(:position).each do |item| %>
+      <tr>
+        <td><%= item.name %></td>
+        <td style="color: #555;"><%= item.description %></td>
+        <td class="text-right"><%= item.quantity %></td>
+        <td class="text-right"><%= number_to_currency(item.unit_price) %></td>
+        <td class="text-right" style="font-weight: 500;"><%= number_to_currency(item.total) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+  <tfoot>
+    <tr class="totals-row">
+      <td colspan="4" class="text-right" style="color: #555; font-weight: 500;">Subtotal:</td>
+      <td class="text-right" style="font-weight: 500;"><%= number_to_currency(@invoice.subtotal) %></td>
+    </tr>
+    <% @invoice.adjustments.order(:position).each do |adj| %>
+      <tr class="totals-row">
+        <td colspan="4" class="text-right" style="color: #555;"><%= adj.label %>:</td>
+        <td class="text-right" style="<%= 'color: #059669;' if adj.adjustment_type == 'discount' %>"><%= number_to_currency(adj.amount) %></td>
+      </tr>
+    <% end %>
+    <tr class="totals-row grand-total">
+      <td colspan="4" class="text-right">Total:</td>
+      <td class="text-right"><%= number_to_currency(@invoice.total) %></td>
+    </tr>
+  </tfoot>
+</table>
+
+<% if @invoice.notes.present? %>
+  <div class="notes">
+    <div class="notes-label">Notes</div>
+    <%= simple_format(@invoice.notes) %>
+  </div>
+<% end %>

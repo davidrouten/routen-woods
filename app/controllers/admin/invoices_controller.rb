@@ -1,7 +1,7 @@
 module Admin
   class InvoicesController < BaseController
     before_action :set_project, if: -> { params[:project_id].present? }
-    before_action :set_invoice, only: [:show, :edit, :update, :destroy, :send_invoice, :record_payment]
+    before_action :set_invoice, only: [:show, :edit, :update, :destroy, :send_invoice, :record_payment, :pdf]
     before_action -> { require_permission!(:manage, :leads) }
 
     def index
@@ -66,6 +66,15 @@ module Admin
       type = params[:payment_type]&.to_sym || :balance
       @invoice.record_payment!(amount, type: type)
       redirect_to invoice_path_for(@invoice), notice: "Payment recorded."
+    end
+
+    def pdf
+      html = render_to_string(template: "pdfs/invoice", layout: "pdf")
+      pdf_data = PdfService.render(html)
+      send_data pdf_data,
+        filename: "#{@invoice.invoice_number}.pdf",
+        type: :pdf,
+        disposition: params[:download] ? :attachment : :inline
     end
 
     private

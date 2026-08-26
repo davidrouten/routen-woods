@@ -56,6 +56,7 @@ Rails.application.routes.draw do
       member do
         patch :send_invoice
         patch :record_payment
+        get :pdf
       end
     end
 
@@ -75,6 +76,7 @@ Rails.application.routes.draw do
         member do
           patch :send_invoice
           patch :record_payment
+          get :pdf
         end
       end
     end
