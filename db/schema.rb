@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_15_143957) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_27_120002) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -41,6 +41,26 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_15_143957) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "customers", force: :cascade do |t|
+    t.string "address_city"
+    t.string "address_state"
+    t.string "address_street"
+    t.string "address_street2"
+    t.string "address_zip"
+    t.datetime "created_at", null: false
+    t.string "email"
+    t.string "first_name", null: false
+    t.string "last_name"
+    t.text "notes"
+    t.string "phone"
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "idx_customers_email_trgm", opclass: :gin_trgm_ops, using: :gin
+    t.index ["email"], name: "index_customers_on_email"
+    t.index ["last_name"], name: "index_customers_on_last_name"
+    t.index ["phone"], name: "idx_customers_phone_trgm", opclass: :gin_trgm_ops, using: :gin
+    t.index ["phone"], name: "index_customers_on_phone"
   end
 
   create_table "gallery_images", force: :cascade do |t|
@@ -115,6 +135,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_15_143957) do
     t.datetime "contacted_at"
     t.datetime "created_at", null: false
     t.bigint "created_by_id"
+    t.bigint "customer_id"
     t.string "email"
     t.string "first_name", null: false
     t.float "form_completion_seconds"
@@ -150,6 +171,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_15_143957) do
     t.index ["assigned_to_id"], name: "index_leads_on_assigned_to_id"
     t.index ["created_at"], name: "index_leads_on_created_at"
     t.index ["created_by_id"], name: "index_leads_on_created_by_id"
+    t.index ["customer_id"], name: "index_leads_on_customer_id"
     t.index ["lead_temperature"], name: "index_leads_on_lead_temperature"
     t.index ["spam"], name: "index_leads_on_spam"
     t.index ["status"], name: "index_leads_on_status"
@@ -231,6 +253,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_15_143957) do
     t.string "client_token", null: false
     t.datetime "completed_at"
     t.datetime "created_at", null: false
+    t.bigint "customer_id"
     t.decimal "deposit_amount", precision: 10, scale: 2
     t.text "description"
     t.string "email"
@@ -248,6 +271,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_15_143957) do
     t.datetime "updated_at", null: false
     t.index ["assigned_to_id"], name: "index_projects_on_assigned_to_id"
     t.index ["client_token"], name: "index_projects_on_client_token", unique: true
+    t.index ["customer_id"], name: "index_projects_on_customer_id"
     t.index ["lead_id"], name: "index_projects_on_lead_id"
     t.index ["status"], name: "index_projects_on_status"
   end
@@ -305,10 +329,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_15_143957) do
   add_foreign_key "invoice_adjustments", "invoices"
   add_foreign_key "invoice_line_items", "invoices"
   add_foreign_key "invoices", "projects"
+  add_foreign_key "leads", "customers"
   add_foreign_key "leads", "users", column: "assigned_to_id"
   add_foreign_key "notes", "users"
   add_foreign_key "order_forms", "projects"
   add_foreign_key "order_line_items", "order_forms"
+  add_foreign_key "projects", "customers"
   add_foreign_key "projects", "leads"
   add_foreign_key "projects", "users", column: "assigned_to_id"
   add_foreign_key "status_changes", "leads"

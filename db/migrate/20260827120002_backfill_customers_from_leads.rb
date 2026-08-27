@@ -10,10 +10,10 @@ class BackfillCustomersFromLeads < ActiveRecord::Migration[8.1]
       project.update_column(:customer_id, project.lead.customer_id)
     end
 
+    # Orphan projects (no lead) are left without a customer — admins can link one manually
     Project.where(customer_id: nil, lead_id: nil).where.not(email: [nil, ""]).find_each do |project|
       customer = Customer.where("LOWER(email) = LOWER(?)", project.email).first
-      customer ||= Customer.create!(first_name: "Unknown", email: project.email, phone: project.phone)
-      project.update_column(:customer_id, customer.id)
+      project.update_column(:customer_id, customer.id) if customer
     end
   end
 

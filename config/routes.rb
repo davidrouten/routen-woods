@@ -33,6 +33,12 @@ Rails.application.routes.draw do
     resource :account, only: [:show, :update], controller: "account"
     get "search", to: "search#index"
 
+    resources :customers, only: [:index, :show, :edit, :update] do
+      collection do
+        get :suggest
+      end
+    end
+
     resources :leads do
       member do
         patch :transition

@@ -2,7 +2,7 @@ class GlobalSearch
   LIMIT = 10
 
   # Order matters: first model's results appear first in the dropdown
-  MODELS = [Lead, Project, Invoice].freeze
+  MODELS = [Lead, Project, Invoice, Customer].freeze
 
   def initialize(query)
     @query = query.to_s.strip
@@ -79,7 +79,7 @@ class GlobalSearch
         subtitle: context,
         match_contexts: [context],
         url: record.search_url,
-        status: record.status
+        status: record.respond_to?(:status) ? record.status : nil
       }
     end
   end

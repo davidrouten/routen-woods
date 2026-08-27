@@ -3,6 +3,10 @@ require "rails_helper"
 RSpec.describe GlobalSearch do
   let(:user) { create(:user, first_name: "Sarah", last_name: "Connor") }
 
+  before do
+    allow_any_instance_of(Lead).to receive(:link_to_customer)
+  end
+
   describe "#results" do
     it "returns empty for queries shorter than 2 characters" do
       create(:lead, first_name: "A")

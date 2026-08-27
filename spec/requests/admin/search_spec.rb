@@ -3,6 +3,10 @@ require "rails_helper"
 RSpec.describe "Admin::Search", type: :request do
   let(:admin) { create(:user, :admin) }
 
+  before do
+    allow_any_instance_of(Lead).to receive(:link_to_customer)
+  end
+
   describe "GET /admin/search" do
     context "when authenticated" do
       before { sign_in admin }

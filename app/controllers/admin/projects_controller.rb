@@ -26,6 +26,7 @@ module Admin
         @project.phone = @lead.phone
         @project.address = @lead.zip_code
         @project.description = @lead.message
+        @project.customer = @lead.customer if @lead.customer
       end
     end
 
@@ -33,9 +34,11 @@ module Admin
       @project = Project.new(project_params)
 
       if @project.save
-        # Transition lead to booked if coming from a lead
-        if @project.lead && !@project.lead.booked?
-          @project.lead.transition_to!(:booked, user: current_user)
+        if @project.lead
+          @project.lead.transition_to!(:booked, user: current_user) unless @project.lead.booked?
+          if @project.customer_id.nil? && @project.lead.customer_id.present?
+            @project.update_column(:customer_id, @project.lead.customer_id)
+          end
         end
         redirect_to admin_project_path(@project), notice: "Project created."
       else
@@ -84,7 +87,7 @@ module Admin
 
     def project_params
       params.require(:project).permit(
-        :lead_id, :assigned_to_id, :title, :description, :internal_notes,
+        :lead_id, :assigned_to_id, :customer_id, :title, :description, :internal_notes,
         :address, :email, :phone,
         :estimated_price, :agreed_price, :deposit_amount, :balance_amount,
         :time_estimate, :scheduled_start_date, :scheduled_end_date

@@ -1,0 +1,56 @@
+<div class="flex justify-between items-center mb-6">
+  <h1 class="text-2xl font-bold text-gray-900">Customers</h1>
+</div>
+
+<div class="bg-white rounded-xl shadow-sm p-4 mb-6">
+  <%= form_tag admin_customers_path, method: :get, class: "flex items-center gap-3" do %>
+    <input type="text" name="q" value="<%= params[:q] %>" placeholder="Search customers..." class="input-admin flex-1" autofocus>
+    <button type="submit" class="btn-admin">Search</button>
+    <% if params[:q].present? %>
+      <%= link_to "Clear", admin_customers_path, class: "btn-admin-secondary" %>
+    <% end %>
+  <% end %>
+</div>
+
+<div class="bg-white rounded-xl shadow-sm overflow-hidden">
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="border-b border-gray-200">
+          <th class="text-left px-4 py-3 font-semibold text-gray-700">Name</th>
+          <th class="text-left px-4 py-3 font-semibold text-gray-700">Email</th>
+          <th class="text-left px-4 py-3 font-semibold text-gray-700">Phone</th>
+          <th class="text-center px-4 py-3 font-semibold text-gray-700">Leads</th>
+          <th class="text-center px-4 py-3 font-semibold text-gray-700">Projects</th>
+          <th class="text-right px-4 py-3 font-semibold text-gray-700">Revenue</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        <% @customers.each do |customer| %>
+          <tr class="hover:bg-gray-50 transition">
+            <td class="px-4 py-3">
+              <%= link_to customer.full_name, admin_customer_path(customer), class: "font-medium text-accent hover:text-accent-hover" %>
+            </td>
+            <td class="px-4 py-3 text-gray-600"><%= customer.email %></td>
+            <td class="px-4 py-3 text-gray-600"><%= customer.phone %></td>
+            <td class="px-4 py-3 text-center text-gray-600"><%= customer.lead_count %></td>
+            <td class="px-4 py-3 text-center text-gray-600"><%= customer.project_count %></td>
+            <td class="px-4 py-3 text-right font-medium text-gray-900"><%= number_to_currency(customer.total_revenue, precision: 0) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <% if @customers.empty? %>
+    <div class="px-4 py-8 text-center text-gray-400">
+      <p>No customers found.</p>
+    </div>
+  <% end %>
+</div>
+
+<% if @pagy && @pagy.pages > 1 %>
+  <div class="mt-6 flex justify-center">
+    <%== @pagy.series_nav %>
+  </div>
+<% end %>

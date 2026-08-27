@@ -9,8 +9,9 @@
     </div>
   <% end %>
 
-  <div class="bg-white rounded-xl shadow-sm p-6 space-y-5">
+  <div class="bg-white rounded-xl shadow-sm p-6 space-y-5" data-controller="customer-suggest">
     <h2 class="text-lg font-semibold text-gray-900">Contact Info</h2>
+    <%= f.hidden_field :customer_id, data: { customer_suggest_target: "customerId" } %>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
       <div>
@@ -26,13 +27,15 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
       <div>
         <%= f.label :email, class: "block text-sm font-semibold text-gray-700 mb-1.5" %>
-        <%= f.email_field :email, class: "input-admin w-full" %>
+        <%= f.email_field :email, class: "input-admin w-full", data: { customer_suggest_target: "email", action: "blur->customer-suggest#lookup" } %>
       </div>
       <div>
         <%= f.label :phone, class: "block text-sm font-semibold text-gray-700 mb-1.5" %>
-        <%= f.telephone_field :phone, class: "input-admin w-full" %>
+        <%= f.telephone_field :phone, class: "input-admin w-full", data: { customer_suggest_target: "phone", action: "blur->customer-suggest#lookup" } %>
       </div>
     </div>
+
+    <div data-customer-suggest-target="suggestion" class="hidden"></div>
   </div>
 
   <div class="bg-white rounded-xl shadow-sm p-6"

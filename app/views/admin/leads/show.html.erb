@@ -62,6 +62,12 @@
             <p class="font-medium"><%= @lead.lead_source_reference %></p>
           </div>
         <% end %>
+        <% if @lead.customer.present? %>
+          <div>
+            <p class="text-gray-500">Customer</p>
+            <p class="font-medium"><%= link_to @lead.customer.full_name, admin_customer_path(@lead.customer), class: "text-accent hover:text-accent-hover" %></p>
+          </div>
+        <% end %>
         <div>
           <p class="text-gray-500">Submitted</p>
           <p class="font-medium"><%= format_datetime(@lead.created_at) %></p>
