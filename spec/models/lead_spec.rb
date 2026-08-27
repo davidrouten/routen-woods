@@ -23,6 +23,7 @@ RSpec.describe Lead, type: :model do
 
   describe "associations" do
     it { is_expected.to belong_to(:assigned_to).optional }
+    it { is_expected.to belong_to(:customer).optional }
     it { is_expected.to have_many(:notes).dependent(:destroy) }
     it { is_expected.to have_many(:status_changes).dependent(:destroy) }
   end
@@ -91,6 +92,33 @@ RSpec.describe Lead, type: :model do
     it "marks honeypot leads as spam" do
       lead = create(:lead, :spam)
       expect(lead.reload.spam).to be true
+    end
+  end
+
+  describe "customer linking" do
+    it "auto-creates and links a customer on creation" do
+      lead = create(:lead, email: "newcustomer@example.com")
+      expect(lead.reload.customer).to be_present
+      expect(lead.customer.email).to eq("newcustomer@example.com")
+    end
+
+    it "links to an existing customer with the same email" do
+      existing = create(:customer, email: "returning@example.com")
+      lead = create(:lead, email: "returning@example.com")
+
+      expect(lead.reload.customer).to eq(existing)
+    end
+
+    it "does not link spam leads to a customer" do
+      lead = create(:lead, :spam)
+      expect(lead.reload.customer_id).to be_nil
+    end
+
+    it "does not create a customer when lead has no email or phone" do
+      lead = build(:lead, email: nil, phone: nil)
+      lead.save(validate: false)
+
+      expect(lead.reload.customer_id).to be_nil
     end
   end
 end

@@ -45,6 +45,7 @@ class Lead < ApplicationRecord
 
   belongs_to :assigned_to, class_name: "User", optional: true
   belongs_to :created_by, class_name: "User", optional: true
+  belongs_to :customer, optional: true
   has_many :notes, as: :notable, dependent: :destroy
   has_many :status_changes, dependent: :destroy
   has_many :projects, dependent: :nullify
@@ -79,6 +80,7 @@ class Lead < ApplicationRecord
   after_create :calculate_spam_score
   after_create :calculate_lead_temperature
   after_create :notify_new_lead
+  after_create_commit :link_to_customer, unless: :spam?
 
   def transition_to!(new_status, user: nil)
     old_status = status
@@ -127,5 +129,15 @@ class Lead < ApplicationRecord
   def notify_new_lead
     return if spam?
     NotificationService.notify(:new_lead, self)
+  end
+
+  def link_to_customer
+    return if customer_id.present?
+
+    customer = CustomerMatcher.match_or_create(self)
+    # update_column to avoid re-triggering spam/temperature/notification callbacks
+    update_column(:customer_id, customer.id) if customer
+  rescue => e
+    Rails.logger.warn("CustomerMatcher failed for Lead##{id}: #{e.message}")
   end
 end

@@ -26,6 +26,7 @@ class Project < ApplicationRecord
 
   belongs_to :lead, optional: true
   belongs_to :assigned_to, class_name: "User", optional: true
+  belongs_to :customer, optional: true
   has_many :order_forms, dependent: :destroy
   has_many :invoices, dependent: :destroy
   has_many :notes, as: :notable, dependent: :destroy
