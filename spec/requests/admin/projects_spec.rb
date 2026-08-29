@@ -13,6 +13,47 @@ RSpec.describe "Admin::Projects", type: :request do
       expect(response).to be_successful
       expect(response.body).to include("Kitchen Refacing")
     end
+
+    it "sorts by project title ascending" do
+      create(:project, title: "Zephyr Kitchen")
+      create(:project, title: "Alpha Closet")
+      get admin_projects_path, params: { sort: "project" }
+      expect(response).to be_successful
+      expect(response.body.index("Alpha Closet")).to be < response.body.index("Zephyr Kitchen")
+    end
+
+    it "sorts by project title descending" do
+      create(:project, title: "Zephyr Kitchen")
+      create(:project, title: "Alpha Closet")
+      get admin_projects_path, params: { sort: "-project" }
+      expect(response).to be_successful
+      expect(response.body.index("Zephyr Kitchen")).to be < response.body.index("Alpha Closet")
+    end
+
+    it "sorts by client name" do
+      lead_a = create(:lead, first_name: "Zara", email: "z@example.com")
+      lead_b = create(:lead, first_name: "Alice", email: "a@example.com")
+      create(:project, title: "P1", lead: lead_a)
+      create(:project, title: "P2", lead: lead_b)
+      get admin_projects_path, params: { sort: "client" }
+      expect(response).to be_successful
+    end
+
+    it "sorts by price descending" do
+      create(:project, title: "Cheap", agreed_price: 1000)
+      create(:project, title: "Expensive", agreed_price: 9000)
+      get admin_projects_path, params: { sort: "-price" }
+      expect(response).to be_successful
+      expect(response.body.index("Expensive")).to be < response.body.index("Cheap")
+    end
+
+    it "sorts by schedule ascending" do
+      create(:project, title: "Later", scheduled_start_date: 30.days.from_now)
+      create(:project, title: "Soon", scheduled_start_date: 2.days.from_now)
+      get admin_projects_path, params: { sort: "schedule" }
+      expect(response).to be_successful
+      expect(response.body.index("Soon")).to be < response.body.index("Later")
+    end
   end
 
   describe "GET /admin/projects/new" do

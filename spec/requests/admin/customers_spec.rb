@@ -12,6 +12,49 @@ RSpec.describe "Admin::Customers", type: :request do
       expect(response).to have_http_status(:ok)
     end
 
+    it "sorts by name ascending" do
+      create(:customer, first_name: "Zara")
+      create(:customer, first_name: "Alice")
+      get admin_customers_path, params: { sort: "name" }
+      expect(response).to have_http_status(:ok)
+      expect(response.body.index("Alice")).to be < response.body.index("Zara")
+    end
+
+    it "sorts by name descending" do
+      create(:customer, first_name: "Zara")
+      create(:customer, first_name: "Alice")
+      get admin_customers_path, params: { sort: "-name" }
+      expect(response).to have_http_status(:ok)
+      expect(response.body.index("Zara")).to be < response.body.index("Alice")
+    end
+
+    it "sorts by email" do
+      create(:customer, first_name: "A", email: "zara@example.com")
+      create(:customer, first_name: "B", email: "alice@example.com")
+      get admin_customers_path, params: { sort: "email" }
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "sorts by leads count" do
+      get admin_customers_path, params: { sort: "-leads" }
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "sorts by projects count" do
+      get admin_customers_path, params: { sort: "-projects" }
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "sorts by revenue" do
+      get admin_customers_path, params: { sort: "-revenue" }
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "sorts by phone" do
+      get admin_customers_path, params: { sort: "phone" }
+      expect(response).to have_http_status(:ok)
+    end
+
     it "filters by search query" do
       create(:customer, first_name: "Alice", last_name: "Johnson")
       create(:customer, first_name: "Bob", last_name: "Smith")

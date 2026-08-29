@@ -17,12 +17,12 @@
     <table class="w-full text-sm">
       <thead>
         <tr class="border-b border-gray-200">
-          <th class="text-left px-4 py-3 font-semibold text-gray-700">Name</th>
-          <th class="text-left px-4 py-3 font-semibold text-gray-700">Email</th>
-          <th class="text-left px-4 py-3 font-semibold text-gray-700">Phone</th>
-          <th class="text-center px-4 py-3 font-semibold text-gray-700">Leads</th>
-          <th class="text-center px-4 py-3 font-semibold text-gray-700">Projects</th>
-          <th class="text-right px-4 py-3 font-semibold text-gray-700">Revenue</th>
+          <th class="text-left px-4 py-3 font-semibold text-gray-700"><%= sort_link("Name", :name, page_default: true) %></th>
+          <th class="text-left px-4 py-3 font-semibold text-gray-700"><%= sort_link("Email", :email) %></th>
+          <th class="text-left px-4 py-3 font-semibold text-gray-700"><%= sort_link("Phone", :phone) %></th>
+          <th class="text-center px-4 py-3 font-semibold text-gray-700"><%= sort_link("Leads", :leads, default_desc: true) %></th>
+          <th class="text-center px-4 py-3 font-semibold text-gray-700"><%= sort_link("Projects", :projects, default_desc: true) %></th>
+          <th class="text-right px-4 py-3 font-semibold text-gray-700"><%= sort_link("Revenue", :revenue, default_desc: true) %></th>
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-100">

@@ -6,7 +6,7 @@ module Admin
 
     def index
       scope = Customer.left_joins(:leads, :projects)
-        .select("customers.*, COUNT(DISTINCT leads.id) AS lead_count, COUNT(DISTINCT projects.id) AS project_count")
+        .select("customers.*, COUNT(DISTINCT leads.id) AS lead_count, COUNT(DISTINCT projects.id) AS project_count, COALESCE(SUM(projects.agreed_price), 0) AS total_revenue_amount")
         .group("customers.id")
 
       if params[:q].present?
@@ -17,7 +17,17 @@ module Admin
         )
       end
 
-      @pagy, @customers = pagy(:offset, scope.order("customers.created_at DESC"), limit: 25)
+      scope = case sort_column
+              when "name" then scope.order("customers.first_name #{sort_direction}, customers.last_name #{sort_direction}")
+              when "email" then scope.order("customers.email #{sort_direction}")
+              when "phone" then scope.order("customers.phone #{sort_direction}")
+              when "leads" then scope.order(Arel.sql("COUNT(DISTINCT leads.id) #{sort_direction}"))
+              when "projects" then scope.order(Arel.sql("COUNT(DISTINCT projects.id) #{sort_direction}"))
+              when "revenue" then scope.order(Arel.sql("COALESCE(SUM(projects.agreed_price), 0) #{sort_direction}"))
+              else scope.order("customers.first_name ASC, customers.last_name ASC")
+              end
+
+      @pagy, @customers = pagy(:offset, scope, limit: 25)
     end
 
     def show

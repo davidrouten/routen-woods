@@ -5,9 +5,18 @@ module Admin
     before_action -> { require_permission!(:manage, :leads) }, only: [:new, :create, :edit, :update, :destroy, :transition]
 
     def index
-      scope = Project.includes(:lead)
+      scope = Project.includes(:lead, :customer)
       scope = scope.where(status: params[:status]) if params[:status].present?
-      @pagy, @projects = pagy(:offset, scope.recent, limit: 25)
+
+      scope = case sort_column
+              when "project" then scope.order(title: sort_direction)
+              when "client" then scope.left_joins(:lead).order("leads.first_name #{sort_direction}")
+              when "price" then scope.order(agreed_price: sort_direction)
+              when "schedule" then scope.order(Arel.sql("COALESCE(scheduled_start_date, '9999-12-31') #{sort_direction}"))
+              else scope.order(Arel.sql("COALESCE(scheduled_start_date, '9999-12-31') ASC"))
+              end
+
+      @pagy, @projects = pagy(:offset, scope, limit: 25)
     end
 
     def show

@@ -20,7 +20,15 @@ module Admin
 
       scope = scope.where(lead_temperature: params[:temperature]) if params[:temperature].present?
       scope = SalesEngine.search(params[:q]) if params[:q].present?
-      @pagy, @leads = pagy(:offset, scope.recent, limit: 25)
+
+      scope = case sort_column
+              when "name" then scope.order(first_name: sort_direction, last_name: sort_direction)
+              when "city" then scope.order(address_city: sort_direction)
+              when "date" then scope.order(created_at: sort_direction)
+              else scope.recent
+              end
+
+      @pagy, @leads = pagy(:offset, scope, limit: 25)
     end
 
     def show

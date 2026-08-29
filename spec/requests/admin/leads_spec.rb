@@ -13,6 +13,37 @@ RSpec.describe "Admin::Leads", type: :request do
         get admin_leads_path
         expect(response).to have_http_status(:ok)
       end
+
+      it "sorts by name ascending" do
+        create(:lead, first_name: "Zara", email: "z@example.com")
+        create(:lead, first_name: "Alice", email: "a@example.com")
+        get admin_leads_path, params: { sort: "name" }
+        expect(response).to have_http_status(:ok)
+        expect(response.body.index("Alice")).to be < response.body.index("Zara")
+      end
+
+      it "sorts by name descending" do
+        create(:lead, first_name: "Zara", email: "z@example.com")
+        create(:lead, first_name: "Alice", email: "a@example.com")
+        get admin_leads_path, params: { sort: "-name" }
+        expect(response).to have_http_status(:ok)
+        expect(response.body.index("Zara")).to be < response.body.index("Alice")
+      end
+
+      it "sorts by city" do
+        create(:lead, first_name: "A", email: "a@example.com", address_city: "Zebra Town")
+        create(:lead, first_name: "B", email: "b@example.com", address_city: "Alphaville")
+        get admin_leads_path, params: { sort: "city" }
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "sorts by date descending" do
+        create(:lead, first_name: "Old", email: "old@example.com", created_at: 2.days.ago)
+        create(:lead, first_name: "New", email: "new@example.com", created_at: 1.hour.ago)
+        get admin_leads_path, params: { sort: "-date" }
+        expect(response).to have_http_status(:ok)
+        expect(response.body.index("New")).to be < response.body.index("Old")
+      end
     end
 
     context "when not authenticated" do

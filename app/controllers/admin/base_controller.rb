@@ -17,5 +17,18 @@ module Admin
         redirect_to admin_root_path, alert: "Not authorized"
       end
     end
+
+    def sort_column
+      params[:sort]&.delete_prefix("-")
+    end
+
+    def sort_desc?
+      params[:sort]&.start_with?("-")
+    end
+
+    def sort_direction
+      sort_desc? ? "desc" : "asc"
+    end
+    helper_method :sort_column, :sort_desc?, :sort_direction
   end
 end
