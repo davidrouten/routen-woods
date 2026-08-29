@@ -37,6 +37,7 @@ class Lead < ApplicationRecord
     "Angi",
     "Word of Mouth",
     "Referral",
+    "Returning Customer",
     "Google Search",
     "Next Door",
     "Facebook",

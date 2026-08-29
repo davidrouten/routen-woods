@@ -48,4 +48,26 @@ RSpec.describe Customer, type: :model do
       expect(customer.total_collected).to eq(800)
     end
   end
+
+  describe "#total_outstanding" do
+    it "returns revenue minus collected" do
+      customer = create(:customer)
+      project = create(:project, customer: customer, agreed_price: 5000)
+      create(:invoice, project: project, amount_paid: 2000, total: 5000)
+
+      expect(customer.total_outstanding).to eq(3000)
+    end
+  end
+
+  describe "Searchable" do
+    it "returns full_name as search_title" do
+      customer = build(:customer, first_name: "Jane", last_name: "Doe")
+      expect(customer.search_title).to eq("Jane Doe")
+    end
+
+    it "returns admin path as search_url" do
+      customer = create(:customer)
+      expect(customer.search_url).to eq("/admin/customers/#{customer.id}")
+    end
+  end
 end

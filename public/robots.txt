@@ -5,3 +5,4 @@ Disallow: /admin/
 Disallow: /users/
 
 Sitemap: https://www.routenwoods.com/sitemap.xml
+LLMs: https://www.routenwoods.com/llms.txt

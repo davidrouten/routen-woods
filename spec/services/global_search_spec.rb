@@ -306,6 +306,31 @@ RSpec.describe GlobalSearch do
       end
     end
 
+    # -- Customer search --
+
+    context "customer: matching" do
+      it "finds customers by name" do
+        create(:customer, first_name: "Repeat", last_name: "Buyer")
+        results = GlobalSearch.new("Repeat").results
+        expect(results.length).to eq(1)
+        expect(results.first[:type]).to eq("Customer")
+        expect(results.first[:title]).to eq("Repeat Buyer")
+      end
+
+      it "finds customers by email" do
+        create(:customer, first_name: "Test", email: "unique-search@example.com")
+        results = GlobalSearch.new("unique-search").results
+        expect(results.length).to eq(1)
+        expect(results.first[:type]).to eq("Customer")
+      end
+
+      it "returns nil status for customers" do
+        create(:customer, first_name: "StatusCheck")
+        result = GlobalSearch.new("StatusCheck").results.first
+        expect(result[:status]).to be_nil
+      end
+    end
+
     # -- Cross-model --
 
     context "cross-model results" do

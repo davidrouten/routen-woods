@@ -45,6 +45,17 @@ RSpec.describe "Admin::Projects", type: :request do
       }
       expect(lead.reload).to be_booked
     end
+
+    it "inherits customer_id from the lead" do
+      customer = create(:customer)
+      lead.update_column(:customer_id, customer.id)
+
+      post admin_projects_path, params: {
+        project: { lead_id: lead.id, title: "Customer Inherited Job" }
+      }
+
+      expect(Project.last.customer_id).to eq(customer.id)
+    end
   end
 
   describe "PATCH /admin/projects/:id" do

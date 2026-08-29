@@ -89,5 +89,14 @@ RSpec.describe "Admin::Customers", type: :request do
       json = JSON.parse(response.body)
       expect(json).to eq([])
     end
+
+    it "searches by name with q param" do
+      create(:customer, first_name: "Alice", last_name: "Wonder")
+
+      get suggest_admin_customers_path, params: { q: "Alice" }, headers: { "Accept" => "application/json" }
+      json = JSON.parse(response.body)
+      expect(json.length).to eq(1)
+      expect(json[0]["name"]).to eq("Alice Wonder")
+    end
   end
 end
