@@ -18,17 +18,9 @@ module Admin
       end
     end
 
-    def sort_column
-      params[:sort]&.delete_prefix("-")
+    def current_sort
+      @current_sort ||= SortParam.new(params[:sort])
     end
-
-    def sort_desc?
-      params[:sort]&.start_with?("-")
-    end
-
-    def sort_direction
-      sort_desc? ? "desc" : "asc"
-    end
-    helper_method :sort_column, :sort_desc?, :sort_direction
+    helper_method :current_sort
   end
 end

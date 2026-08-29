@@ -21,10 +21,10 @@ module Admin
       scope = scope.where(lead_temperature: params[:temperature]) if params[:temperature].present?
       scope = SalesEngine.search(params[:q]) if params[:q].present?
 
-      scope = case sort_column
-              when "name" then scope.order(first_name: sort_direction, last_name: sort_direction)
-              when "city" then scope.order(address_city: sort_direction)
-              when "date" then scope.order(created_at: sort_direction)
+      scope = case current_sort.column
+              when "name" then scope.order(first_name: current_sort.direction, last_name: current_sort.direction)
+              when "city" then scope.order(address_city: current_sort.direction)
+              when "date" then scope.order(created_at: current_sort.direction)
               else scope.recent
               end
 

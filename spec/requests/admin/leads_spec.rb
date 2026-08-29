@@ -14,6 +14,12 @@ RSpec.describe "Admin::Leads", type: :request do
         expect(response).to have_http_status(:ok)
       end
 
+      it "shows active sort arrow on the default column without a sort param" do
+        create(:lead)
+        get admin_leads_path
+        expect(response.body).to include("▼") # Date desc is the default
+      end
+
       it "sorts by name ascending" do
         create(:lead, first_name: "Zara", email: "z@example.com")
         create(:lead, first_name: "Alice", email: "a@example.com")

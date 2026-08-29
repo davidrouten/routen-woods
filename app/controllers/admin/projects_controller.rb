@@ -8,11 +8,12 @@ module Admin
       scope = Project.includes(:lead, :customer)
       scope = scope.where(status: params[:status]) if params[:status].present?
 
-      scope = case sort_column
-              when "project" then scope.order(title: sort_direction)
-              when "client" then scope.left_joins(:lead).order("leads.first_name #{sort_direction}")
-              when "price" then scope.order(agreed_price: sort_direction)
-              when "schedule" then scope.order(Arel.sql("COALESCE(scheduled_start_date, '9999-12-31') #{sort_direction}"))
+      dir = current_sort.direction
+      scope = case current_sort.column
+              when "project" then scope.order(title: dir)
+              when "client" then scope.left_joins(:lead).order("leads.first_name #{dir}")
+              when "price" then scope.order(agreed_price: dir)
+              when "schedule" then scope.order(Arel.sql("COALESCE(scheduled_start_date, '9999-12-31') #{dir}"))
               else scope.order(Arel.sql("COALESCE(scheduled_start_date, '9999-12-31') ASC"))
               end
 
