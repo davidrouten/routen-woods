@@ -1,9 +1,18 @@
 <%= I18n.t("notifications.#{@event}.email_subject", name: @lead.first_name, service: @lead.service_names, status: @lead.status, from: @context[:from], to: @context[:to]) %>
 
+<% urgent = %w[asap within_month].include?(@lead.timeframe) %>
+<% if urgent %>
+*** URGENT — <%= I18n.t("business.timeframes.#{@lead.timeframe}.label", default: @lead.timeframe&.titleize) %> — Call back immediately! ***
+
+<% end %>
 Name: <%= @lead.first_name %> <%= @lead.last_name %>
 <% if @lead.email.present? %>Email: <%= @lead.email %><% end %>
 <% if @lead.phone.present? %>Phone: <%= @lead.phone %><% end %>
 <% if @lead.services_interested_in.present? %>Services: <%= @lead.service_names %><% end %>
+<% if @lead.budget_range.present? %>Budget: <%= I18n.t("business.budget_ranges.#{@lead.budget_range}.label", default: @lead.budget_range&.titleize) %><% end %>
+<% if @lead.timeframe.present? %>Timeframe: <%= I18n.t("business.timeframes.#{@lead.timeframe}.label", default: @lead.timeframe&.titleize) %><% end %>
+<% address = [@lead.address_street, @lead.address_street2, @lead.address_city, @lead.address_state, @lead.address_zip].compact_blank.join(", ") %>
+<% if address.present? %>Location: <%= address %><% end %>
 <% if @lead.message.present? %>Message: <%= @lead.message %><% end %>
 <% if @lead.lead_temperature.present? %>Temperature: <%= @lead.lead_temperature.capitalize %><% end %>
 
