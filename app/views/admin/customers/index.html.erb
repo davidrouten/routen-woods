@@ -32,7 +32,7 @@
               <%= link_to customer.full_name, admin_customer_path(customer), class: "font-medium text-accent hover:text-accent-hover" %>
             </td>
             <td class="px-4 py-3 text-gray-600"><%= customer.email %></td>
-            <td class="px-4 py-3 text-gray-600"><%= customer.phone %></td>
+            <td class="px-4 py-3 text-gray-600"><%= format_phone(customer.phone) %></td>
             <td class="px-4 py-3 text-center text-gray-600"><%= customer.lead_count %></td>
             <td class="px-4 py-3 text-center text-gray-600"><%= customer.project_count %></td>
             <td class="px-4 py-3 text-right font-medium text-gray-900"><%= number_to_currency(customer.total_revenue, precision: 0) %></td>

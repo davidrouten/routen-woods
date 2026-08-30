@@ -13,7 +13,7 @@
   </td>
   <td class="px-6 py-4 text-sm text-gray-500">
     <% if lead.email.present? %><p><%= lead.email %></p><% end %>
-    <% if lead.phone.present? %><p><%= lead.phone %></p><% end %>
+    <% if lead.phone.present? %><p><%= format_phone(lead.phone) %></p><% end %>
   </td>
   <td class="px-6 py-4 text-sm text-gray-500"><%= budget_range_label(lead.budget_range) %></td>
   <td class="px-6 py-4 text-sm text-gray-500"><%= timeframe_label(lead.timeframe) %></td>

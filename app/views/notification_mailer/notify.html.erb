@@ -19,10 +19,9 @@
   </tr>
   <% end %>
   <% if @lead.phone.present? %>
-  <% digits = @lead.phone.gsub(/\D/, "") %>
   <tr>
     <td style="padding: 8px; font-weight: bold;">Phone:</td>
-    <td style="padding: 8px;"><a href="tel:+1<%= digits %>" style="color: #1b2a4a; text-decoration: underline;"><%= @lead.phone %></a></td>
+    <td style="padding: 8px;"><a href="tel:+1<%= phone_digits(@lead.phone) %>" style="color: #1b2a4a; text-decoration: underline;"><%= format_phone(@lead.phone) %></a></td>
   </tr>
   <% end %>
   <% if @lead.services_interested_in.present? %>

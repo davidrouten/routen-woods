@@ -52,6 +52,44 @@ RSpec.describe ApplicationHelper, type: :helper do
     end
   end
 
+  describe "#format_phone" do
+    it "formats a 10-digit number with parentheses and dash" do
+      expect(helper.format_phone("8135550100")).to eq("(813) 555-0100")
+    end
+
+    it "formats a dashed number" do
+      expect(helper.format_phone("813-555-0100")).to eq("(813) 555-0100")
+    end
+
+    it "formats a dotted number" do
+      expect(helper.format_phone("813.555.0100")).to eq("(813) 555-0100")
+    end
+
+    it "formats a spaced number" do
+      expect(helper.format_phone("813 555 0100")).to eq("(813) 555-0100")
+    end
+
+    it "returns the original for non-10-digit numbers" do
+      expect(helper.format_phone("15551234567")).to eq("15551234567")
+    end
+
+    it "returns nil for blank input" do
+      expect(helper.format_phone(nil)).to be_nil
+      expect(helper.format_phone("")).to eq("")
+    end
+  end
+
+  describe "#phone_digits" do
+    it "strips non-digit characters" do
+      expect(helper.phone_digits("(813) 555-0100")).to eq("8135550100")
+    end
+
+    it "returns empty string for blank input" do
+      expect(helper.phone_digits(nil)).to eq("")
+      expect(helper.phone_digits("")).to eq("")
+    end
+  end
+
   describe "#format_date" do
     it "returns em dash for nil" do
       expect(helper.format_date(nil)).to eq("—")

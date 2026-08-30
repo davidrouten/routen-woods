@@ -79,6 +79,18 @@ module ApplicationHelper
     }[temp] || "bg-gray-100 text-gray-600"
   end
 
+  def format_phone(number)
+    return number if number.blank?
+    digits = number.gsub(/\D/, "")
+    return number unless digits.length == 10
+    "(#{digits[0..2]}) #{digits[3..5]}-#{digits[6..9]}"
+  end
+
+  def phone_digits(number)
+    return "" if number.blank?
+    number.gsub(/\D/, "")
+  end
+
   def format_datetime(dt)
     return "—" if dt.nil?
     dt.in_time_zone("Eastern Time (US & Canada)").strftime("%b %d, %Y @ %l:%M%P").squish

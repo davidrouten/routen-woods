@@ -35,7 +35,7 @@
         <% if @lead.phone.present? %>
           <div>
             <p class="text-gray-500">Phone</p>
-            <p class="font-medium"><%= link_to @lead.phone, "tel:#{@lead.phone}", class: "text-accent hover:text-accent-hover" %></p>
+            <p class="font-medium"><%= link_to format_phone(@lead.phone), "tel:+1#{phone_digits(@lead.phone)}", class: "text-accent hover:text-accent-hover" %></p>
           </div>
         <% end %>
         <div>

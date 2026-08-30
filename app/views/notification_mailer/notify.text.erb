@@ -7,7 +7,7 @@
 <% end %>
 Name: <%= @lead.first_name %> <%= @lead.last_name %>
 <% if @lead.email.present? %>Email: <%= @lead.email %><% end %>
-<% if @lead.phone.present? %>Phone: <%= @lead.phone %><% end %>
+<% if @lead.phone.present? %>Phone: <%= format_phone(@lead.phone) %><% end %>
 <% if @lead.services_interested_in.present? %>Services: <%= @lead.service_names %><% end %>
 <% if @lead.budget_range.present? %>Budget: <%= I18n.t("business.budget_ranges.#{@lead.budget_range}.label", default: @lead.budget_range&.titleize) %><% end %>
 <% if @lead.timeframe.present? %>Timeframe: <%= I18n.t("business.timeframes.#{@lead.timeframe}.label", default: @lead.timeframe&.titleize) %><% end %>

@@ -42,9 +42,9 @@ RSpec.describe NotificationMailer, type: :mailer do
       expect(mail.html_part.body.to_s).to include("Tampa")
     end
 
-    it "renders phone as a clickable tel: link" do
+    it "renders phone as a clickable tel: link with formatted label" do
       expect(mail.html_part.body.to_s).to include('href="tel:+18135550100"')
-      expect(mail.html_part.body.to_s).to include("813-555-0100")
+      expect(mail.html_part.body.to_s).to include("(813) 555-0100")
     end
 
     it "includes the urgent banner for ASAP timeframe" do

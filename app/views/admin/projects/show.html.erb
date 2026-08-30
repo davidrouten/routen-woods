@@ -35,7 +35,7 @@
         <% if @project.phone.present? %>
           <div>
             <p class="text-gray-500">Phone</p>
-            <p class="font-medium"><%= link_to @project.phone, "tel:#{@project.phone}", class: "text-accent hover:text-accent-hover" %></p>
+            <p class="font-medium"><%= link_to format_phone(@project.phone), "tel:+1#{phone_digits(@project.phone)}", class: "text-accent hover:text-accent-hover" %></p>
           </div>
         <% end %>
         <% if @project.time_estimate.present? %>
