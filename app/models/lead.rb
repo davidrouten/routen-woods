@@ -5,7 +5,7 @@ class Lead < ApplicationRecord
   searchable :email, context: ->(r, _, _) { "Email: #{r.email}" }
   searchable :phone, context: ->(r, _, _) { "Phone: #{r.phone}" }
   searchable :address_street, :address_city, :address_state, :address_zip,
-             context: ->(r, _, _) { "Address: #{[r.address_street, r.address_city, r.address_state, r.address_zip].compact_blank.join(', ')}" }
+             context: ->(r, _, _) { "Address: #{[ r.address_street, r.address_city, r.address_state, r.address_zip ].compact_blank.join(', ')}" }
   searchable :message, context: ->(r, snip, _) { "Message: #{snip.call(r.message)}" }
   searchable_notes!
 
@@ -59,7 +59,7 @@ class Lead < ApplicationRecord
   scope :spam_only, -> { where(spam: true) }
   scope :not_archived, -> { where(archived_at: nil) }
   scope :archived_only, -> { where.not(archived_at: nil) }
-  scope :open_leads, -> { not_spam.not_archived.where.not(status: [:completed, :lost, :lost_no_contact]) }
+  scope :open_leads, -> { not_spam.not_archived.where.not(status: [ :completed, :lost, :lost_no_contact ]) }
   scope :by_status, ->(s) { where(status: s) }
   scope :hot, -> { where(lead_temperature: "hot") }
   scope :warm, -> { where(lead_temperature: "warm") }
@@ -80,7 +80,7 @@ class Lead < ApplicationRecord
 
   after_create :calculate_spam_score
   after_create :calculate_lead_temperature
-  after_create :notify_new_lead
+  after_create_commit :notify_new_lead
   after_create_commit :link_to_customer, unless: :spam?
 
   def transition_to!(new_status, user: nil)
@@ -95,7 +95,7 @@ class Lead < ApplicationRecord
   end
 
   def full_name_or_email
-    name = [first_name, last_name].compact_blank.join(" ")
+    name = [ first_name, last_name ].compact_blank.join(" ")
     name.present? ? name : email
   end
 
