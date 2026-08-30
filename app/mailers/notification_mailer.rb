@@ -2,13 +2,13 @@ class NotificationMailer < ApplicationMailer
   def notify
     @event = params[:event]
     @lead = params[:lead]
+    @user = params[:user]
     @context = params[:context] || {}
 
-    admin_emails = User.where(admin: true).pluck(:email)
-    return if admin_emails.empty?
+    return unless @user&.email.present?
 
     mail(
-      to: admin_emails,
+      to: @user.email,
       subject: I18n.t("notifications.#{@event}.email_subject", **mail_params)
     )
   end

@@ -15,6 +15,19 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_many(:permissions).through(:user_permissions) }
     it { is_expected.to have_many(:notes).dependent(:nullify) }
     it { is_expected.to have_many(:assigned_leads).dependent(:nullify) }
+    it { is_expected.to have_many(:notification_preferences).dependent(:destroy) }
+  end
+
+  describe "callbacks" do
+    it "creates default notification preferences for new admin users" do
+      admin = create(:user, :admin)
+      expect(admin.notification_preferences.pluck(:event_name)).to match_array(NotificationPreference::EVENTS)
+    end
+
+    it "does not create notification preferences for non-admin users" do
+      user = create(:user)
+      expect(user.notification_preferences).to be_empty
+    end
   end
 
   describe "#full_name" do

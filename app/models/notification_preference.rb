@@ -1,7 +1,10 @@
 class NotificationPreference < ApplicationRecord
   EVENTS = %w[new_lead status_changed lead_assigned daily_summary].freeze
 
-  validates :event_name, presence: true, uniqueness: true, inclusion: { in: EVENTS }
+  belongs_to :user
+
+  validates :event_name, presence: true, inclusion: { in: EVENTS }
+  validates :event_name, uniqueness: { scope: :user_id }
 
   def channels
     [].tap do |ch|

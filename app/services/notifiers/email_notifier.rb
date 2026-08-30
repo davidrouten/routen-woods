@@ -4,7 +4,8 @@ module Notifiers
       NotificationMailer.with(
         event: event_name,
         lead: lead,
-        context: context
+        user: context[:user],
+        context: context.except(:user)
       ).notify.deliver_later
     end
   end

@@ -5,8 +5,12 @@ RSpec.describe NotificationPreference, type: :model do
     subject { build(:notification_preference) }
 
     it { is_expected.to validate_presence_of(:event_name) }
-    it { is_expected.to validate_uniqueness_of(:event_name) }
+    it { is_expected.to validate_uniqueness_of(:event_name).scoped_to(:user_id) }
     it { is_expected.to validate_inclusion_of(:event_name).in_array(NotificationPreference::EVENTS) }
+  end
+
+  describe "associations" do
+    it { is_expected.to belong_to(:user) }
   end
 
   describe "#channels" do

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_27_120002) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_30_135814) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -198,7 +198,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_27_120002) do
     t.boolean "slack_enabled", default: true
     t.boolean "sms_enabled", default: false
     t.datetime "updated_at", null: false
-    t.index ["event_name"], name: "index_notification_preferences_on_event_name", unique: true
+    t.bigint "user_id", null: false
+    t.index ["user_id", "event_name"], name: "index_notification_preferences_on_user_id_and_event_name", unique: true
+    t.index ["user_id"], name: "index_notification_preferences_on_user_id"
   end
 
   create_table "order_forms", force: :cascade do |t|
@@ -332,6 +334,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_27_120002) do
   add_foreign_key "leads", "customers"
   add_foreign_key "leads", "users", column: "assigned_to_id"
   add_foreign_key "notes", "users"
+  add_foreign_key "notification_preferences", "users"
   add_foreign_key "order_forms", "projects"
   add_foreign_key "order_line_items", "order_forms"
   add_foreign_key "projects", "customers"

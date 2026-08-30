@@ -16,13 +16,14 @@ class NotificationService
   end
 
   def deliver
-    preference = NotificationPreference.find_by(event_name: @event_name)
-    return unless preference
+    preferences = NotificationPreference.includes(:user).where(event_name: @event_name)
 
-    preference.channels.each do |channel|
-      notifier = NOTIFIERS[channel]
-      next unless notifier
-      notifier.new(@event_name, @lead, **@context).deliver_later
+    preferences.each do |preference|
+      preference.channels.each do |channel|
+        notifier = NOTIFIERS[channel]
+        next unless notifier
+        notifier.new(@event_name, @lead, user: preference.user, **@context).deliver_later
+      end
     end
   end
 end
