@@ -5,12 +5,12 @@ class User < ApplicationRecord
   has_many :permissions, through: :user_permissions
   has_many :notes, dependent: :nullify
   has_many :assigned_leads, class_name: "Lead", foreign_key: :assigned_to_id, dependent: :nullify
-  has_many :notification_preferences, dependent: :destroy
+  has_one :notification_preference, dependent: :destroy
 
   validates :first_name, presence: true
   validates :last_name, presence: true
 
-  after_create :create_default_notification_preferences, if: :admin?
+  after_create :create_default_notification_preference, if: :admin?
 
   def full_name
     "#{first_name} #{last_name}"
@@ -42,9 +42,7 @@ class User < ApplicationRecord
 
   private
 
-  def create_default_notification_preferences
-    NotificationPreference::EVENTS.each do |event|
-      notification_preferences.create!(event_name: event)
-    end
+  def create_default_notification_preference
+    create_notification_preference!(preferences: NotificationPreference.default_preferences)
   end
 end

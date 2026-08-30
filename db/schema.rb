@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_30_135814) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_30_140837) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -191,16 +191,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_30_135814) do
   end
 
   create_table "notification_preferences", force: :cascade do |t|
-    t.jsonb "config", default: {}
     t.datetime "created_at", null: false
-    t.boolean "email_enabled", default: true
-    t.string "event_name", null: false
-    t.boolean "slack_enabled", default: true
-    t.boolean "sms_enabled", default: false
+    t.jsonb "preferences", default: {}, null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
-    t.index ["user_id", "event_name"], name: "index_notification_preferences_on_user_id_and_event_name", unique: true
-    t.index ["user_id"], name: "index_notification_preferences_on_user_id"
+    t.index ["user_id"], name: "index_notification_preferences_on_user_id", unique: true
   end
 
   create_table "order_forms", force: :cascade do |t|

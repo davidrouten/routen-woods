@@ -5,14 +5,11 @@ RSpec.describe NotificationService do
   let(:user) { create(:user) }
 
   describe ".notify" do
-    context "when a user has the event with email enabled" do
+    context "when a user has email enabled for the event" do
       before do
         create(:notification_preference,
           user: user,
-          event_name: "status_changed",
-          email_enabled: true,
-          sms_enabled: false,
-          slack_enabled: false
+          preferences: { "status_changed" => %w[email] }
         )
       end
 
@@ -28,12 +25,12 @@ RSpec.describe NotificationService do
       end
     end
 
-    context "when multiple users have preferences" do
+    context "when multiple users have the event enabled" do
       let(:user2) { create(:user) }
 
       before do
-        create(:notification_preference, user: user, event_name: "status_changed", email_enabled: true, slack_enabled: false)
-        create(:notification_preference, user: user2, event_name: "status_changed", email_enabled: true, slack_enabled: false)
+        create(:notification_preference, user: user, preferences: { "status_changed" => %w[email] })
+        create(:notification_preference, user: user2, preferences: { "status_changed" => %w[email] })
       end
 
       it "delivers to each user individually" do
@@ -46,12 +43,12 @@ RSpec.describe NotificationService do
       end
     end
 
-    context "when one user has email disabled for the event" do
+    context "when one user has the event and another does not" do
       let(:user2) { create(:user) }
 
       before do
-        create(:notification_preference, user: user, event_name: "status_changed", email_enabled: true, slack_enabled: false)
-        create(:notification_preference, user: user2, event_name: "status_changed", email_enabled: false, slack_enabled: false)
+        create(:notification_preference, user: user, preferences: { "status_changed" => %w[email] })
+        create(:notification_preference, user: user2, preferences: { "status_changed" => [] })
       end
 
       it "only delivers to the user with it enabled" do
@@ -65,21 +62,18 @@ RSpec.describe NotificationService do
       end
     end
 
-    context "when no preferences exist for the event" do
+    context "when no preferences exist" do
       it "does not deliver anything" do
         expect(Notifiers::EmailNotifier).not_to receive(:new)
         NotificationService.notify(:status_changed, lead)
       end
     end
 
-    context "when all channels are disabled" do
+    context "when user has no channels for the event" do
       before do
         create(:notification_preference,
           user: user,
-          event_name: "status_changed",
-          email_enabled: false,
-          sms_enabled: false,
-          slack_enabled: false
+          preferences: { "status_changed" => [] }
         )
       end
 
