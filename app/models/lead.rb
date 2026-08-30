@@ -80,7 +80,7 @@ class Lead < ApplicationRecord
 
   after_create :calculate_spam_score
   after_create :calculate_lead_temperature
-  after_create :notify_new_lead
+  after_create_commit :notify_new_lead
   after_create_commit :link_to_customer, unless: :spam?
 
   def transition_to!(new_status, user: nil)

@@ -1,5 +1,12 @@
 <h2><%= I18n.t("notifications.#{@event}.email_subject", name: @lead.first_name, service: @lead.service_names, status: @lead.status, from: @context[:from], to: @context[:to]) %></h2>
 
+<% urgent = %w[asap within_month 1_3_months].include?(@lead.timeframe) %>
+<% if urgent %>
+<p style="background-color: #dc2626; color: white; padding: 12px 16px; border-radius: 6px; font-weight: bold; font-size: 16px;">
+  URGENT — <%= I18n.t("business.timeframes.#{@lead.timeframe}.label", default: @lead.timeframe&.titleize) %> — Call back immediately!
+</p>
+<% end %>
+
 <table style="width: 100%; border-collapse: collapse;">
   <tr>
     <td style="padding: 8px; font-weight: bold;">Name:</td>
@@ -21,6 +28,25 @@
   <tr>
     <td style="padding: 8px; font-weight: bold;">Services:</td>
     <td style="padding: 8px;"><%= @lead.service_names %></td>
+  </tr>
+  <% end %>
+  <% if @lead.budget_range.present? %>
+  <tr>
+    <td style="padding: 8px; font-weight: bold;">Budget:</td>
+    <td style="padding: 8px;"><%= I18n.t("business.budget_ranges.#{@lead.budget_range}.label", default: @lead.budget_range&.titleize) %></td>
+  </tr>
+  <% end %>
+  <% if @lead.timeframe.present? %>
+  <tr>
+    <td style="padding: 8px; font-weight: bold;">Timeframe:</td>
+    <td style="padding: 8px;"><%= I18n.t("business.timeframes.#{@lead.timeframe}.label", default: @lead.timeframe&.titleize) %></td>
+  </tr>
+  <% end %>
+  <% address = [@lead.address_street, @lead.address_street2, @lead.address_city, @lead.address_state, @lead.address_zip].compact_blank.join(", ") %>
+  <% if address.present? %>
+  <tr>
+    <td style="padding: 8px; font-weight: bold;">Location:</td>
+    <td style="padding: 8px;"><%= address %></td>
   </tr>
   <% end %>
   <% if @lead.message.present? %>
