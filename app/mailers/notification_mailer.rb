@@ -5,8 +5,6 @@ class NotificationMailer < ApplicationMailer
     @user = params[:user]
     @context = params[:context] || {}
 
-    return unless @user&.email.present?
-
     mail(
       to: @user.email,
       subject: I18n.t("notifications.#{@event}.email_subject", **mail_params)
