@@ -1,6 +1,16 @@
 class NotificationPreference < ApplicationRecord
-  EVENTS = %w[new_lead status_changed lead_assigned daily_summary].freeze
-  CHANNELS = %w[email sms slack].freeze
+  EVENTS = [
+    NEW_LEAD = "new_lead",
+    STATUS_CHANGED = "status_changed",
+    LEAD_ASSIGNED = "lead_assigned",
+    DAILY_SUMMARY = "daily_summary"
+  ].freeze
+
+  CHANNELS = [
+    EMAIL = "email",
+    SMS = "sms",
+    SLACK = "slack"
+  ].freeze
 
   belongs_to :user
 
@@ -8,7 +18,7 @@ class NotificationPreference < ApplicationRecord
   validate :preferences_format
 
   def self.default_preferences
-    EVENTS.each_with_object({}) { |event, hash| hash[event] = %w[email] }
+    EVENTS.each_with_object({}) { |event, hash| hash[event] = [EMAIL] }
   end
 
   def channels_for(event)
