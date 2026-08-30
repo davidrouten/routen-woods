@@ -89,7 +89,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :notification_preferences, only: [:index, :update]
+    resources :notification_preferences, only: [:index, :create, :update]
     resources :testimonials
     resources :gallery_images do
       collection do

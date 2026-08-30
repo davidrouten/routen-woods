@@ -1,28 +1,36 @@
 <h1 class="text-2xl font-bold text-gray-900 mb-6"><%= t("admin.nav.settings") %> — Notifications</h1>
 
 <div class="bg-white rounded-xl shadow-sm overflow-x-auto">
-  <table class="min-w-full divide-y divide-gray-200">
-    <thead class="bg-gray-50">
-      <tr>
-        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Event</th>
-        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Email</th>
-        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">SMS</th>
-        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Slack</th>
-        <th class="px-6 py-3"></th>
-      </tr>
-    </thead>
-    <tbody class="divide-y divide-gray-200">
-      <% @preferences.each do |pref| %>
+  <% url = @preference.persisted? ? admin_notification_preference_path(@preference) : admin_notification_preferences_path %>
+  <% method = @preference.persisted? ? :patch : :post %>
+  <%= form_with url: url, method: method do |f| %>
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
         <tr>
-          <%= form_with model: [:admin, pref], class: "contents" do |f| %>
-            <td class="px-6 py-4 font-medium text-gray-900"><%= pref.event_name.titleize %></td>
-            <td class="px-6 py-4 text-center"><%= f.check_box :email_enabled, class: "rounded text-accent focus:ring-accent" %></td>
-            <td class="px-6 py-4 text-center"><%= f.check_box :sms_enabled, class: "rounded text-accent focus:ring-accent" %></td>
-            <td class="px-6 py-4 text-center"><%= f.check_box :slack_enabled, class: "rounded text-accent focus:ring-accent" %></td>
-            <td class="px-6 py-4 text-right"><%= f.submit "Save", class: "px-3 py-1 bg-primary text-white rounded text-sm hover:bg-primary-light transition cursor-pointer" %></td>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Event</th>
+          <% NotificationPreference::CHANNELS.each do |channel| %>
+            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase"><%= channel.titleize %></th>
           <% end %>
         </tr>
-      <% end %>
-    </tbody>
-  </table>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+        <% NotificationPreference::EVENTS.each do |event| %>
+          <tr>
+            <td class="px-6 py-4 font-medium text-gray-900"><%= event.titleize %></td>
+            <% NotificationPreference::CHANNELS.each do |channel| %>
+              <td class="px-6 py-4 text-center">
+                <%= check_box_tag "preferences[#{event}][]", channel,
+                      @preference.channels_for(event).include?(channel.to_sym),
+                      class: "rounded text-accent focus:ring-accent",
+                      id: "preferences_#{event}_#{channel}" %>
+              </td>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <div class="px-6 py-4 bg-gray-50 text-right">
+      <%= f.submit "Save", class: "px-4 py-2 bg-primary text-white rounded text-sm hover:bg-primary-light transition cursor-pointer" %>
+    </div>
+  <% end %>
 </div>
