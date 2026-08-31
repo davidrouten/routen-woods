@@ -90,6 +90,7 @@ Rails.application.routes.draw do
     end
 
     resources :notification_preferences, only: [:index, :create, :update]
+    get "analytics", to: "analytics#index", as: :analytics
     resources :testimonials
     resources :gallery_images do
       collection do

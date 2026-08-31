@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import ahoy from "ahoy.js"
 
 export default class extends Controller {
   static targets = ["item"]
@@ -23,6 +24,8 @@ export default class extends Controller {
     const url = item.dataset.lightboxUrl
     const alt = item.dataset.lightboxAlt || item.querySelector("img")?.alt || ""
     const total = this.itemTargets.length
+
+    ahoy.track("image_view", { image: url, alt: alt, page: window.location.pathname })
     const current = this.indexValue + 1
 
     this.overlay = document.createElement("div")

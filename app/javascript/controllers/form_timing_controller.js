@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import ahoy from "ahoy.js"
 
 export default class extends Controller {
   static targets = ["completionField"]
@@ -18,5 +19,10 @@ export default class extends Controller {
       const seconds = (Date.now() - this.startTime) / 1000
       this.completionFieldTarget.value = seconds.toFixed(1)
     }
+
+    ahoy.track("form_submit", {
+      page: window.location.pathname,
+      form_id: this.element.id
+    })
   }
 }
