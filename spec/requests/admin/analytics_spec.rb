@@ -32,7 +32,7 @@ RSpec.describe "Admin::Analytics", type: :request do
 
       it "displays data sections" do
         get admin_analytics_path
-        expect(response.body).to include("Visits by Day")
+        expect(response.body).to include("Traffic Over Time")
         expect(response.body).to include("Top Pages")
         expect(response.body).to include("Browsers")
       end

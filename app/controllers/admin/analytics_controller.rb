@@ -14,6 +14,7 @@ module Admin
       @total_pageviews = events.count
 
       @visits_over_time = visits.group_by_day(:started_at, range: range).count
+      @unique_visitors_over_time = visits.group_by_day(:started_at, range: range).count("DISTINCT ip")
       @pageviews_over_time = events.group_by_day(:time, range: range).count
 
       @top_pages = events
