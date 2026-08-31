@@ -95,6 +95,51 @@ RSpec.describe Lead, type: :model do
     end
   end
 
+  describe "#auto_detected_spam?" do
+    it "returns true for auto-detected spam (score >= threshold)" do
+      lead = create(:lead, :spam)
+      expect(lead.auto_detected_spam?).to be true
+    end
+
+    it "returns false for manually-marked spam" do
+      lead = create(:lead)
+      lead.update_columns(spam: true)
+      expect(lead.auto_detected_spam?).to be false
+    end
+
+    it "returns false for non-spam leads" do
+      lead = create(:lead)
+      expect(lead.auto_detected_spam?).to be false
+    end
+  end
+
+  describe "#customer_will_be_deleted?" do
+    it "returns true when auto-detected spam and customer has no other non-spam leads" do
+      customer = create(:customer)
+      lead = create(:lead, :spam, customer: customer)
+      expect(lead.customer_will_be_deleted?).to be true
+    end
+
+    it "returns false when customer has other non-spam leads" do
+      customer = create(:customer)
+      lead = create(:lead, :spam, customer: customer)
+      create(:lead, customer: customer)
+      expect(lead.customer_will_be_deleted?).to be false
+    end
+
+    it "returns false for manually-marked spam even with orphaned customer" do
+      customer = create(:customer)
+      lead = create(:lead, customer: customer)
+      lead.update_columns(spam: true)
+      expect(lead.customer_will_be_deleted?).to be false
+    end
+
+    it "returns false when lead has no customer" do
+      lead = create(:lead, :spam)
+      expect(lead.customer_will_be_deleted?).to be false
+    end
+  end
+
   describe "customer linking" do
     it "auto-creates and links a customer on creation" do
       lead = create(:lead, email: "newcustomer@example.com")

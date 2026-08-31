@@ -1,13 +1,13 @@
 module Admin
   class LeadsController < BaseController
     include ActionView::RecordIdentifier
-    before_action :set_lead, only: [:show, :edit, :update, :transition, :mark_spam, :unmark_spam, :archive, :restore, :assign]
+    before_action :set_lead, only: [:show, :edit, :update, :transition, :mark_spam, :unmark_spam, :archive, :restore, :assign, :destroy]
     before_action -> { require_permission!(:view, :leads) }, only: [:index, :show]
-    before_action -> { require_permission!(:manage, :leads) }, only: [:new, :create, :edit, :update, :transition, :mark_spam, :unmark_spam, :archive, :restore, :assign]
+    before_action -> { require_permission!(:manage, :leads) }, only: [:new, :create, :edit, :update, :transition, :mark_spam, :unmark_spam, :archive, :restore, :assign, :destroy, :purge_spam]
 
     def index
       scope = if params[:spam] == "true"
-                Lead.spam_only
+                Lead.spam_only.includes(:customer)
               elsif params[:archived] == "true"
                 Lead.archived_only
               elsif params[:filter] == "all"
@@ -100,6 +100,20 @@ module Admin
         format.turbo_stream { render turbo_stream: turbo_stream.remove(dom_id(@lead)) }
         format.html { redirect_to admin_leads_path(archived: true), notice: "Lead restored." }
       end
+    end
+
+    def destroy
+      SpamCleanupService.delete_lead(@lead)
+      respond_to do |format|
+        format.turbo_stream { render turbo_stream: turbo_stream.remove(dom_id(@lead)) }
+        format.html { redirect_to admin_leads_path(spam: true), notice: "Lead permanently deleted." }
+      end
+    end
+
+    def purge_spam
+      result = SpamCleanupService.purge_all_spam
+      redirect_to admin_leads_path(spam: true),
+        notice: "Deleted #{result[:leads_deleted]} spam #{"lead".pluralize(result[:leads_deleted])} and #{result[:customers_deleted]} orphaned #{"customer".pluralize(result[:customers_deleted])}."
     end
 
     def assign

@@ -62,6 +62,12 @@
       <% if current_user_can?(:manage, :leads) %>
         <% if current_view == :spam %>
           <%= button_to "Restore", unmark_spam_admin_lead_path(lead), method: :patch, class: "px-3 py-1 text-xs font-medium text-green-700 bg-green-50 rounded-md hover:bg-green-100 transition cursor-pointer" %>
+          <% delete_message = "Permanently delete #{lead.first_name} #{lead.last_name}?" %>
+          <% if lead.customer_will_be_deleted? %>
+            <% delete_message += " This will also permanently delete customer \"#{lead.customer.full_name}\" (no other non-spam leads)." %>
+          <% end %>
+          <% delete_message += " This cannot be undone." %>
+          <%= render "shared/confirm_button", url: admin_lead_path(lead), method: :delete, label: "Delete", title: "Permanently Delete Lead", message: delete_message, confirm_text: "Delete Forever", danger: true, button_class: "px-3 py-1 text-xs font-medium text-red-600 bg-red-50 rounded-md hover:bg-red-100 transition cursor-pointer" %>
         <% elsif current_view == :archived %>
           <%= button_to "Restore", restore_admin_lead_path(lead), method: :patch, class: "px-3 py-1 text-xs font-medium text-green-700 bg-green-50 rounded-md hover:bg-green-100 transition cursor-pointer" %>
         <% else %>

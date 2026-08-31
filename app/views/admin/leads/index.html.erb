@@ -18,7 +18,12 @@
         else t("admin.leads.title")
         end %>
   </h1>
-  <%= link_to "New Lead", new_admin_lead_path, class: "btn-admin" %>
+  <div class="flex items-center gap-3">
+    <% if current_view == :spam && @leads.any? && current_user_can?(:manage, :leads) %>
+      <%= render "shared/confirm_button", url: purge_spam_admin_leads_path, method: :delete, label: "Delete All Spam", title: "Delete All Spam Leads", message: "Permanently delete all #{@pagy.count} spam #{"lead".pluralize(@pagy.count)}? Customers linked only to auto-detected spam leads will also be deleted. This cannot be undone.", confirm_text: "Delete All Spam", danger: true, button_class: "px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition cursor-pointer" %>
+    <% end %>
+    <%= link_to "New Lead", new_admin_lead_path, class: "btn-admin" %>
+  </div>
 </div>
 
 <!-- Filters -->

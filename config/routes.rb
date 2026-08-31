@@ -40,6 +40,9 @@ Rails.application.routes.draw do
     end
 
     resources :leads do
+      collection do
+        delete :purge_spam
+      end
       member do
         patch :transition
         patch :mark_spam

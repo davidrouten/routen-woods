@@ -184,4 +184,169 @@ RSpec.describe "Admin::Leads", type: :request do
       expect(lead.reload.spam).to be true
     end
   end
+
+  describe "DELETE /admin/leads/:id" do
+    before { sign_in admin }
+
+    it "permanently deletes a spam lead" do
+      lead = create(:lead, :spam)
+      expect { delete admin_lead_path(lead) }.to change(Lead, :count).by(-1)
+      expect(response).to redirect_to(admin_leads_path(spam: true))
+    end
+
+    it "permanently deletes a manually-marked spam lead" do
+      lead = create(:lead)
+      lead.update_columns(spam: true)
+      expect { delete admin_lead_path(lead) }.to change(Lead, :count).by(-1)
+    end
+
+    it "removes the row via Turbo Stream" do
+      lead = create(:lead, :spam)
+      delete admin_lead_path(lead), headers: { "Accept" => "text/vnd.turbo-stream.html" }
+      expect(response.media_type).to eq("text/vnd.turbo-stream.html")
+      expect(response.body).to include("turbo-stream")
+    end
+
+    it "deletes orphaned customer for auto-detected spam" do
+      customer = create(:customer)
+      lead = create(:lead, :spam, customer: customer)
+
+      expect { delete admin_lead_path(lead) }.to change(Customer, :count).by(-1)
+    end
+
+    it "does NOT delete customer for manually-marked spam" do
+      customer = create(:customer)
+      lead = create(:lead, customer: customer)
+      lead.update_columns(spam: true)
+
+      expect { delete admin_lead_path(lead) }.not_to change(Customer, :count)
+    end
+
+    it "preserves customer with non-spam leads" do
+      customer = create(:customer)
+      lead = create(:lead, :spam, customer: customer)
+      create(:lead, customer: customer)
+
+      expect { delete admin_lead_path(lead) }.not_to change(Customer, :count)
+    end
+
+    context "when not authorized" do
+      before { sign_in member }
+
+      it "redirects" do
+        lead = create(:lead, :spam)
+        delete admin_lead_path(lead)
+        expect(response).to redirect_to(root_path)
+      end
+    end
+  end
+
+  describe "DELETE /admin/leads/purge_spam" do
+    before { sign_in admin }
+
+    it "deletes all spam leads including manually-marked ones" do
+      create_list(:lead, 2, :spam)
+      manually_marked = create(:lead)
+      manually_marked.update_columns(spam: true)
+      create(:lead)
+
+      expect { delete purge_spam_admin_leads_path }.to change(Lead, :count).by(-3)
+      expect(response).to redirect_to(admin_leads_path(spam: true))
+      expect(flash[:notice]).to include("3 spam leads")
+    end
+
+    it "deletes orphaned customers from auto-detected spam" do
+      customer = create(:customer)
+      create(:lead, :spam, customer: customer)
+
+      delete purge_spam_admin_leads_path
+      expect(flash[:notice]).to include("1 orphaned customer")
+      expect(Customer.find_by(id: customer.id)).to be_nil
+    end
+
+    it "does NOT delete customers from manually-marked spam" do
+      customer = create(:customer)
+      lead = create(:lead, customer: customer)
+      lead.update_columns(spam: true)
+
+      delete purge_spam_admin_leads_path
+      expect(flash[:notice]).to include("0 orphaned customers")
+      expect(Customer.find_by(id: customer.id)).to be_present
+    end
+
+    it "handles no spam leads gracefully" do
+      delete purge_spam_admin_leads_path
+      expect(response).to redirect_to(admin_leads_path(spam: true))
+      expect(flash[:notice]).to include("0 spam leads")
+    end
+
+    context "when not authorized" do
+      before { sign_in member }
+
+      it "redirects" do
+        delete purge_spam_admin_leads_path
+        expect(response).to redirect_to(root_path)
+      end
+    end
+  end
+
+  describe "confirm dialog content" do
+    before { sign_in admin }
+
+    context "spam index view" do
+      it "shows customer name in delete button when customer will be deleted" do
+        customer = create(:customer, first_name: "Bogus", last_name: "Spammer")
+        create(:lead, :spam, customer: customer)
+
+        get admin_leads_path(spam: true)
+        expect(response.body).to include("Bogus Spammer")
+        expect(response.body).to include("no other non-spam leads")
+      end
+
+      it "does NOT show customer warning for manually-marked spam" do
+        customer = create(:customer, first_name: "Real", last_name: "Person")
+        lead = create(:lead, customer: customer, first_name: "Suspicious", last_name: "Lead")
+        lead.update_columns(spam: true)
+
+        get admin_leads_path(spam: true)
+        expect(response.body).not_to include("also permanently delete customer")
+      end
+
+      it "does NOT show customer warning when customer has other non-spam leads" do
+        customer = create(:customer, first_name: "Shared", last_name: "Customer")
+        create(:lead, :spam, customer: customer)
+        create(:lead, customer: customer)
+
+        get admin_leads_path(spam: true)
+        expect(response.body).not_to include("also permanently delete customer")
+      end
+
+      it "shows Delete All Spam button with count" do
+        create_list(:lead, 3, :spam)
+        get admin_leads_path(spam: true)
+        expect(response.body).to include("Delete All Spam")
+        expect(response.body).to include("3 spam leads")
+      end
+    end
+
+    context "spam lead show page" do
+      it "shows customer name in delete confirmation when customer will be deleted" do
+        customer = create(:customer, first_name: "Bogus", last_name: "Bot")
+        lead = create(:lead, :spam, customer: customer)
+
+        get admin_lead_path(lead)
+        expect(response.body).to include("Bogus Bot")
+        expect(response.body).to include("no other non-spam leads")
+      end
+
+      it "does NOT show customer warning for manually-marked spam" do
+        customer = create(:customer, first_name: "Legit", last_name: "Customer")
+        lead = create(:lead, customer: customer)
+        lead.update_columns(spam: true)
+
+        get admin_lead_path(lead)
+        expect(response.body).not_to include("also permanently delete customer")
+      end
+    end
+  end
 end

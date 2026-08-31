@@ -77,4 +77,57 @@ lead_data.each do |data|
 end
 puts "  #{lead_data.size} sample leads created"
 
+# Spam leads (auto-detected) with customers for testing deletion
+spam_data = [
+  { first_name: "Buy", last_name: "Viagra", email: "buyviagraonline@spam.net", phone: "000-000-0001", message: "Free viagra bitcoin lottery winner! Click here for free money!", honeypot_value: "gotcha" },
+  { first_name: "Crypto", last_name: "Winner", email: "crypto12345678@spam.net", phone: "000-000-0002", message: "You won the bitcoin lottery! Free crypto!", honeypot_value: "gotcha" },
+  { first_name: "asdf", last_name: "asdf", email: "bot99999@spam.net", phone: "000-000-0003", message: "click here free money viagra", honeypot_value: "gotcha" },
+  { first_name: "Test", last_name: "Spambot", email: "spambot@example.net", phone: "000-000-0004", message: "Free lottery winner", honeypot_value: "gotcha" },
+  { first_name: "xxxxx", last_name: "xxxxx", email: "xxxxx12345@spam.net", phone: "000-000-0005", message: "cialis bitcoin free money click", honeypot_value: "gotcha" }
+]
+
+spam_data.each do |data|
+  next if Lead.exists?(email: data[:email])
+
+  customer = Customer.create!(
+    first_name: data[:first_name],
+    last_name: data[:last_name],
+    email: data[:email],
+    phone: data[:phone]
+  )
+  lead = Lead.new(
+    first_name: data[:first_name],
+    last_name: data[:last_name],
+    email: data[:email],
+    phone: data[:phone],
+    message: data[:message],
+    honeypot_value: data[:honeypot_value],
+    source: "website",
+    customer: customer
+  )
+  lead.save!
+end
+puts "  #{spam_data.size} spam leads with customers created"
+
+# Test leads (non-spam) with customers for verifying safe deletion
+test_lead_data = [
+  { first_name: "Test", last_name: "Alpha", email: "test.alpha@example.com", phone: "248-555-0201" },
+  { first_name: "Test", last_name: "Bravo", email: "test.bravo@example.com", phone: "248-555-0202" },
+  { first_name: "Test", last_name: "Charlie", email: "test.charlie@example.com", phone: "248-555-0203" },
+  { first_name: "Test", last_name: "Delta", email: "test.delta@example.com", phone: "248-555-0204" },
+  { first_name: "Test", last_name: "Echo", email: "test.echo@example.com", phone: "248-555-0205" }
+]
+
+test_lead_data.each do |data|
+  Lead.find_or_create_by!(email: data[:email]) do |l|
+    l.first_name = data[:first_name]
+    l.last_name = data[:last_name]
+    l.phone = data[:phone]
+    l.services_interested_in = ["cabinet_refacing"]
+    l.message = "Test lead for verifying spam cleanup does not affect real customers."
+    l.source = "website"
+  end
+end
+puts "  #{test_lead_data.size} test leads with customers created"
+
 puts "Done!"

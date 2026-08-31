@@ -78,6 +78,16 @@ class Lead < ApplicationRecord
     archived_at.present?
   end
 
+  def auto_detected_spam?
+    spam? && spam_score >= SpamDetector::SPAM_THRESHOLD
+  end
+
+  def customer_will_be_deleted?
+    return false unless customer
+    return false unless auto_detected_spam?
+    !customer.leads.where(spam: false).where.not(id: id).exists?
+  end
+
   after_create :calculate_spam_score
   after_create :calculate_lead_temperature
   after_create_commit :notify_new_lead
