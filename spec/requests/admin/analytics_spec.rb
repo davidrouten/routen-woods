@@ -46,6 +46,21 @@ RSpec.describe "Admin::Analytics", type: :request do
         expect(response.body).to include("Total Visits")
       end
 
+      it "groups visits by the application timezone, not UTC" do
+        cst_late = Time.zone.parse("2026-08-31 23:30")
+        Ahoy::Visit.create!(visit_token: "tz1", visitor_token: "v1", started_at: cst_late)
+
+        get admin_analytics_path, params: { month: "2026-08" }
+        doc = Nokogiri::HTML(response.body)
+        total_visits = doc.css(".text-3xl").first.text.strip
+        expect(total_visits).to eq("1")
+
+        get admin_analytics_path, params: { month: "2026-09" }
+        doc = Nokogiri::HTML(response.body)
+        total_visits = doc.css(".text-3xl").first.text.strip
+        expect(total_visits).to eq("0")
+      end
+
       it "handles invalid month param gracefully" do
         get admin_analytics_path, params: { month: "garbage" }
         expect(response).to have_http_status(:ok)
