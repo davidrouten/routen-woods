@@ -3,8 +3,15 @@ module Admin
     before_action { require_permission!(:manage, :settings) }
 
     def index
-      @period = params[:period].presence || "30d"
-      range = period_range(@period)
+      @month = parse_month(params[:month])
+      @earliest_month = Ahoy::Visit.minimum(:started_at)&.to_date&.beginning_of_month || @month
+      @month = @earliest_month if @month < @earliest_month
+      @prev_month = @month.prev_month
+      @next_month = @month.next_month
+      @is_current_month = @month.year == Date.current.year && @month.month == Date.current.month
+      @is_earliest_month = @month.year == @earliest_month.year && @month.month == @earliest_month.month
+
+      range = @month.beginning_of_month.beginning_of_day..@month.end_of_month.end_of_day
 
       visits = Ahoy::Visit.where(started_at: range)
       events = Ahoy::Event.where(name: "$view", time: range)
@@ -64,13 +71,10 @@ module Admin
 
     private
 
-    def period_range(period)
-      case period
-      when "7d"  then 7.days.ago..Time.current
-      when "30d" then 30.days.ago..Time.current
-      when "90d" then 90.days.ago..Time.current
-      else 30.days.ago..Time.current
-      end
+    def parse_month(param)
+      Date.strptime(param, "%Y-%m")
+    rescue ArgumentError, TypeError
+      Date.current
     end
   end
 end

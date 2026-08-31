@@ -13,14 +13,15 @@ RSpec.describe "Admin::Analytics", type: :request do
         expect(response).to have_http_status(:ok)
       end
 
-      it "defaults to 30d period" do
+      it "defaults to the current month" do
         get admin_analytics_path
-        expect(response.body).to include("30d")
+        expect(response.body).to include(Date.current.strftime("%B %Y"))
       end
 
-      it "accepts a period parameter" do
-        get admin_analytics_path, params: { period: "7d" }
+      it "accepts a month parameter" do
+        get admin_analytics_path, params: { month: "2026-07" }
         expect(response).to have_http_status(:ok)
+        expect(response.body).to include("July 2026")
       end
 
       it "displays visit and pageview stats" do
@@ -32,17 +33,23 @@ RSpec.describe "Admin::Analytics", type: :request do
 
       it "displays data sections" do
         get admin_analytics_path
-        expect(response.body).to include("Traffic Over Time")
+        expect(response.body).to include("Traffic")
         expect(response.body).to include("Top Pages")
         expect(response.body).to include("Browsers")
       end
 
-      it "counts visits in the selected period" do
-        Ahoy::Visit.create!(visit_token: "a", visitor_token: "v1", started_at: 2.days.ago)
-        Ahoy::Visit.create!(visit_token: "b", visitor_token: "v2", started_at: 60.days.ago)
+      it "shows visits for the selected month" do
+        Ahoy::Visit.create!(visit_token: "a", visitor_token: "v1", started_at: Date.new(2026, 7, 15).noon)
+        Ahoy::Visit.create!(visit_token: "b", visitor_token: "v2", started_at: Date.new(2026, 8, 10).noon)
 
-        get admin_analytics_path, params: { period: "30d" }
+        get admin_analytics_path, params: { month: "2026-07" }
         expect(response.body).to include("Total Visits")
+      end
+
+      it "handles invalid month param gracefully" do
+        get admin_analytics_path, params: { month: "garbage" }
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include(Date.current.strftime("%B %Y"))
       end
     end
 

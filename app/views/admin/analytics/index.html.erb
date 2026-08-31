@@ -1,11 +1,23 @@
 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-3">
   <h1 class="text-2xl font-bold text-gray-900"><%= t("admin.nav.settings") %> — Analytics</h1>
 
-  <div class="flex gap-2">
-    <% %w[7d 30d 90d].each do |period| %>
-      <%= link_to period,
-            admin_analytics_path(period: period),
-            class: "px-3 py-1.5 rounded-lg text-sm font-medium transition #{@period == period ? 'bg-primary text-white' : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'}" %>
+  <div class="flex items-center gap-1">
+    <% if @is_earliest_month %>
+      <span class="p-2 text-gray-300"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg></span>
+    <% else %>
+      <%= link_to admin_analytics_path(month: @prev_month.strftime("%Y-%m")),
+            class: "p-2 rounded-lg text-gray-500 hover:bg-gray-100 transition" do %>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+      <% end %>
+    <% end %>
+    <span class="px-3 py-1.5 text-sm font-semibold text-gray-900 min-w-[120px] text-center"><%= @month.strftime("%B %Y") %></span>
+    <% if @is_current_month %>
+      <span class="p-2 text-gray-300"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></span>
+    <% else %>
+      <%= link_to admin_analytics_path(month: @next_month.strftime("%Y-%m")),
+            class: "p-2 rounded-lg text-gray-500 hover:bg-gray-100 transition" do %>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      <% end %>
     <% end %>
   </div>
 </div>
@@ -26,60 +38,69 @@
   </div>
 </div>
 
-<!-- Traffic Chart -->
-<div class="bg-white rounded-xl shadow-sm p-6 mb-8">
-  <h2 class="text-lg font-semibold text-gray-900 mb-4">Traffic Over Time</h2>
-  <div class="flex gap-4 text-xs mb-2">
-    <span class="flex items-center gap-1"><span class="inline-block w-3 h-0.5 bg-blue-600 rounded"></span> Page Views</span>
-    <span class="flex items-center gap-1"><span class="inline-block w-3 h-0.5 bg-emerald-500 rounded"></span> Unique Visitors</span>
-  </div>
-  <% if @pageviews_over_time.any? { |_, v| v > 0 } || @unique_visitors_over_time.any? { |_, v| v > 0 } %>
-    <%
-      chart_labels = @pageviews_over_time.keys.map { |d| d.strftime("%-m/%-d") }
-      chart_series = [
-        @pageviews_over_time.values,
-        @unique_visitors_over_time.values
-      ]
-    %>
-    <div class="ct-chart"
-         data-controller="analytics-chart"
-         data-analytics-chart-labels-value="<%= chart_labels.to_json %>"
-         data-analytics-chart-series-value="<%= chart_series.to_json %>"
-         style="height: 280px;"></div>
-  <% else %>
-    <p class="text-sm text-gray-400">No traffic data yet</p>
-  <% end %>
-</div>
-
-<!-- Daily Breakdown -->
-<div class="bg-white rounded-xl shadow-sm p-6 mb-8">
-  <h2 class="text-lg font-semibold text-gray-900 mb-4">Daily Breakdown</h2>
-  <% if @visits_over_time.any? { |_, v| v > 0 } %>
-    <div class="overflow-x-auto">
-      <table class="w-full text-sm">
-        <thead>
-          <tr class="border-b border-gray-200">
-            <th class="text-left py-2 pr-4 font-medium text-gray-500">Date</th>
-            <th class="text-right py-2 pr-4 font-medium text-gray-500">Visits</th>
-            <th class="text-right py-2 pr-4 font-medium text-gray-500">Unique</th>
-            <th class="text-right py-2 font-medium text-gray-500">Page Views</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @visits_over_time.reverse_each do |date, count| %>
-            <tr class="border-b border-gray-100">
-              <td class="py-2 pr-4 text-gray-700"><%= date.strftime("%b %-d, %Y") %></td>
-              <td class="py-2 pr-4 text-right text-gray-900 font-medium"><%= number_with_delimiter(count) %></td>
-              <td class="py-2 pr-4 text-right text-gray-900 font-medium"><%= number_with_delimiter(@unique_visitors_over_time[date] || 0) %></td>
-              <td class="py-2 text-right text-gray-900 font-medium"><%= number_with_delimiter(@pageviews_over_time[date] || 0) %></td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
+<!-- Traffic -->
+<div class="bg-white rounded-xl shadow-sm p-6 mb-8" data-controller="tabs" data-tabs-active-class="bg-primary text-white" data-tabs-inactive-class="bg-white text-gray-600 hover:bg-gray-50 border border-gray-200">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-lg font-semibold text-gray-900">Traffic</h2>
+    <div class="flex gap-2">
+      <button data-tabs-target="tab" data-action="click->tabs#switch" data-tabs-panel-param="chart" class="px-3 py-1.5 rounded-lg text-sm font-medium transition bg-primary text-white">Chart</button>
+      <button data-tabs-target="tab" data-action="click->tabs#switch" data-tabs-panel-param="table" class="px-3 py-1.5 rounded-lg text-sm font-medium transition bg-white text-gray-600 hover:bg-gray-50 border border-gray-200">Daily Breakdown</button>
     </div>
-  <% else %>
-    <p class="text-sm text-gray-400">No visit data yet</p>
-  <% end %>
+  </div>
+
+  <!-- Chart Panel -->
+  <div data-tabs-target="panel" data-tabs-name="chart">
+    <div class="flex gap-4 text-xs mb-2">
+      <span class="flex items-center gap-1"><span class="inline-block w-3 h-0.5 bg-blue-600 rounded"></span> Page Views</span>
+      <span class="flex items-center gap-1"><span class="inline-block w-3 h-0.5 bg-emerald-500 rounded"></span> Unique Visitors</span>
+    </div>
+    <% if @pageviews_over_time.any? { |_, v| v > 0 } || @unique_visitors_over_time.any? { |_, v| v > 0 } %>
+      <%
+        chart_labels = @pageviews_over_time.keys.map { |d| d.strftime("%-m/%-d") }
+        chart_series = [
+          @pageviews_over_time.values,
+          @unique_visitors_over_time.values
+        ]
+      %>
+      <div class="ct-chart"
+           data-controller="analytics-chart"
+           data-analytics-chart-labels-value="<%= chart_labels.to_json %>"
+           data-analytics-chart-series-value="<%= chart_series.to_json %>"
+           style="height: 280px;"></div>
+    <% else %>
+      <p class="text-sm text-gray-400">No traffic data yet</p>
+    <% end %>
+  </div>
+
+  <!-- Table Panel -->
+  <div data-tabs-target="panel" data-tabs-name="table" class="hidden">
+    <% if @visits_over_time.any? { |_, v| v > 0 } %>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-gray-200">
+              <th class="text-left py-2 pr-4 font-medium text-gray-500">Date</th>
+              <th class="text-right py-2 pr-4 font-medium text-gray-500">Visits</th>
+              <th class="text-right py-2 pr-4 font-medium text-gray-500">Unique</th>
+              <th class="text-right py-2 font-medium text-gray-500">Page Views</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @visits_over_time.reverse_each do |date, count| %>
+              <tr class="border-b border-gray-100">
+                <td class="py-2 pr-4 text-gray-700"><%= date.strftime("%b %-d, %Y") %></td>
+                <td class="py-2 pr-4 text-right text-gray-900 font-medium"><%= number_with_delimiter(count) %></td>
+                <td class="py-2 pr-4 text-right text-gray-900 font-medium"><%= number_with_delimiter(@unique_visitors_over_time[date] || 0) %></td>
+                <td class="py-2 text-right text-gray-900 font-medium"><%= number_with_delimiter(@pageviews_over_time[date] || 0) %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <p class="text-sm text-gray-400">No visit data yet</p>
+    <% end %>
+  </div>
 </div>
 
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
