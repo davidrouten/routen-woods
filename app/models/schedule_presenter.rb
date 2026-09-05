@@ -98,7 +98,7 @@ class SchedulePresenter
 
   def key_entry(project)
     customer = customer_name(project)
-    label = customer ? "#{project.title.truncate(25)} (#{customer})" : project.title.truncate(30)
+    label = customer ? "#{project.title.truncate(50)} (#{customer})" : project.title.truncate(50)
     { id: project.id, label: label, color: color_for(project), url: project_url(project) }
   end
 

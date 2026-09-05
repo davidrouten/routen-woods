@@ -62,6 +62,7 @@ export default class extends Controller {
       this.renderEightWeekView()
     }
     this.renderProjectKey()
+    this.injectHighlightCSS()
   }
 
   updateTabs() {
@@ -156,10 +157,10 @@ export default class extends Controller {
       const statusClass = this.statusOverlay(p.status)
 
       const label = p.customer_name
-        ? `${this.truncateLabel(p.title, 25)} (${p.customer_name})`
+        ? `${this.truncateLabel(p.title, 50)} (${p.customer_name})`
         : this.truncateLabel(p.title)
 
-      html += `<a href="${p.url}" class="absolute flex items-center rounded-md px-2 overflow-hidden hover:ring-2 hover:ring-offset-1 hover:ring-gray-400 transition group ${statusClass}" style="left: ${left}%; width: ${width}%; top: ${top}px; height: ${barHeight}px; background-color: ${color}">
+      html += `<a href="${p.url}" class="proj proj-${p.id} absolute flex items-center rounded-md px-2 overflow-hidden hover:ring-2 hover:ring-offset-1 hover:ring-gray-400 transition group ${statusClass}" style="left: ${left}%; width: ${width}%; top: ${top}px; height: ${barHeight}px; background-color: ${color}">
         <span class="text-white text-xs font-medium truncate drop-shadow-sm">${this.escapeHtml(label)}</span>
       </a>`
     }
@@ -238,7 +239,7 @@ export default class extends Controller {
         const statusClass = this.statusOverlay(p.status)
 
         const tip = p.customer_name ? `${p.title} (${p.customer_name})` : p.title
-        html += `<a href="${p.url}" class="absolute rounded-sm hover:ring-1 hover:ring-gray-400 transition ${statusClass}" style="left: calc(${left}% + 2px); width: calc(${width}% - 4px); top: ${top}px; height: ${barHeight}px; background-color: ${color}" title="${this.escapeHtml(tip)}"></a>`
+        html += `<a href="${p.url}" class="proj proj-${p.id} absolute rounded-sm hover:ring-1 hover:ring-gray-400 transition ${statusClass}" style="left: calc(${left}% + 2px); width: calc(${width}% - 4px); top: ${top}px; height: ${barHeight}px; background-color: ${color}" title="${this.escapeHtml(tip)}"></a>`
       }
 
       html += `</div>`
@@ -270,15 +271,35 @@ export default class extends Controller {
     for (const p of unique) {
       const color = this.colorFor(p.id)
       const label = p.customer_name
-        ? `${this.truncateLabel(p.title, 25)} (${p.customer_name})`
+        ? `${this.truncateLabel(p.title, 50)} (${p.customer_name})`
         : this.truncateLabel(p.title)
-      html += `<a href="${p.url}" class="inline-flex items-center gap-1.5 text-xs text-gray-700 hover:text-gray-900 transition">
+      html += `<a href="${p.url}" class="proj proj-key proj-${p.id} inline-flex items-center gap-1.5 px-1.5 py-0.5 rounded text-xs text-gray-700 hover:text-gray-900" style="--proj-color: ${color}">
         <span class="w-2.5 h-2.5 rounded-full shrink-0" style="background-color: ${color}"></span>
         <span>${this.escapeHtml(label)}</span>
       </a>`
     }
     html += `</div>`
     this.projectKeyTarget.innerHTML = html
+  }
+
+  injectHighlightCSS() {
+    const id = "sched-hl-css"
+    let style = document.getElementById(id)
+    if (!style) {
+      style = document.createElement("style")
+      style.id = id
+      document.head.appendChild(style)
+    }
+
+    const sel = "[data-controller='schedule-calendar']"
+    const ids = [...new Set(this.visibleProjects().map(p => p.id))]
+
+    let css = `${sel} .proj { transition: opacity 0.2s ease, filter 0.2s ease, background-color 0.2s ease; }\n`
+    for (const pid of ids) {
+      css += `${sel}:has(.proj-${pid}:hover) .proj:not(.proj-${pid}) { opacity: 0.15; }\n`
+      css += `${sel}:has(.proj-${pid}:hover) .proj-key.proj-${pid} { background-color: color-mix(in srgb, var(--proj-color) 20%, transparent); font-weight: 600; }\n`
+    }
+    style.textContent = css
   }
 
   visibleProjects() {
@@ -377,7 +398,7 @@ export default class extends Controller {
     return ""
   }
 
-  truncateLabel(str, max = 30) {
+  truncateLabel(str, max = 50) {
     return str.length > max ? str.slice(0, max - 1) + "…" : str
   }
 
