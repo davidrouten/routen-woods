@@ -51,8 +51,8 @@
   <% if @schedule_key.any? %>
     <div class="schedule-key flex flex-wrap gap-x-4 gap-y-1.5 mb-6">
       <% @schedule_key.each do |entry| %>
-        <%= link_to entry[:url], class: "schedule-key-item sched-hl inline-flex items-center gap-1.5 text-xs text-gray-700 transition-opacity",
-            data: { projects: entry[:id].to_s } do %>
+        <%= link_to entry[:url], class: "schedule-key-item sched-hl inline-flex items-center gap-1.5 px-1.5 py-0.5 rounded text-xs text-gray-700",
+            data: { projects: entry[:id].to_s, color: entry[:color] } do %>
           <span class="w-2.5 h-2.5 rounded-full shrink-0" style="background-color: <%= entry[:color] %>"></span>
           <span class="truncate"><%= entry[:label] %></span>
         <% end %>
@@ -93,7 +93,7 @@
               <div class="flex-1 h-4 rounded-sm <%= cell_class %> <%= 'sched-hl cursor-pointer' if has_projects %>"
                    <% if cell_style %>style="<%= cell_style %>"<% end %>
                    title="<%= day[:date].strftime('%a, %b %-d') %>: <%= day[:count] %> project<%= day[:count] != 1 ? 's' : '' %>"
-                   <% if has_projects %>data-projects="<%= day[:project_ids].join(',') %>"<% end %>></div>
+                   <% if has_projects %>data-projects="<%= day[:project_ids].join(',') %>" data-color="<%= color %>"<% end %>></div>
             <% end %>
           </div>
         </div>
@@ -102,29 +102,73 @@
   </div>
 </div>
 
+<style>
+  .sched-hl { transition: opacity 0.25s ease, background-color 0.25s ease; }
+</style>
+
 <script>
   (function() {
-    var container = document.getElementById("schedule-outlook");
-    if (!container) return;
-    container = container.closest(".bg-white");
+    var widget = document.getElementById("schedule-outlook");
+    if (!widget) return;
+    var container = widget.closest(".bg-white");
     var allHL = container.querySelectorAll(".sched-hl");
+    var activeKey = null;
 
-    container.addEventListener("mouseover", function(e) {
-      var el = e.target.closest(".sched-hl");
-      if (!el) return;
-      var ids = el.dataset.projects.split(",");
-      allHL.forEach(function(item) {
-        var itemIds = item.dataset.projects.split(",");
-        var match = ids.some(function(id) { return itemIds.indexOf(id) !== -1; });
-        item.style.opacity = match ? "1" : "0.2";
+    var urlMap = {};
+    container.querySelectorAll(".schedule-key-item").forEach(function(item) {
+      urlMap[item.dataset.projects] = item.getAttribute("href");
+    });
+
+    allHL.forEach(function(item) {
+      item._origBg = item.style.backgroundColor || "";
+    });
+
+    container.querySelectorAll(".sched-hl:not(.schedule-key-item)").forEach(function(cell) {
+      cell.addEventListener("click", function() {
+        var id = cell.dataset.projects.split(",")[0];
+        if (urlMap[id]) window.location.href = urlMap[id];
       });
     });
 
-    container.addEventListener("mouseout", function(e) {
+    function highlight(ids) {
+      allHL.forEach(function(item) {
+        var itemIds = item.dataset.projects.split(",");
+        var match = ids.some(function(id) { return itemIds.indexOf(id) !== -1; });
+        if (match) {
+          item.style.opacity = "1";
+          var color = item.dataset.color;
+          if (item.classList.contains("schedule-key-item")) {
+            item.style.backgroundColor = color + "30";
+          } else if (color) {
+            item.style.backgroundColor = color;
+          }
+        } else {
+          item.style.opacity = "0.2";
+        }
+      });
+    }
+
+    function clearHighlight() {
+      activeKey = null;
+      allHL.forEach(function(item) {
+        item.style.opacity = "";
+        item.style.backgroundColor = item._origBg;
+      });
+    }
+
+    container.addEventListener("mouseover", function(e) {
       var el = e.target.closest(".sched-hl");
-      if (!el) return;
-      allHL.forEach(function(item) { item.style.opacity = ""; });
+      if (!el) {
+        if (activeKey) clearHighlight();
+        return;
+      }
+      var key = el.dataset.projects;
+      if (key === activeKey) return;
+      activeKey = key;
+      highlight(key.split(","));
     });
+
+    container.addEventListener("mouseleave", clearHighlight);
   })();
 </script>
 
