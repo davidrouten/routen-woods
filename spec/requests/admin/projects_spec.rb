@@ -48,8 +48,8 @@ RSpec.describe "Admin::Projects", type: :request do
     end
 
     it "sorts by schedule ascending" do
-      create(:project, title: "Later", scheduled_start_date: 30.days.from_now)
-      create(:project, title: "Soon", scheduled_start_date: 2.days.from_now)
+      create(:project, title: "Later", scheduled_start_date: 30.days.from_now.to_date)
+      create(:project, title: "Soon", scheduled_start_date: 2.days.from_now.to_date)
       get admin_projects_path, params: { sort: "schedule" }
       expect(response).to be_successful
       expect(response.body.index("Soon")).to be < response.body.index("Later")

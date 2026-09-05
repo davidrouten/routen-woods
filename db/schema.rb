@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_05_200000) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_05_210000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -320,6 +320,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_05_200000) do
     t.decimal "deposit_amount", precision: 10, scale: 2
     t.text "description"
     t.string "email"
+    t.decimal "estimated_duration_days", precision: 5, scale: 1
     t.decimal "estimated_price", precision: 10, scale: 2
     t.text "internal_notes"
     t.bigint "lead_id"
@@ -332,6 +333,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_05_200000) do
     t.string "time_estimate"
     t.string "title", null: false
     t.datetime "updated_at", null: false
+    t.boolean "work_saturdays", default: false, null: false
     t.index ["assigned_to_id"], name: "index_projects_on_assigned_to_id"
     t.index ["client_token"], name: "index_projects_on_client_token", unique: true
     t.index ["customer_id"], name: "index_projects_on_customer_id"

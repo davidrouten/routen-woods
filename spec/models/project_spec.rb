@@ -47,4 +47,19 @@ RSpec.describe Project do
       expect(project.balance_remaining).to eq(5000)
     end
   end
+
+  describe "#schedule" do
+    it "returns a Schedule built from project attributes" do
+      project = build(:project,
+        scheduled_start_date: Date.parse("2026-09-07"),
+        estimated_duration_days: 5,
+        work_saturdays: false)
+
+      sched = project.schedule
+      expect(sched).to be_a(Schedule)
+      expect(sched.start_date).to eq(Date.parse("2026-09-07"))
+      expect(sched.duration_days).to eq(5)
+      expect(sched.work_saturdays).to be false
+    end
+  end
 end

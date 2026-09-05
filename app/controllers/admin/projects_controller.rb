@@ -21,6 +21,7 @@ module Admin
     end
 
     def show
+      @schedule = @project.schedule
       @order_forms = @project.order_forms.includes(:line_items)
       @invoices = @project.invoices
       @notes = @project.notes.includes(:user).reverse_chronological
@@ -100,7 +101,8 @@ module Admin
         :lead_id, :assigned_to_id, :customer_id, :title, :description, :internal_notes,
         :address, :email, :phone,
         :estimated_price, :agreed_price, :deposit_amount, :balance_amount,
-        :time_estimate, :scheduled_start_date, :scheduled_end_date
+        :time_estimate, :scheduled_start_date, :scheduled_end_date,
+        :estimated_duration_days, :work_saturdays
       )
     end
   end

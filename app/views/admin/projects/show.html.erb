@@ -44,12 +44,6 @@
             <p class="font-medium"><%= @project.time_estimate %></p>
           </div>
         <% end %>
-        <% if @project.scheduled_start_date %>
-          <div>
-            <p class="text-gray-500">Schedule</p>
-            <p class="font-medium"><%= format_date(@project.scheduled_start_date) %><% if @project.scheduled_end_date %> – <%= format_date(@project.scheduled_end_date) %><% end %></p>
-          </div>
-        <% end %>
       </div>
 
       <% if @project.address.present? %>
@@ -87,6 +81,56 @@
         </div>
       <% end %>
     </div>
+
+    <!-- Schedule Card -->
+    <% if @project.scheduled_start_date %>
+      <div class="bg-white rounded-xl shadow-sm p-6">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-lg font-semibold text-gray-900">Schedule</h2>
+          <% if @project.work_saturdays? %>
+            <span class="inline-block px-2 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700">Includes Saturdays</span>
+          <% end %>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+          <div>
+            <p class="text-gray-500">Starts</p>
+            <p class="text-lg font-bold text-gray-900"><%= @schedule.start_date.strftime("%a, %b %-d") %></p>
+          </div>
+          <% if @schedule.end_date %>
+            <div>
+              <p class="text-gray-500">Ends</p>
+              <p class="text-lg font-bold text-gray-900"><%= @schedule.end_date.strftime("%a, %b %-d") %></p>
+            </div>
+          <% end %>
+          <% if @schedule.formatted_duration %>
+            <div>
+              <p class="text-gray-500">Duration</p>
+              <p class="text-lg font-bold text-gray-900"><%= @schedule.formatted_duration %></p>
+            </div>
+          <% end %>
+          <% if @project.time_estimate.present? %>
+            <div>
+              <p class="text-gray-500">Estimate Notes</p>
+              <p class="text-lg font-bold text-gray-900"><%= @project.time_estimate %></p>
+            </div>
+          <% end %>
+        </div>
+
+        <% if @schedule.work_days.any? %>
+          <div class="mt-4 pt-4 border-t border-gray-100">
+            <p class="text-gray-500 text-sm mb-2">Work Days</p>
+            <div class="flex flex-wrap gap-2">
+              <% @schedule.work_days.each do |day| %>
+                <span class="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-medium bg-primary/10 text-primary">
+                  <%= day.strftime("%a, %b %-d") %>
+                </span>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
 
     <!-- Financials Card -->
     <div class="bg-white rounded-xl shadow-sm p-6">

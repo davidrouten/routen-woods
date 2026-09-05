@@ -38,6 +38,14 @@ class Project < ApplicationRecord
   scope :active, -> { where(status: [:scheduled, :in_progress, :blocked]) }
   scope :recent, -> { order(created_at: :desc) }
 
+  def schedule
+    Schedule.new(
+      start_date: scheduled_start_date,
+      duration_days: estimated_duration_days,
+      work_saturdays: work_saturdays?
+    )
+  end
+
   def start!
     update!(status: :in_progress, started_at: Time.current)
   end

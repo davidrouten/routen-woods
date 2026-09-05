@@ -12,6 +12,9 @@ FactoryBot.define do
     deposit_amount { 2000.00 }
     balance_amount { 5000.00 }
     time_estimate { "4-5 days" }
+    scheduled_start_date { 1.week.from_now.to_date }
+    estimated_duration_days { 5.0 }
+    work_saturdays { false }
 
     trait :in_progress do
       status { :in_progress }
