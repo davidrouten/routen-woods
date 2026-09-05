@@ -63,12 +63,17 @@ module Admin
         .order(Arel.sql("count(*) DESC"))
         .count
 
-      @top_images = image_events
+      top_image_counts = image_events
         .where("properties->>'alt' IS NOT NULL AND properties->>'alt' != ''")
         .group("properties->>'alt'")
         .order(Arel.sql("count(*) DESC"))
         .limit(15)
         .count
+
+      gallery_images_by_title = GalleryImage.where(title: top_image_counts.keys).index_by(&:title)
+      @top_images = top_image_counts.map do |title, count|
+        { title: title, count: count, gallery_image: gallery_images_by_title[title] }
+      end
     end
 
     private
