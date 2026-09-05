@@ -7,7 +7,7 @@ module Admin
       @spam_count = Lead.spam_only.count
       @leads_today = Lead.not_spam.where("created_at >= ?", Date.current.beginning_of_day).count
 
-      @booked_leads = Lead.not_spam.where(status: :booked).includes(projects: :invoices).order(booked_at: :desc)
+      @booked_leads = Lead.not_spam.where(status: :booked).includes(projects: { invoices: :payments }).order(booked_at: :desc)
       @completed_leads = Lead.not_spam.where(status: :completed).includes(:projects).order(completed_at: :desc).limit(10)
 
       booked_project_ids = @booked_leads.flat_map { |l| l.projects.map(&:id) }
