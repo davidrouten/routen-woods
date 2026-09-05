@@ -62,7 +62,6 @@ export default class extends Controller {
       this.renderEightWeekView()
     }
     this.renderProjectKey()
-    this.injectHighlightCSS()
   }
 
   updateTabs() {
@@ -267,6 +266,15 @@ export default class extends Controller {
       return true
     })
 
+    const sel = "[data-controller='schedule-calendar']"
+    let css = `<style>${sel} .proj { transition: opacity 0.2s ease, filter 0.2s ease, background-color 0.2s ease; }\n`
+    for (const p of unique) {
+      css += `${sel}:has(.proj-${p.id}:hover) .proj:not(.proj-${p.id}) { opacity: 0.15; }\n`
+      css += `${sel}:has(.proj-${p.id}:hover) .proj.proj-${p.id}:not(:hover) { filter: brightness(1.2); }\n`
+      css += `${sel}:has(.proj-${p.id}:hover) .proj-key.proj-${p.id} { background-color: color-mix(in srgb, var(--proj-color) 20%, transparent); font-weight: 600; }\n`
+    }
+    css += `</style>`
+
     let html = `<div class="flex flex-wrap gap-x-4 gap-y-1.5 mt-4 px-1">`
     for (const p of unique) {
       const color = this.colorFor(p.id)
@@ -279,27 +287,7 @@ export default class extends Controller {
       </a>`
     }
     html += `</div>`
-    this.projectKeyTarget.innerHTML = html
-  }
-
-  injectHighlightCSS() {
-    const id = "sched-hl-css"
-    let style = document.getElementById(id)
-    if (!style) {
-      style = document.createElement("style")
-      style.id = id
-      document.head.appendChild(style)
-    }
-
-    const sel = "[data-controller='schedule-calendar']"
-    const ids = [...new Set(this.visibleProjects().map(p => p.id))]
-
-    let css = `${sel} .proj { transition: opacity 0.2s ease, filter 0.2s ease, background-color 0.2s ease; }\n`
-    for (const pid of ids) {
-      css += `${sel}:has(.proj-${pid}:hover) .proj:not(.proj-${pid}) { opacity: 0.15; }\n`
-      css += `${sel}:has(.proj-${pid}:hover) .proj-key.proj-${pid} { background-color: color-mix(in srgb, var(--proj-color) 20%, transparent); font-weight: 600; }\n`
-    }
-    style.textContent = css
+    this.projectKeyTarget.innerHTML = css + html
   }
 
   visibleProjects() {
