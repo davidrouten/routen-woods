@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_05_175950) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_05_200000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -111,6 +111,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_05_175950) do
     t.integer "position"
     t.string "title"
     t.datetime "updated_at", null: false
+  end
+
+  create_table "inbound_leads", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "external_id"
+    t.bigint "lead_id"
+    t.jsonb "payload", default: {}, null: false
+    t.datetime "processed_at"
+    t.string "source", null: false
+    t.string "status", default: "pending", null: false
+    t.datetime "updated_at", null: false
+    t.index ["lead_id"], name: "index_inbound_leads_on_lead_id"
+    t.index ["source", "external_id"], name: "index_inbound_leads_on_source_and_external_id", unique: true, where: "(external_id IS NOT NULL)"
+    t.index ["status"], name: "index_inbound_leads_on_status"
   end
 
   create_table "invoice_adjustments", force: :cascade do |t|
@@ -375,6 +389,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_05_175950) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "inbound_leads", "leads"
   add_foreign_key "invoice_adjustments", "invoices"
   add_foreign_key "invoice_line_items", "invoices"
   add_foreign_key "invoices", "projects"
