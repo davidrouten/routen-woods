@@ -102,7 +102,7 @@ module Admin
         :address, :email, :phone,
         :estimated_price, :agreed_price, :deposit_amount, :balance_amount,
         :time_estimate, :scheduled_start_date, :scheduled_end_date,
-        :estimated_duration_days, :work_saturdays
+        :estimated_duration_days, :work_saturdays, :calendar_color
       )
     end
   end

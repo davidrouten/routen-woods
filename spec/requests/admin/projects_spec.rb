@@ -108,6 +108,13 @@ RSpec.describe "Admin::Projects", type: :request do
       }
       expect(project.reload.agreed_price).to eq(8500.0)
     end
+
+    it "updates the calendar color" do
+      patch admin_project_path(project), params: {
+        project: { calendar_color: "#EC4899" }
+      }
+      expect(project.reload.calendar_color).to eq("#EC4899")
+    end
   end
 
   describe "PATCH /admin/projects/:id/transition" do

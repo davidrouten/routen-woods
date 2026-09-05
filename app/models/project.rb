@@ -33,7 +33,35 @@ class Project < ApplicationRecord
 
   has_secure_token :client_token
 
+  CALENDAR_COLORS = {
+    "Blue"        => "#3B82F6",
+    "Red"         => "#EF4444",
+    "Emerald"     => "#10B981",
+    "Orange"      => "#F97316",
+    "Purple"      => "#8B5CF6",
+    "Cyan"        => "#06B6D4",
+    "Pink"        => "#EC4899",
+    "Amber"       => "#F59E0B",
+    "Navy"        => "#1E3A5F",
+    "Lime"        => "#84CC16",
+    "Crimson"     => "#B91C1C",
+    "Teal"        => "#0D9488",
+    "Gold"        => "#CA8A04",
+    "Indigo"      => "#4338CA",
+    "Charcoal"    => "#374151",
+    "Coral"       => "#F87171",
+    "Forest"      => "#166534",
+    "Brown"       => "#78350F",
+    "Silver"      => "#9CA3AF",
+    "Slate"       => "#64748B",
+  }.freeze
+
+  CALENDAR_PALETTE = CALENDAR_COLORS.values.freeze
+
   validates :title, presence: true
+  validates :calendar_color, format: { with: /\A#[0-9A-Fa-f]{6}\z/, message: "must be a valid hex color" }, allow_blank: true
+
+  before_create :assign_calendar_color, unless: -> { calendar_color.present? }
 
   scope :active, -> { where(status: [:scheduled, :in_progress, :blocked]) }
   scope :recent, -> { order(created_at: :desc) }
@@ -77,5 +105,13 @@ class Project < ApplicationRecord
 
   def balance_remaining
     (agreed_price || 0) - (deposit_amount || 0)
+  end
+
+  private
+
+  def assign_calendar_color
+    used = Project.where.not(calendar_color: [nil, ""]).distinct.pluck(:calendar_color)
+    available = CALENDAR_PALETTE - used
+    self.calendar_color = available.any? ? available.first : CALENDAR_PALETTE[Project.count % CALENDAR_PALETTE.length]
   end
 end

@@ -139,6 +139,40 @@
       </p>
     </div>
 
+    <div>
+      <%= f.label :calendar_color, "Calendar Color", class: "block text-sm font-semibold text-gray-700 mb-1.5" %>
+      <div class="flex items-center gap-3">
+        <%= f.color_field :calendar_color,
+              value: project.calendar_color.presence || Project::CALENDAR_PALETTE[0],
+              class: "w-10 h-10 rounded-lg border border-gray-300 cursor-pointer p-0.5",
+              id: "project_calendar_color_picker" %>
+        <div class="flex flex-wrap gap-1.5" id="color-presets">
+          <% Project::CALENDAR_COLORS.each do |name, hex| %>
+            <button type="button"
+                    data-color="<%= hex %>"
+                    title="<%= name %>"
+                    onclick="document.getElementById('project_calendar_color').value = this.dataset.color; document.getElementById('project_calendar_color_picker').value = this.dataset.color; document.querySelectorAll('#color-presets button').forEach(b => b.classList.remove('ring-2','ring-offset-1','ring-gray-500')); this.classList.add('ring-2','ring-offset-1','ring-gray-500')"
+                    class="w-7 h-7 rounded-full border border-gray-200 cursor-pointer transition hover:scale-110 <%= hex == (project.calendar_color.presence || Project::CALENDAR_PALETTE[0]) ? 'ring-2 ring-offset-1 ring-gray-500' : '' %>"
+                    style="background-color: <%= hex %>"></button>
+          <% end %>
+        </div>
+        <%= f.hidden_field :calendar_color, id: "project_calendar_color",
+              value: project.calendar_color.presence || Project::CALENDAR_PALETTE[0] %>
+      </div>
+      <p class="text-xs text-gray-400 mt-1">Pick a preset or choose a custom color</p>
+      <script>
+        document.getElementById("project_calendar_color_picker").addEventListener("input", function(e) {
+          document.getElementById("project_calendar_color").value = e.target.value;
+          document.querySelectorAll("#color-presets button").forEach(function(b) {
+            b.classList.remove("ring-2", "ring-offset-1", "ring-gray-500");
+            if (b.dataset.color.toLowerCase() === e.target.value.toLowerCase()) {
+              b.classList.add("ring-2", "ring-offset-1", "ring-gray-500");
+            }
+          });
+        });
+      </script>
+    </div>
+
     <div class="pt-3 border-t border-gray-100">
       <div>
         <%= f.label :time_estimate, "Estimate Notes", class: "block text-sm font-semibold text-gray-700 mb-1.5" %>

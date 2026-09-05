@@ -48,6 +48,37 @@ RSpec.describe Project do
     end
   end
 
+  describe "calendar_color" do
+    it "auto-assigns a color from the palette on create" do
+      project = create(:project)
+      expect(project.calendar_color).to be_present
+      expect(project.calendar_color).to match(/\A#[0-9A-Fa-f]{6}\z/)
+    end
+
+    it "does not overwrite an explicitly set color" do
+      project = create(:project, calendar_color: "#FF0000")
+      expect(project.calendar_color).to eq("#FF0000")
+    end
+
+    it "avoids colors already in use by other projects" do
+      first = create(:project)
+      second = create(:project)
+      expect(second.calendar_color).not_to eq(first.calendar_color)
+    end
+
+    it "rejects invalid hex colors" do
+      project = build(:project, calendar_color: "not-a-color")
+      expect(project).not_to be_valid
+      expect(project.errors[:calendar_color]).to be_present
+    end
+
+    it "allows blank calendar_color" do
+      project = build(:project, calendar_color: "")
+      project.valid?
+      expect(project.errors[:calendar_color]).to be_empty
+    end
+  end
+
   describe "#schedule" do
     it "returns a Schedule built from project attributes" do
       project = build(:project,

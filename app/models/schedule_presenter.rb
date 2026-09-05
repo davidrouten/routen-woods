@@ -1,5 +1,5 @@
 class SchedulePresenter
-  PALETTE = %w[#3B82F6 #10B981 #F59E0B #8B5CF6 #EC4899 #06B6D4 #F97316 #6366F1 #14B8A6 #EF4444].freeze
+  PALETTE = Project::CALENDAR_PALETTE
 
   attr_reader :scheduled_projects, :unscheduled_projects
 
@@ -76,7 +76,7 @@ class SchedulePresenter
   end
 
   def color_for(project)
-    PALETTE[project.id % PALETTE.length]
+    project.calendar_color.presence || PALETTE[project.id % PALETTE.length]
   end
 
   private
@@ -92,7 +92,8 @@ class SchedulePresenter
       work_days: schedule.work_days.map(&:iso8601),
       status: project.status,
       work_saturdays: project.work_saturdays?,
-      url: project_url(project)
+      url: project_url(project),
+      color: color_for(project)
     }
   end
 

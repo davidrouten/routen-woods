@@ -15,6 +15,7 @@ FactoryBot.define do
     scheduled_start_date { 1.week.from_now.to_date }
     estimated_duration_days { 5.0 }
     work_saturdays { false }
+    calendar_color { nil }
 
     trait :in_progress do
       status { :in_progress }

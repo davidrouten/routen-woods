@@ -1,9 +1,11 @@
 import { Controller } from "@hotwired/stimulus"
 
 const PALETTE = [
-  "#3B82F6", "#10B981", "#F59E0B", "#8B5CF6",
-  "#EC4899", "#06B6D4", "#F97316", "#6366F1",
-  "#14B8A6", "#EF4444"
+  "#3B82F6", "#EF4444", "#10B981", "#F97316",
+  "#8B5CF6", "#06B6D4", "#EC4899", "#F59E0B",
+  "#1E3A5F", "#84CC16", "#B91C1C", "#0D9488",
+  "#CA8A04", "#4338CA", "#374151", "#F87171",
+  "#166534", "#78350F", "#9CA3AF", "#64748B"
 ]
 
 const DAY_NAMES = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
@@ -270,7 +272,7 @@ export default class extends Controller {
     let css = `<style>${sel} .proj { transition: opacity 0.2s ease, filter 0.2s ease, background-color 0.2s ease; }\n`
     for (const p of unique) {
       css += `${sel}:has(.proj-${p.id}:hover) .proj:not(.proj-${p.id}) { opacity: 0.15; }\n`
-      css += `${sel}:has(.proj-${p.id}:hover) .proj.proj-${p.id}:not(:hover) { filter: brightness(1.2); }\n`
+      css += `${sel}:has(.proj-${p.id}:hover) .proj.proj-${p.id} { filter: brightness(1.35) saturate(1.3); outline: 2px solid rgba(0,0,0,0.15); outline-offset: -1px; }\n`
       css += `${sel}:has(.proj-${p.id}:hover) .proj-key.proj-${p.id} { background-color: color-mix(in srgb, var(--proj-color) 20%, transparent); font-weight: 600; }\n`
     }
     css += `</style>`
@@ -377,7 +379,8 @@ export default class extends Controller {
   }
 
   colorFor(id) {
-    return PALETTE[id % PALETTE.length]
+    const p = this.projectsValue.find(p => p.id === id)
+    return (p && p.color) || PALETTE[id % PALETTE.length]
   }
 
   statusOverlay(status) {
