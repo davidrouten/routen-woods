@@ -14,7 +14,9 @@ module Admin
       range = @month.beginning_of_month.beginning_of_day..@month.end_of_month.end_of_day
 
       visits = Ahoy::Visit.where(started_at: range)
+        .where("landing_page IS NULL OR landing_page NOT LIKE ?", "%/admin%")
       events = Ahoy::Event.where(name: "$view", time: range)
+        .where("properties->>'page' IS NULL OR properties->>'page' NOT LIKE ?", "/admin%")
 
       @total_visits = visits.count
       @unique_visitors = visits.distinct.count(:ip)

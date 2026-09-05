@@ -68,6 +68,45 @@ RSpec.describe "Admin::Analytics", type: :request do
       end
     end
 
+    context "when admin visits exist in the data" do
+      before { sign_in admin }
+
+      let(:month) { "2026-08" }
+      let(:visit_time) { Date.new(2026, 8, 15).noon }
+
+      it "excludes visits with admin landing pages from totals" do
+        public_visit = Ahoy::Visit.create!(visit_token: "pub1", visitor_token: "v1", started_at: visit_time, landing_page: "https://example.com/")
+        Ahoy::Visit.create!(visit_token: "adm1", visitor_token: "v2", started_at: visit_time, landing_page: "https://example.com/admin/leads")
+
+        get admin_analytics_path, params: { month: month }
+        doc = Nokogiri::HTML(response.body)
+        total_visits = doc.css(".text-3xl").first.text.strip
+        expect(total_visits).to eq("1")
+      end
+
+      it "excludes admin page view events from pageview totals" do
+        visit = Ahoy::Visit.create!(visit_token: "v1", visitor_token: "vis1", started_at: visit_time, landing_page: "https://example.com/")
+        Ahoy::Event.create!(visit: visit, name: "$view", time: visit_time, properties: { "page" => "/" })
+        Ahoy::Event.create!(visit: visit, name: "$view", time: visit_time, properties: { "page" => "/about" })
+        Ahoy::Event.create!(visit: visit, name: "$view", time: visit_time, properties: { "page" => "/admin/leads" })
+        Ahoy::Event.create!(visit: visit, name: "$view", time: visit_time, properties: { "page" => "/admin/analytics" })
+
+        get admin_analytics_path, params: { month: month }
+        doc = Nokogiri::HTML(response.body)
+        pageviews = doc.css(".text-3xl")[2].text.strip
+        expect(pageviews).to eq("2")
+      end
+
+      it "excludes admin pages from top pages list" do
+        visit = Ahoy::Visit.create!(visit_token: "v1", visitor_token: "vis1", started_at: visit_time, landing_page: "https://example.com/")
+        Ahoy::Event.create!(visit: visit, name: "$view", time: visit_time, properties: { "page" => "/" })
+        Ahoy::Event.create!(visit: visit, name: "$view", time: visit_time, properties: { "page" => "/admin/dashboard" })
+
+        get admin_analytics_path, params: { month: month }
+        expect(response.body).not_to include("/admin/dashboard")
+      end
+    end
+
     context "when not authenticated" do
       it "redirects to login" do
         get admin_analytics_path
