@@ -77,7 +77,14 @@
                   cell_style = nil
                 end
               %>
-              <div class="flex-1 h-4 rounded-sm <%= cell_class %> <%= "proj sched-cell cursor-pointer #{day[:project_ids].map { |id| "proj-#{id}" }.join(' ')}" if has_projects %>"
+              <%
+                stripe_class = if day[:count] >= 3
+                  "sched-triple"
+                elsif day[:count] == 2
+                  "sched-double"
+                end
+              %>
+              <div class="flex-1 h-4 rounded-sm <%= cell_class %> <%= stripe_class %> <%= "proj sched-cell cursor-pointer #{day[:project_ids].map { |id| "proj-#{id}" }.join(' ')}" if has_projects %>"
                    <% if cell_style %>style="<%= cell_style %>"<% end %>
                    title="<%= day[:date].strftime('%a, %b %-d') %>: <%= day[:count] %> project<%= day[:count] != 1 ? 's' : '' %>"
                    <% if has_projects %>data-projects="<%= day[:project_ids].join(',') %>"<% end %>></div>
@@ -108,6 +115,23 @@
   #dash-schedule.highlighting .proj.dimmed { opacity: 0.15; }
   #dash-schedule.highlighting .sched-cell.highlighted { filter: brightness(1.35) saturate(1.3); outline: 2px solid rgba(0,0,0,0.15); outline-offset: -1px; }
   #dash-schedule.highlighting .proj-key.highlighted { background-color: color-mix(in srgb, var(--proj-color) 20%, transparent); font-weight: 600; }
+  .sched-double {
+    background-image: repeating-linear-gradient(
+      135deg, transparent, transparent 2px,
+      rgba(255,255,255,0.45) 2px, rgba(255,255,255,0.45) 4px
+    );
+  }
+  .sched-triple {
+    background-image:
+      repeating-linear-gradient(
+        135deg, transparent, transparent 2px,
+        rgba(255,255,255,0.4) 2px, rgba(255,255,255,0.4) 4px
+      ),
+      repeating-linear-gradient(
+        45deg, transparent, transparent 2px,
+        rgba(255,255,255,0.4) 2px, rgba(255,255,255,0.4) 4px
+      );
+  }
 </style>
 
 <script>
@@ -116,8 +140,16 @@
     if (!container) return;
 
     var urlMap = {};
+    var colorMap = {};
     container.querySelectorAll("a[data-projects]").forEach(function(a) {
       urlMap[a.dataset.projects] = a.getAttribute("href");
+    });
+    container.querySelectorAll(".proj-key").forEach(function(el) {
+      var dot = el.querySelector("[style*='background-color']");
+      if (!dot) return;
+      var color = dot.style.backgroundColor;
+      var m = el.className.match(/proj-(\d+)/);
+      if (m) colorMap[m[1]] = color;
     });
 
     container.addEventListener("click", function(e) {
@@ -129,10 +161,15 @@
 
     function highlight(ids) {
       container.classList.add("highlighting");
+      var projColor = colorMap[ids[0]] || null;
       container.querySelectorAll(".proj").forEach(function(el) {
         var match = ids.some(function(id) { return el.classList.contains("proj-" + id); });
         el.classList.toggle("highlighted", match);
         el.classList.toggle("dimmed", !match);
+        if (match && projColor && el.classList.contains("sched-cell") && ids.length === 1) {
+          if (!el.dataset.origBg) el.dataset.origBg = el.style.backgroundColor;
+          el.style.backgroundColor = projColor;
+        }
       });
     }
 
@@ -140,6 +177,10 @@
       container.classList.remove("highlighting");
       container.querySelectorAll(".proj").forEach(function(el) {
         el.classList.remove("highlighted", "dimmed");
+        if (el.dataset.origBg) {
+          el.style.backgroundColor = el.dataset.origBg;
+          delete el.dataset.origBg;
+        }
       });
     }
 
