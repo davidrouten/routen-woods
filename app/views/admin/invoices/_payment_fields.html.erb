@@ -1,0 +1,30 @@
+<div class="nested-form-item flex flex-wrap gap-3 items-end mb-3 p-3 border border-gray-200 rounded-lg" data-nested-form-target="item">
+  <div class="w-28">
+    <%= f.label :amount, class: "block text-xs font-medium text-gray-600 mb-1" %>
+    <%= f.number_field :amount, step: 0.01, min: 0, class: "input-admin w-full text-sm", required: true %>
+  </div>
+  <div class="w-36">
+    <%= f.label :paid_at, "Date Paid", class: "block text-xs font-medium text-gray-600 mb-1" %>
+    <%= f.date_field :paid_at, class: "input-admin w-full text-sm", required: true, value: f.object.paid_at&.to_date || Date.current %>
+  </div>
+  <div class="w-32">
+    <%= f.label :payment_method, "Method", class: "block text-xs font-medium text-gray-600 mb-1" %>
+    <%= f.select :payment_method, [["Cash", "cash"], ["Check", "check"], ["Credit Card", "credit_card"], ["Bank Transfer", "bank_transfer"], ["Venmo", "venmo"], ["Zelle", "zelle"], ["Other", "other"]], { include_blank: "—" }, class: "input-admin w-full text-sm" %>
+  </div>
+  <div class="w-28">
+    <%= f.label :reference_number, "Ref #", class: "block text-xs font-medium text-gray-600 mb-1" %>
+    <%= f.text_field :reference_number, class: "input-admin w-full text-sm", placeholder: "Check #" %>
+  </div>
+  <div class="flex-1 min-w-[120px]">
+    <%= f.label :notes, class: "block text-xs font-medium text-gray-600 mb-1" %>
+    <%= f.text_field :notes, class: "input-admin w-full text-sm", placeholder: "Optional notes" %>
+  </div>
+  <div class="flex items-center gap-1 mb-1">
+    <%= f.check_box :deposit, class: "rounded border-gray-300 text-accent focus:ring-accent" %>
+    <%= f.label :deposit, "Deposit", class: "text-xs font-medium text-gray-600" %>
+  </div>
+  <div>
+    <button type="button" data-action="nested-form#remove" class="text-red-400 hover:text-red-600 text-sm cursor-pointer mb-2">Remove</button>
+    <%= f.hidden_field :_destroy, value: "0", data: { "nested-form-target": "destroy" } %>
+  </div>
+</div>

@@ -29,4 +29,15 @@ FactoryBot.define do
     rate { 0.06 }
     amount { 420.00 }
   end
+
+  factory :payment do
+    association :invoice
+    amount { 2000.00 }
+    paid_at { Time.current }
+    deposit { false }
+
+    trait :deposit do
+      deposit { true }
+    end
+  end
 end

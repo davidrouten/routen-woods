@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_30_235859) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_05_165124) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -140,11 +140,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_30_235859) do
   end
 
   create_table "invoices", force: :cascade do |t|
-    t.decimal "amount_paid", precision: 10, scale: 2, default: "0.0"
-    t.datetime "balance_paid_at"
     t.datetime "created_at", null: false
     t.decimal "deposit_amount", precision: 10, scale: 2
-    t.datetime "deposit_paid_at"
     t.date "due_date"
     t.decimal "fees_total", precision: 10, scale: 2, default: "0.0"
     t.string "invoice_number", null: false
@@ -274,6 +271,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_30_235859) do
     t.index ["order_form_id"], name: "index_order_line_items_on_order_form_id"
   end
 
+  create_table "payments", force: :cascade do |t|
+    t.decimal "amount", precision: 10, scale: 2, null: false
+    t.datetime "created_at", null: false
+    t.boolean "deposit", default: false, null: false
+    t.bigint "invoice_id", null: false
+    t.text "notes"
+    t.datetime "paid_at", null: false
+    t.string "payment_method"
+    t.string "reference_number"
+    t.datetime "updated_at", null: false
+    t.index ["invoice_id"], name: "index_payments_on_invoice_id"
+  end
+
   create_table "permissions", force: :cascade do |t|
     t.string "action", null: false
     t.datetime "created_at", null: false
@@ -372,6 +382,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_30_235859) do
   add_foreign_key "notification_preferences", "users"
   add_foreign_key "order_forms", "projects"
   add_foreign_key "order_line_items", "order_forms"
+  add_foreign_key "payments", "invoices"
   add_foreign_key "projects", "customers"
   add_foreign_key "projects", "leads"
   add_foreign_key "projects", "users", column: "assigned_to_id"

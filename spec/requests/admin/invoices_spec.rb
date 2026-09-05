@@ -88,12 +88,49 @@ RSpec.describe "Admin::Invoices", type: :request do
   describe "PATCH /admin/projects/:project_id/invoices/:id/record_payment" do
     let(:invoice) { create(:invoice, :with_items, project: project) }
 
-    it "records a deposit payment" do
+    it "creates a payment record" do
+      expect {
+        patch record_payment_admin_project_invoice_path(project, invoice), params: {
+          payment: { amount: 2000, paid_at: Date.current, deposit: true }
+        }
+      }.to change(Payment, :count).by(1)
+
+      payment = invoice.payments.last
+      expect(payment.amount).to eq(2000.0)
+      expect(payment).to be_deposit
+      expect(invoice.reload).to be_partially_paid
+    end
+
+    it "marks invoice as paid when fully paid" do
       patch record_payment_admin_project_invoice_path(project, invoice), params: {
-        amount: 2000, payment_type: "deposit"
+        payment: { amount: 7000, paid_at: Date.current }
       }
-      expect(invoice.reload.amount_paid).to eq(2000.0)
-      expect(invoice.deposit_paid?).to be true
+      expect(invoice.reload).to be_paid
+    end
+  end
+
+  describe "PATCH /admin/invoices/:id (update with payments)" do
+    let(:invoice) { create(:invoice, :with_items) }
+
+    it "updates status manually" do
+      patch admin_invoice_path(invoice), params: {
+        invoice: { status: "sent" }
+      }
+      expect(invoice.reload).to be_sent
+    end
+
+    it "adds payments via nested attributes" do
+      expect {
+        patch admin_invoice_path(invoice), params: {
+          invoice: {
+            payments_attributes: {
+              "0" => { amount: 1500, paid_at: Date.current, deposit: true, notes: "Deposit check" }
+            }
+          }
+        }
+      }.to change(Payment, :count).by(1)
+
+      expect(invoice.payments.last.notes).to eq("Deposit check")
     end
   end
 
@@ -135,6 +172,28 @@ RSpec.describe "Admin::Invoices", type: :request do
       get pdf_admin_project_invoice_path(project, invoice)
       expect(response).to be_successful
       expect(response.content_type).to include("application/pdf")
+    end
+  end
+
+  describe "GET /admin/invoices/:id (show with payments)" do
+    let(:invoice) { create(:invoice, :with_items, project: project) }
+
+    it "renders the show page with payments" do
+      create(:payment, invoice: invoice, amount: 2000, deposit: true)
+      get admin_invoice_path(invoice)
+      expect(response).to be_successful
+      expect(response.body).to include("Payments")
+    end
+  end
+
+  describe "GET /admin/invoices/:id/edit" do
+    let(:invoice) { create(:invoice, :with_items, project: project) }
+
+    it "renders the edit page with status and payments sections" do
+      create(:payment, invoice: invoice, amount: 2000)
+      get edit_admin_invoice_path(invoice)
+      expect(response).to be_successful
+      expect(response.body).to include("Payments")
     end
   end
 end

@@ -12,7 +12,7 @@
   <div class="bg-white rounded-xl shadow-sm p-6 space-y-5">
     <h2 class="text-lg font-semibold text-gray-900">Invoice Details</h2>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
       <div>
         <%= f.label :issued_date, class: "block text-sm font-semibold text-gray-700 mb-1.5" %>
         <%= f.date_field :issued_date, class: "input-admin w-full" %>
@@ -25,6 +25,12 @@
         <%= f.label :deposit_amount, "Deposit Required", class: "block text-sm font-semibold text-gray-700 mb-1.5" %>
         <%= f.number_field :deposit_amount, step: 0.01, min: 0, class: "input-admin w-full" %>
       </div>
+      <% if invoice.persisted? %>
+        <div>
+          <%= f.label :status, class: "block text-sm font-semibold text-gray-700 mb-1.5" %>
+          <%= f.select :status, Invoice.statuses.keys.map { |s| [s.titleize, s] }, {}, class: "input-admin w-full" %>
+        </div>
+      <% end %>
     </div>
 
     <div class="max-w-xs">
@@ -63,8 +69,34 @@
   </div>
 
   <div class="bg-white rounded-xl shadow-sm p-6">
-    <div class="flex justify-between items-center mb-4">
-      <h2 class="text-lg font-semibold text-gray-900">Taxes & Fees</h2>
+    <% if invoice.persisted? %>
+      <div class="mb-4">
+        <h2 class="text-lg font-semibold text-gray-900">Payments</h2>
+      </div>
+
+      <div id="invoice-payments" data-nested-form-target="paymentContainer">
+        <%= f.fields_for :payments do |pf| %>
+          <%= render "payment_fields", f: pf %>
+        <% end %>
+      </div>
+
+      <template data-nested-form-target="paymentTemplate">
+        <%= f.fields_for :payments, Payment.new, child_index: "NEW_PAYMENT" do |pf| %>
+          <%= render "payment_fields", f: pf %>
+        <% end %>
+      </template>
+
+      <div class="mt-4">
+        <button type="button" data-action="nested-form#addPayment" class="px-4 py-2 text-sm font-medium text-accent bg-accent/10 rounded-lg hover:bg-accent/20 transition cursor-pointer">
+          + Add Payment
+        </button>
+      </div>
+
+      <div class="border-t border-gray-200 mt-6 pt-6"></div>
+    <% end %>
+
+    <div class="<%= 'mt-0' if invoice.persisted? %>">
+      <h2 class="text-lg font-semibold text-gray-900 mb-4">Taxes & Fees</h2>
     </div>
 
     <div id="invoice-adjustments" data-nested-form-target="adjustmentContainer">

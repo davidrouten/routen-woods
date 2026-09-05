@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["container", "template", "item", "destroy", "adjustmentContainer", "adjustmentTemplate"]
+  static targets = ["container", "template", "item", "destroy", "adjustmentContainer", "adjustmentTemplate", "paymentContainer", "paymentTemplate"]
 
   add() {
     const content = this.templateTarget.innerHTML.replace(/NEW_RECORD/g, new Date().getTime())
@@ -11,6 +11,11 @@ export default class extends Controller {
   addAdjustment() {
     const content = this.adjustmentTemplateTarget.innerHTML.replace(/NEW_ADJUSTMENT/g, new Date().getTime())
     this.adjustmentContainerTarget.insertAdjacentHTML("beforeend", content)
+  }
+
+  addPayment() {
+    const content = this.paymentTemplateTarget.innerHTML.replace(/NEW_PAYMENT/g, new Date().getTime())
+    this.paymentContainerTarget.insertAdjacentHTML("beforeend", content)
   }
 
   remove(event) {

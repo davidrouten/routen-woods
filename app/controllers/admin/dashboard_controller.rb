@@ -14,10 +14,9 @@ module Admin
       @booked_revenue = Project.where(id: booked_project_ids).sum(:agreed_price)
 
       active_invoices = Invoice.where(project_id: booked_project_ids)
-      @total_outstanding = active_invoices.sum("total - amount_paid")
+      @total_outstanding = active_invoices.total_outstanding
 
-      month_start = Date.current.beginning_of_month
-      @collected_this_month = Invoice.where("deposit_paid_at >= ? OR balance_paid_at >= ?", month_start, month_start).sum(:amount_paid)
+      @collected_this_month = Invoice.total_collected_since(Date.current.beginning_of_month)
     end
   end
 end

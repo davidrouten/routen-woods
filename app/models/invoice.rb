@@ -26,11 +26,21 @@ class Invoice < ApplicationRecord
   belongs_to :project, optional: true
   has_many :line_items, class_name: "InvoiceLineItem", dependent: :destroy
   has_many :adjustments, class_name: "InvoiceAdjustment", dependent: :destroy
+  has_many :payments, dependent: :destroy
 
   accepts_nested_attributes_for :line_items, allow_destroy: true, reject_if: :all_blank
   accepts_nested_attributes_for :adjustments, allow_destroy: true, reject_if: :all_blank
+  accepts_nested_attributes_for :payments, allow_destroy: true, reject_if: :all_blank
 
   validates :invoice_number, presence: true, uniqueness: true
+
+  def self.total_outstanding
+    sum(:total) - Payment.where(invoice_id: select(:id)).sum(:amount)
+  end
+
+  def self.total_collected_since(date)
+    Payment.where(invoice_id: select(:id)).where("paid_at >= ?", date).sum(:amount)
+  end
 
   before_validation :generate_invoice_number, on: :create, if: -> { invoice_number.blank? }
 
@@ -42,29 +52,36 @@ class Invoice < ApplicationRecord
     save!
   end
 
+  def amount_paid
+    payments.sum(:amount)
+  end
+
   def balance_due
     total - amount_paid
   end
 
   def deposit_paid?
-    deposit_paid_at.present?
+    deposit_amount.present? && deposit_amount > 0 && payments.where(deposit: true).sum(:amount) >= deposit_amount
   end
 
   def fully_paid?
-    amount_paid >= total
+    amount_paid >= total && total > 0
   end
 
-  def record_payment!(amount, type:)
-    self.amount_paid += amount
-    case type
-    when :deposit
-      self.deposit_paid_at = Time.current
-      self.status = :partially_paid
-    when :balance
-      self.balance_paid_at = Time.current
-      self.status = :paid if fully_paid?
+  def update_payment_status!
+    if payments.any? && balance_due <= 0
+      mark_as_paid!
+    elsif payments.any?
+      mark_as_partially_paid!
     end
-    save!
+  end
+
+  def mark_as_paid!
+    update!(status: :paid) unless paid?
+  end
+
+  def mark_as_partially_paid!
+    update!(status: :partially_paid) unless partially_paid?
   end
 
   private

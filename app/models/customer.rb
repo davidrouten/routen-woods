@@ -30,7 +30,7 @@ class Customer < ApplicationRecord
   end
 
   def total_collected
-    invoices.sum(:amount_paid)
+    invoices.joins(:payments).sum("payments.amount")
   end
 
   def total_outstanding

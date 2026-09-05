@@ -39,11 +39,13 @@ RSpec.describe Customer, type: :model do
   end
 
   describe "#total_collected" do
-    it "sums amount_paid across invoices" do
+    it "sums payments across invoices" do
       customer = create(:customer)
       project = create(:project, customer: customer)
-      create(:invoice, project: project, amount_paid: 500, total: 1000)
-      create(:invoice, project: project, amount_paid: 300, total: 800)
+      inv1 = create(:invoice, project: project, total: 1000)
+      inv2 = create(:invoice, project: project, total: 800)
+      create(:payment, invoice: inv1, amount: 500)
+      create(:payment, invoice: inv2, amount: 300)
 
       expect(customer.total_collected).to eq(800)
     end
@@ -53,7 +55,8 @@ RSpec.describe Customer, type: :model do
     it "returns revenue minus collected" do
       customer = create(:customer)
       project = create(:project, customer: customer, agreed_price: 5000)
-      create(:invoice, project: project, amount_paid: 2000, total: 5000)
+      inv = create(:invoice, project: project, total: 5000)
+      create(:payment, invoice: inv, amount: 2000)
 
       expect(customer.total_outstanding).to eq(3000)
     end

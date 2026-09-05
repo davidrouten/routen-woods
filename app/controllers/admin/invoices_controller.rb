@@ -5,7 +5,7 @@ module Admin
     before_action -> { require_permission!(:manage, :leads) }
 
     def index
-      scope = Invoice.includes(:project, :line_items)
+      scope = Invoice.includes(:project, :line_items, :payments)
       scope = scope.where(status: params[:status]) if params[:status].present?
       @invoices = scope.order(created_at: :desc)
     end
@@ -62,9 +62,7 @@ module Admin
     end
 
     def record_payment
-      amount = params[:amount].to_d
-      type = params[:payment_type]&.to_sym || :balance
-      @invoice.record_payment!(amount, type: type)
+      @invoice.payments.create!(payment_params)
       redirect_to invoice_path_for(@invoice), notice: "Payment recorded."
     end
 
@@ -101,10 +99,15 @@ module Admin
 
     def invoice_params
       params.require(:invoice).permit(
-        :issued_date, :due_date, :deposit_amount, :notes, :project_id,
+        :issued_date, :due_date, :deposit_amount, :notes, :project_id, :status,
         line_items_attributes: [:id, :name, :description, :quantity, :unit_price, :line_type, :position, :_destroy],
-        adjustments_attributes: [:id, :label, :adjustment_type, :rate, :amount, :position, :_destroy]
+        adjustments_attributes: [:id, :label, :adjustment_type, :rate, :amount, :position, :_destroy],
+        payments_attributes: [:id, :amount, :paid_at, :deposit, :notes, :payment_method, :reference_number, :_destroy]
       )
+    end
+
+    def payment_params
+      params.require(:payment).permit(:amount, :paid_at, :deposit, :notes, :payment_method, :reference_number)
     end
   end
 end
