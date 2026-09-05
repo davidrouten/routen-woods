@@ -66,6 +66,7 @@
           <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
           <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase">Qty</th>
           <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase">Unit Price</th>
+          <th class="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase">Tax</th>
           <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase">Total</th>
         </tr>
       </thead>
@@ -76,23 +77,30 @@
             <td class="px-4 py-3 text-gray-600"><%= item.description %></td>
             <td class="px-4 py-3 text-right"><%= item.quantity %></td>
             <td class="px-4 py-3 text-right"><%= number_to_currency(item.unit_price) %></td>
+            <td class="px-4 py-3 text-center"><%= item.taxable? ? "✓" : "" %></td>
             <td class="px-4 py-3 text-right font-medium"><%= number_to_currency(item.total) %></td>
           </tr>
         <% end %>
       </tbody>
       <tfoot class="bg-gray-50">
         <tr>
-          <td colspan="4" class="px-4 py-2 text-right font-medium text-gray-700">Subtotal:</td>
+          <td colspan="5" class="px-4 py-2 text-right font-medium text-gray-700">Subtotal:</td>
           <td class="px-4 py-2 text-right font-medium"><%= number_to_currency(@invoice.subtotal) %></td>
         </tr>
+        <% if @invoice.tax_rate.to_f > 0 %>
+          <tr>
+            <td colspan="5" class="px-4 py-2 text-right text-gray-600">Sales Tax (<%= number_to_percentage(@invoice.tax_rate * 100, precision: 2, strip_insignificant_zeros: true) %>):</td>
+            <td class="px-4 py-2 text-right"><%= number_to_currency(@invoice.tax_total) %></td>
+          </tr>
+        <% end %>
         <% @invoice.adjustments.order(:position).each do |adj| %>
           <tr>
-            <td colspan="4" class="px-4 py-2 text-right text-gray-600"><%= adj.label %>:</td>
-            <td class="px-4 py-2 text-right <%= adj.adjustment_type == 'discount' ? 'text-green-700' : '' %>"><%= number_to_currency(adj.amount) %></td>
+            <td colspan="5" class="px-4 py-2 text-right text-gray-600"><%= adj.label %>:</td>
+            <td class="px-4 py-2 text-right <%= adj.adjustment_type == 'discount' ? 'text-green-700' : '' %>"><%= adj.adjustment_type == 'discount' ? "-#{number_to_currency(adj.amount)}" : number_to_currency(adj.amount) %></td>
           </tr>
         <% end %>
         <tr class="font-bold">
-          <td colspan="4" class="px-4 py-3 text-right text-gray-900">Total:</td>
+          <td colspan="5" class="px-4 py-3 text-right text-gray-900">Total:</td>
           <td class="px-4 py-3 text-right text-gray-900"><%= number_to_currency(@invoice.total) %></td>
         </tr>
       </tfoot>
@@ -148,8 +156,7 @@
     </div>
   <% end %>
 
-  <!-- Taxes & Fees (when no payments yet, show totals summary) -->
-  <% if @invoice.payments.empty? && @invoice.adjustments.any? %>
+  <% if @invoice.payments.empty? %>
     <div class="mt-4 text-sm text-right text-gray-600">
       <p class="font-bold text-gray-900">Balance Due: <%= number_to_currency(@invoice.balance_due) %></p>
     </div>

@@ -96,7 +96,22 @@
     <% end %>
 
     <div class="<%= 'mt-0' if invoice.persisted? %>">
-      <h2 class="text-lg font-semibold text-gray-900 mb-4">Taxes & Fees</h2>
+      <h2 class="text-lg font-semibold text-gray-900 mb-4">Sales Tax</h2>
+    </div>
+
+    <div class="flex items-end gap-4 mb-6">
+      <div class="w-40">
+        <%= f.label :tax_rate, "Tax Rate", class: "block text-xs font-medium text-gray-600 mb-1" %>
+        <div class="relative">
+          <%= f.number_field :tax_rate, step: 0.0001, min: 0, max: 1, class: "input-admin w-full text-sm pr-8", placeholder: "0.06" %>
+          <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">rate</span>
+        </div>
+      </div>
+      <p class="text-xs text-gray-500 pb-2">Applied to line items marked as taxable (e.g. 0.06 = 6%)</p>
+    </div>
+
+    <div class="border-t border-gray-200 pt-6">
+      <h2 class="text-lg font-semibold text-gray-900 mb-4">Fees</h2>
     </div>
 
     <div id="invoice-adjustments" data-nested-form-target="adjustmentContainer">
@@ -113,7 +128,7 @@
 
     <div class="mt-4">
       <button type="button" data-action="nested-form#addAdjustment" class="px-4 py-2 text-sm font-medium text-accent bg-accent/10 rounded-lg hover:bg-accent/20 transition cursor-pointer">
-        + Add Tax/Fee
+        + Add Fee
       </button>
     </div>
   </div>

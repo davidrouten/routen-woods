@@ -24,10 +24,9 @@ FactoryBot.define do
 
   factory :invoice_adjustment do
     association :invoice
-    label { "Sales Tax (6%)" }
-    adjustment_type { "tax" }
-    rate { 0.06 }
-    amount { 420.00 }
+    label { "Permit Fee" }
+    adjustment_type { "fee" }
+    amount { 150.00 }
   end
 
   factory :payment do

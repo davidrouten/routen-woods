@@ -21,10 +21,12 @@ export default class extends Controller {
   remove(event) {
     const item = event.target.closest("[data-nested-form-target='item']")
     const destroyField = item.querySelector("[data-nested-form-target='destroy']")
+    const persisted = item.querySelector("input[type='hidden'][name$='[id]']")
 
-    if (destroyField) {
+    if (destroyField && persisted) {
       destroyField.value = "1"
       item.style.display = "none"
+      item.querySelectorAll("[required]").forEach(input => input.removeAttribute("required"))
     } else {
       item.remove()
     }

@@ -44,11 +44,25 @@ class Invoice < ApplicationRecord
 
   before_validation :generate_invoice_number, on: :create, if: -> { invoice_number.blank? }
 
+  def taxable_subtotal
+    line_items.select(&:taxable?).sum(&:total)
+  end
+
+  def calculated_tax
+    (taxable_subtotal * (tax_rate || 0)).round(2)
+  end
+
+  def discount_total
+    adjustments.where(adjustment_type: "discount").sum(:amount)
+  end
+
   def calculate_totals!
-    self.subtotal = line_items.sum { |li| li.total }
-    self.tax_total = adjustments.where(adjustment_type: "tax").sum(:amount)
+    line_items.reload
+    adjustments.reload
+    self.subtotal = line_items.sum(&:total)
+    self.tax_total = calculated_tax
     self.fees_total = adjustments.where(adjustment_type: "fee").sum(:amount)
-    self.total = subtotal + tax_total + fees_total
+    self.total = subtotal + tax_total + fees_total - discount_total
     save!
   end
 

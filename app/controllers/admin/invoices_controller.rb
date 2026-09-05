@@ -99,8 +99,8 @@ module Admin
 
     def invoice_params
       params.require(:invoice).permit(
-        :issued_date, :due_date, :deposit_amount, :notes, :project_id, :status,
-        line_items_attributes: [:id, :name, :description, :quantity, :unit_price, :line_type, :position, :_destroy],
+        :issued_date, :due_date, :deposit_amount, :notes, :project_id, :status, :tax_rate,
+        line_items_attributes: [:id, :name, :description, :quantity, :unit_price, :line_type, :position, :taxable, :_destroy],
         adjustments_attributes: [:id, :label, :adjustment_type, :rate, :amount, :position, :_destroy],
         payments_attributes: [:id, :amount, :paid_at, :deposit, :notes, :payment_method, :reference_number, :_destroy]
       )

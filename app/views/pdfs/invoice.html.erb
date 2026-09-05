@@ -68,10 +68,16 @@
       <td colspan="4" class="text-right" style="color: #555; font-weight: 500;">Subtotal:</td>
       <td class="text-right" style="font-weight: 500;"><%= number_to_currency(@invoice.subtotal) %></td>
     </tr>
+    <% if @invoice.tax_rate.to_f > 0 %>
+      <tr class="totals-row">
+        <td colspan="4" class="text-right" style="color: #555;">Sales Tax (<%= number_to_percentage(@invoice.tax_rate * 100, precision: 2, strip_insignificant_zeros: true) %>):</td>
+        <td class="text-right"><%= number_to_currency(@invoice.tax_total) %></td>
+      </tr>
+    <% end %>
     <% @invoice.adjustments.order(:position).each do |adj| %>
       <tr class="totals-row">
         <td colspan="4" class="text-right" style="color: #555;"><%= adj.label %>:</td>
-        <td class="text-right" style="<%= 'color: #059669;' if adj.adjustment_type == 'discount' %>"><%= number_to_currency(adj.amount) %></td>
+        <td class="text-right" style="<%= 'color: #059669;' if adj.adjustment_type == 'discount' %>"><%= adj.adjustment_type == 'discount' ? "-#{number_to_currency(adj.amount)}" : number_to_currency(adj.amount) %></td>
       </tr>
     <% end %>
     <tr class="totals-row grand-total">
@@ -117,9 +123,3 @@
   </div>
 <% end %>
 
-<% if @invoice.notes.present? %>
-  <div class="notes">
-    <div class="notes-label">Notes</div>
-    <%= simple_format(@invoice.notes) %>
-  </div>
-<% end %>

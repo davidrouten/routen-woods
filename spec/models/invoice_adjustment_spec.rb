@@ -12,8 +12,13 @@ RSpec.describe InvoiceAdjustment do
       expect(adj).not_to be_valid
     end
 
-    it "only allows tax, fee, or discount" do
+    it "only allows fee or discount" do
       adj = build(:invoice_adjustment, adjustment_type: "bogus")
+      expect(adj).not_to be_valid
+    end
+
+    it "does not allow tax type (tax is computed from invoice rate)" do
+      adj = build(:invoice_adjustment, adjustment_type: "tax")
       expect(adj).not_to be_valid
     end
 

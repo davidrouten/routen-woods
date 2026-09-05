@@ -15,6 +15,12 @@
     <%= f.label :unit_price, "Unit Price", class: "block text-xs font-medium text-gray-600 mb-1" %>
     <%= f.number_field :unit_price, step: 0.01, min: 0, class: "input-admin w-full text-sm", required: true %>
   </div>
+  <div class="flex items-end pb-1">
+    <label class="flex items-center gap-1.5 cursor-pointer">
+      <%= f.check_box :taxable, class: "rounded border-gray-300 text-accent focus:ring-accent" %>
+      <span class="text-xs font-medium text-gray-600">Taxable</span>
+    </label>
+  </div>
   <div>
     <button type="button" data-action="nested-form#remove" class="text-red-400 hover:text-red-600 text-sm cursor-pointer mb-2">Remove</button>
     <%= f.hidden_field :_destroy, value: "0", data: { "nested-form-target": "destroy" } %>
