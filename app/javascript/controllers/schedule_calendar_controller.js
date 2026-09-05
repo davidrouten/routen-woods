@@ -190,7 +190,7 @@ export default class extends Controller {
     }
 
     const barHeight = 6
-    const cellMinHeight = 32
+    const cellMinHeight = 48
 
     let html = `<div class="overflow-x-auto">`
 
@@ -207,7 +207,7 @@ export default class extends Controller {
       const weekProjects = this.projectsInRange(days[0], days[COLS - 1])
       const lanes = this.assignLanes(weekProjects, days)
       const laneCount = Math.max(lanes.maxLane + 1, 0)
-      const rowHeight = Math.max(cellMinHeight, laneCount * (barHeight + 2) + 8)
+      const rowHeight = Math.max(cellMinHeight, 14 + laneCount * (barHeight + 2) + 2)
       const monthDay = days[0].toLocaleDateString("en-US", { month: "short", day: "numeric" })
 
       html += `<div class="relative border-b border-gray-100" style="height: ${rowHeight}px">`
