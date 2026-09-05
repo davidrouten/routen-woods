@@ -92,6 +92,7 @@ Rails.application.routes.draw do
       end
     end
 
+    get "schedule", to: "schedule#index", as: :schedule
     resources :notification_preferences, only: [:index, :create, :update]
     get "analytics", to: "analytics#index", as: :analytics
     resources :testimonials

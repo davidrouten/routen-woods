@@ -126,3 +126,29 @@
 .tooltip:hover::after {
   @apply opacity-100;
 }
+
+/* --- Schedule calendar --- */
+
+.bg-stripes {
+  background-image: repeating-linear-gradient(
+    135deg,
+    transparent,
+    transparent 4px,
+    rgba(255, 255, 255, 0.25) 4px,
+    rgba(255, 255, 255, 0.25) 8px
+  );
+}
+
+.schedule-key:hover .schedule-key-item {
+  opacity: 0.3;
+}
+
+.schedule-key-item {
+  transition: opacity 0.15s, transform 0.15s, font-weight 0.15s;
+}
+
+.schedule-key:hover .schedule-key-item:hover {
+  opacity: 1;
+  font-weight: 700;
+  transform: scale(1.05);
+}

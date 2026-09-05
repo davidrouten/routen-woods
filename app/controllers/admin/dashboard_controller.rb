@@ -17,6 +17,16 @@ module Admin
       @total_outstanding = active_invoices.total_outstanding
 
       @collected_this_month = Invoice.total_collected_since(Date.current.beginning_of_month)
+
+      week_start = Date.current.beginning_of_week(:monday)
+      week_end = week_start + 6.days
+      eight_week_end = week_start + 55.days
+
+      presenter = SchedulePresenter.new(url_helper: self)
+      @week_schedule = presenter.week_schedule(week_start, week_end)
+      @density_grid = presenter.density_grid(week_start)
+      @schedule_key = presenter.key_entries(week_start, eight_week_end)
+      @project_colors = presenter.scheduled_projects.each_with_object({}) { |p, h| h[p.id] = presenter.color_for(p) }
     end
   end
 end

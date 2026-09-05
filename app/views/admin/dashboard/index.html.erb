@@ -20,8 +20,116 @@
   </div>
 </div>
 
-<!-- Status Breakdown -->
+<!-- Schedule Widget -->
 <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-lg font-semibold text-gray-900">This Week</h2>
+    <%= link_to "Full Schedule", admin_schedule_path, class: "text-sm text-accent hover:text-accent-hover" %>
+  </div>
+
+  <!-- This Week strip -->
+  <div class="grid grid-cols-7 gap-2 mb-6">
+    <% @week_schedule.each do |day| %>
+      <div class="text-center">
+        <div class="text-xs font-medium <%= day[:sunday] ? 'text-gray-400' : 'text-gray-500' %> mb-1"><%= day[:date].strftime("%a") %></div>
+        <div class="h-10 rounded-lg flex items-center justify-center text-xs font-medium
+          <%= if day[:sunday]
+                'bg-gray-100 text-gray-400 border border-gray-200'
+              elsif day[:busy]
+                'bg-accent/15 text-accent border border-accent/30'
+              else
+                'bg-gray-50 text-gray-400 border border-gray-200'
+              end %>
+          <%= day[:date] == Date.current ? 'ring-2 ring-accent/40' : '' %>">
+          <%= day[:date].strftime("%-d") %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Project key -->
+  <% if @schedule_key.any? %>
+    <div class="schedule-key flex flex-wrap gap-x-4 gap-y-1.5 mb-6">
+      <% @schedule_key.each do |entry| %>
+        <%= link_to entry[:url], class: "schedule-key-item sched-hl inline-flex items-center gap-1.5 text-xs text-gray-700 transition-opacity",
+            data: { projects: entry[:id].to_s } do %>
+          <span class="w-2.5 h-2.5 rounded-full shrink-0" style="background-color: <%= entry[:color] %>"></span>
+          <span class="truncate"><%= entry[:label] %></span>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <!-- 8-week density grid -->
+  <div id="schedule-outlook">
+    <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">8-Week Outlook</h3>
+    <div class="space-y-1">
+      <% @density_grid.each do |week| %>
+        <div class="flex items-center gap-1">
+          <span class="text-[10px] text-gray-400 w-12 shrink-0 text-right pr-1"><%= week.first[:date].strftime("%b %-d") %></span>
+          <div class="flex gap-0.5 flex-1">
+            <% week.each do |day| %>
+              <%
+                month_shade = day[:month] % 2 == 0 ? "bg-white" : "bg-gray-100"
+                sunday_shade = day[:month] % 2 == 0 ? "bg-gray-50" : "bg-gray-200/60"
+                has_projects = day[:project_ids].any?
+                if day[:sunday]
+                  cell_class = sunday_shade
+                  cell_style = nil
+                elsif has_projects
+                  color = @project_colors[day[:project_ids].first]
+                  alpha = case day[:count]
+                          when 1 then "40"
+                          when 2 then "70"
+                          else "B0"
+                          end
+                  cell_class = nil
+                  cell_style = "background-color: #{color}#{alpha};"
+                else
+                  cell_class = month_shade
+                  cell_style = nil
+                end
+              %>
+              <div class="flex-1 h-4 rounded-sm <%= cell_class %> <%= 'sched-hl cursor-pointer' if has_projects %>"
+                   <% if cell_style %>style="<%= cell_style %>"<% end %>
+                   title="<%= day[:date].strftime('%a, %b %-d') %>: <%= day[:count] %> project<%= day[:count] != 1 ? 's' : '' %>"
+                   <% if has_projects %>data-projects="<%= day[:project_ids].join(',') %>"<% end %>></div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    var container = document.getElementById("schedule-outlook");
+    if (!container) return;
+    container = container.closest(".bg-white");
+    var allHL = container.querySelectorAll(".sched-hl");
+
+    container.addEventListener("mouseover", function(e) {
+      var el = e.target.closest(".sched-hl");
+      if (!el) return;
+      var ids = el.dataset.projects.split(",");
+      allHL.forEach(function(item) {
+        var itemIds = item.dataset.projects.split(",");
+        var match = ids.some(function(id) { return itemIds.indexOf(id) !== -1; });
+        item.style.opacity = match ? "1" : "0.2";
+      });
+    });
+
+    container.addEventListener("mouseout", function(e) {
+      var el = e.target.closest(".sched-hl");
+      if (!el) return;
+      allHL.forEach(function(item) { item.style.opacity = ""; });
+    });
+  })();
+</script>
+
+<!-- Status Breakdown (hidden) -->
+<div class="hidden bg-white rounded-xl shadow-sm p-6 mb-8">
   <h2 class="text-lg font-semibold text-gray-900 mb-4">Leads by Status</h2>
   <div class="flex flex-wrap gap-3">
     <% Lead.statuses.each_key do |status| %>
