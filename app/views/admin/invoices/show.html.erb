@@ -192,7 +192,7 @@
         </div>
         <div>
           <%= f.label :paid_at, "Date Paid", class: "block text-sm font-semibold text-gray-700 mb-1" %>
-          <%= f.date_field :paid_at, value: Date.current, class: "input-admin w-full", required: true, name: "payment[paid_at]" %>
+          <%= f.text_field :paid_at, value: Date.current.iso8601, class: "input-admin w-full", required: true, name: "payment[paid_at]", data: { controller: "flatpickr" } %>
         </div>
       </div>
 

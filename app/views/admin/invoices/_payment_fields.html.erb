@@ -5,7 +5,7 @@
   </div>
   <div class="w-36">
     <%= f.label :paid_at, "Date Paid", class: "block text-xs font-medium text-gray-600 mb-1" %>
-    <%= f.date_field :paid_at, class: "input-admin w-full text-sm", required: true, value: f.object.paid_at&.to_date || Date.current %>
+    <%= f.text_field :paid_at, class: "input-admin w-full text-sm", required: true, value: (f.object.paid_at&.to_date || Date.current).iso8601, data: { controller: "flatpickr" } %>
   </div>
   <div class="w-32">
     <%= f.label :payment_method, "Method", class: "block text-xs font-medium text-gray-600 mb-1" %>

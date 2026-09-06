@@ -97,9 +97,10 @@
 
     <div>
       <%= f.label :scheduled_start_date, "Start Date", class: "block text-sm font-semibold text-gray-700 mb-1.5" %>
-      <%= f.date_field :scheduled_start_date,
+      <%= f.text_field :scheduled_start_date,
+            value: project.scheduled_start_date&.iso8601,
             class: "input-admin w-full md:w-64",
-            data: { schedule_calculator_target: "startDate", action: "change->schedule-calculator#calculate" } %>
+            data: { controller: "flatpickr", schedule_calculator_target: "startDate", action: "change->schedule-calculator#calculate" } %>
     </div>
 
     <div>
