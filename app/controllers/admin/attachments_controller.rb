@@ -1,8 +1,10 @@
 module Admin
   class AttachmentsController < BaseController
-    before_action :set_project
+    before_action :set_attachable
     before_action :set_attachment, only: [:show, :edit, :update, :destroy]
     before_action -> { require_permission!(:manage, :leads) }
+
+    ATTACHABLE_TYPES = %w[Project Invoice OrderForm].freeze
 
     def show
     end
@@ -11,11 +13,9 @@ module Admin
     end
 
     def update
-      new_project_id = attachment_params[:project_id]
-
+      assign_attachable_from_gid
       if @attachment.update(attachment_params)
-        target_project = @attachment.project
-        redirect_to admin_project_attachment_path(target_project, @attachment), notice: "Attachment updated."
+        redirect_to polymorphic_path([:admin, @attachment.attachable, @attachment]), notice: "Attachment updated."
       else
         render :edit, status: :unprocessable_entity
       end
@@ -25,38 +25,54 @@ module Admin
       files = Array(params[:files])
 
       if files.empty?
-        redirect_to admin_project_path(@project), alert: "No files selected."
+        redirect_to polymorphic_path([:admin, @attachable]), alert: "No files selected."
         return
       end
 
       files.each do |file|
-        @project.attachments.create!(
+        @attachable.attachments.create!(
           file: file,
           description: params[:description].presence,
           uploaded_by: current_user
         )
       end
 
-      redirect_to admin_project_path(@project), notice: "#{files.size} #{'file'.pluralize(files.size)} uploaded."
+      redirect_to polymorphic_path([:admin, @attachable]), notice: "#{files.size} #{'file'.pluralize(files.size)} uploaded."
     end
 
     def destroy
       @attachment.destroy
-      redirect_to admin_project_path(@project), notice: "Attachment deleted."
+      redirect_to polymorphic_path([:admin, @attachable]), notice: "Attachment deleted."
     end
 
     private
 
-    def set_project
-      @project = Project.find(params[:project_id])
+    def set_attachable
+      if params[:invoice_id].present?
+        @attachable = Invoice.find(params[:invoice_id])
+      elsif params[:order_form_id].present?
+        @attachable = OrderForm.find(params[:order_form_id])
+      elsif params[:project_id].present?
+        @attachable = Project.find(params[:project_id])
+      end
     end
 
     def set_attachment
-      @attachment = @project.attachments.find(params[:id])
+      @attachment = @attachable.attachments.find(params[:id])
+    end
+
+    def assign_attachable_from_gid
+      gid = params.dig(:attachment, :attachable_gid)
+      return unless gid.present?
+
+      type, id = gid.split("-", 2)
+      return unless ATTACHABLE_TYPES.include?(type) && id.present?
+
+      @attachment.attachable = type.constantize.find(id)
     end
 
     def attachment_params
-      params.require(:attachment).permit(:description, :project_id)
+      params.require(:attachment).permit(:description)
     end
   end
 end

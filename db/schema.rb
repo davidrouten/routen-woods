@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_06_014312) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_06_183432) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -84,12 +84,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_06_014312) do
   end
 
   create_table "attachments", force: :cascade do |t|
+    t.bigint "attachable_id", null: false
+    t.string "attachable_type", null: false
     t.datetime "created_at", null: false
     t.text "description"
-    t.bigint "project_id", null: false
     t.datetime "updated_at", null: false
     t.bigint "uploaded_by_id", null: false
-    t.index ["project_id"], name: "index_attachments_on_project_id"
+    t.index ["attachable_type", "attachable_id"], name: "index_attachments_on_attachable_type_and_attachable_id"
     t.index ["uploaded_by_id"], name: "index_attachments_on_uploaded_by_id"
   end
 
@@ -402,7 +403,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_06_014312) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "attachments", "projects"
   add_foreign_key "attachments", "users", column: "uploaded_by_id"
   add_foreign_key "inbound_leads", "leads"
   add_foreign_key "invoice_adjustments", "invoices"

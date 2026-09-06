@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :attachment do
-    association :project
+    association :attachable, factory: :project
     association :uploaded_by, factory: :user
 
     after(:build) do |attachment|
@@ -19,6 +19,14 @@ FactoryBot.define do
           content_type: "image/jpeg"
         )
       end
+    end
+
+    trait :on_invoice do
+      association :attachable, factory: :invoice
+    end
+
+    trait :on_order_form do
+      association :attachable, factory: :order_form
     end
 
     trait :with_description do

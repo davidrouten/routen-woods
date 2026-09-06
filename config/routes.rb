@@ -61,6 +61,7 @@ Rails.application.routes.draw do
         patch :receive_order
         get :pdf
       end
+      resources :attachments, only: [:show, :edit, :update, :create, :destroy]
     end
     resources :invoices, only: [:index, :new, :create, :show, :edit, :update, :destroy] do
       member do
@@ -68,6 +69,7 @@ Rails.application.routes.draw do
         patch :record_payment
         get :pdf
       end
+      resources :attachments, only: [:show, :edit, :update, :create, :destroy]
     end
 
     resources :projects do
@@ -82,6 +84,7 @@ Rails.application.routes.draw do
           patch :receive_order
           get :pdf
         end
+        resources :attachments, only: [:show, :edit, :update, :create, :destroy]
       end
       resources :invoices, except: [:index] do
         member do
@@ -89,6 +92,7 @@ Rails.application.routes.draw do
           patch :record_payment
           get :pdf
         end
+        resources :attachments, only: [:show, :edit, :update, :create, :destroy]
       end
       resources :attachments, only: [:show, :edit, :update, :create, :destroy]
     end

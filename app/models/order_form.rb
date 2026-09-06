@@ -7,6 +7,7 @@ class OrderForm < ApplicationRecord
   }
 
   belongs_to :project, optional: true
+  has_many :attachments, as: :attachable, dependent: :destroy
   has_many :line_items, class_name: "OrderLineItem", dependent: :destroy
 
   accepts_nested_attributes_for :line_items, allow_destroy: true, reject_if: :all_blank

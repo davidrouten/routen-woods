@@ -170,6 +170,9 @@
   <% end %>
 </div>
 
+<!-- Attachments -->
+<%= render "admin/attachments/section", attachable: @invoice, attachments: @invoice.attachments.includes(:uploaded_by, file_attachment: :blob).recent %>
+
 <!-- Record Payment Modal Template -->
 <template id="record-payment-template">
   <div data-controller="payment-form"

@@ -82,13 +82,13 @@ RSpec.describe Project do
   describe "attachments" do
     it "has many attachments" do
       project = create(:project)
-      attachment = create(:attachment, project: project)
+      attachment = create(:attachment, attachable: project)
       expect(project.attachments).to include(attachment)
     end
 
     it "destroys attachments when project is destroyed" do
       project = create(:project)
-      create(:attachment, project: project)
+      create(:attachment, attachable: project)
       expect { project.destroy }.to change(Attachment, :count).by(-1)
     end
   end

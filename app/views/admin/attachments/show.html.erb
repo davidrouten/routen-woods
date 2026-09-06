@@ -1,5 +1,5 @@
 <div class="mb-6">
-  <%= link_to "&larr; Back to Project".html_safe, admin_project_path(@project), class: "text-sm text-gray-500 hover:text-gray-700" %>
+  <%= link_to "&larr; Back to #{@attachable.class.model_name.human}".html_safe, polymorphic_path([:admin, @attachable]), class: "text-sm text-gray-500 hover:text-gray-700" %>
 </div>
 
 <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
@@ -7,16 +7,16 @@
     <div>
       <h1 class="text-2xl font-bold text-gray-900"><%= @attachment.filename %></h1>
       <p class="text-gray-500 text-sm">
-        Project: <%= link_to @project.title, admin_project_path(@project), class: "text-accent hover:text-accent-hover" %>
+        <%= @attachable.class.model_name.human %>: <%= link_to @attachable.try(:title) || @attachable.try(:supplier_name) || @attachable.try(:invoice_number), polymorphic_path([:admin, @attachable]), class: "text-accent hover:text-accent-hover" %>
       </p>
     </div>
   </div>
 
   <div class="flex gap-2 mb-6">
-    <%= link_to "Edit", edit_admin_project_attachment_path(@project, @attachment), class: "btn-admin-secondary" %>
+    <%= link_to "Edit", polymorphic_path([:edit, :admin, @attachable, @attachment]), class: "btn-admin-secondary" %>
     <%= link_to "Download", rails_blob_path(@attachment.file, disposition: "attachment"), class: "btn-admin-secondary" %>
     <%= render "shared/confirm_button",
-      url: admin_project_attachment_path(@project, @attachment),
+      url: polymorphic_path([:admin, @attachable, @attachment]),
       method: :delete,
       label: "Delete",
       title: "Delete Attachment",
@@ -59,6 +59,10 @@
       </div>
     <% elsif @attachment.file.content_type == "application/pdf" %>
       <iframe src="<%= rails_blob_path(@attachment.file, disposition: "inline") %>" class="w-full rounded-lg border border-gray-200" style="height: 700px;"></iframe>
+    <% elsif @attachment.text? %>
+      <div class="rounded-lg border border-gray-200 bg-gray-50 p-6 overflow-x-auto">
+        <pre class="text-sm text-gray-800 whitespace-pre-wrap"><%= @attachment.file.download.force_encoding("UTF-8") %></pre>
+      </div>
     <% else %>
       <div class="text-center py-8 text-gray-400">
         <svg class="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

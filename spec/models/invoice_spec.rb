@@ -181,6 +181,20 @@ RSpec.describe Invoice do
     end
   end
 
+  describe "attachments" do
+    it "has many attachments" do
+      invoice = create(:invoice)
+      attachment = create(:attachment, :on_invoice, attachable: invoice)
+      expect(invoice.attachments).to include(attachment)
+    end
+
+    it "destroys attachments when invoice is destroyed" do
+      invoice = create(:invoice)
+      create(:attachment, :on_invoice, attachable: invoice)
+      expect { invoice.destroy }.to change(Attachment, :count).by(-1)
+    end
+  end
+
   describe "#fully_paid?" do
     it "returns true when payments cover the total" do
       invoice = create(:invoice, :with_items)

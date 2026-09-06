@@ -19,6 +19,20 @@ RSpec.describe OrderForm do
     end
   end
 
+  describe "attachments" do
+    it "has many attachments" do
+      order_form = create(:order_form)
+      attachment = create(:attachment, :on_order_form, attachable: order_form)
+      expect(order_form.attachments).to include(attachment)
+    end
+
+    it "destroys attachments when order form is destroyed" do
+      order_form = create(:order_form)
+      create(:attachment, :on_order_form, attachable: order_form)
+      expect { order_form.destroy }.to change(Attachment, :count).by(-1)
+    end
+  end
+
   describe "status transitions" do
     it "#submit! marks as submitted" do
       of = create(:order_form)

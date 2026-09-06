@@ -82,3 +82,6 @@
     </table>
   </div>
 </div>
+
+<!-- Attachments -->
+<%= render "admin/attachments/section", attachable: @order_form, attachments: @order_form.attachments.includes(:uploaded_by, file_attachment: :blob).recent %>
