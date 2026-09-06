@@ -79,6 +79,20 @@ RSpec.describe Project do
     end
   end
 
+  describe "attachments" do
+    it "has many attachments" do
+      project = create(:project)
+      attachment = create(:attachment, project: project)
+      expect(project.attachments).to include(attachment)
+    end
+
+    it "destroys attachments when project is destroyed" do
+      project = create(:project)
+      create(:attachment, project: project)
+      expect { project.destroy }.to change(Attachment, :count).by(-1)
+    end
+  end
+
   describe "#schedule" do
     it "returns a Schedule built from project attributes" do
       project = build(:project,

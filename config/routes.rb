@@ -90,7 +90,7 @@ Rails.application.routes.draw do
           get :pdf
         end
       end
-      resources :attachments, only: [:create, :destroy]
+      resources :attachments, only: [:show, :edit, :update, :create, :destroy]
     end
 
     get "schedule", to: "schedule#index", as: :schedule

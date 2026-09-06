@@ -1,0 +1,71 @@
+<div class="mb-6">
+  <%= link_to "&larr; Back to Project".html_safe, admin_project_path(@project), class: "text-sm text-gray-500 hover:text-gray-700" %>
+</div>
+
+<div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+  <div class="flex justify-between items-start mb-4">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900"><%= @attachment.filename %></h1>
+      <p class="text-gray-500 text-sm">
+        Project: <%= link_to @project.title, admin_project_path(@project), class: "text-accent hover:text-accent-hover" %>
+      </p>
+    </div>
+  </div>
+
+  <div class="flex gap-2 mb-6">
+    <%= link_to "Edit", edit_admin_project_attachment_path(@project, @attachment), class: "btn-admin-secondary" %>
+    <%= link_to "Download", rails_blob_path(@attachment.file, disposition: "attachment"), class: "btn-admin-secondary" %>
+    <%= render "shared/confirm_button",
+      url: admin_project_attachment_path(@project, @attachment),
+      method: :delete,
+      label: "Delete",
+      title: "Delete Attachment",
+      message: "Delete \"#{@attachment.filename}\"? This cannot be undone.",
+      danger: true,
+      button_class: "btn-admin-destructive" %>
+  </div>
+
+  <div class="grid grid-cols-2 gap-4 text-sm mb-6">
+    <div>
+      <p class="text-gray-500">File Size</p>
+      <p class="font-medium"><%= number_to_human_size(@attachment.file_size) %></p>
+    </div>
+    <div>
+      <p class="text-gray-500">Type</p>
+      <p class="font-medium"><%= @attachment.file.content_type %></p>
+    </div>
+    <div>
+      <p class="text-gray-500">Uploaded By</p>
+      <p class="font-medium"><%= @attachment.uploaded_by.full_name %></p>
+    </div>
+    <div>
+      <p class="text-gray-500">Uploaded</p>
+      <p class="font-medium"><%= format_datetime(@attachment.created_at) %></p>
+    </div>
+  </div>
+
+  <% if @attachment.description.present? %>
+    <div class="mb-6 pt-4 border-t border-gray-100">
+      <p class="text-gray-500 text-sm mb-1">Description</p>
+      <p class="text-gray-700 whitespace-pre-line"><%= @attachment.description %></p>
+    </div>
+  <% end %>
+
+  <!-- Preview -->
+  <div class="pt-4 border-t border-gray-100">
+    <% if @attachment.image? %>
+      <div class="rounded-lg overflow-hidden border border-gray-200 inline-block">
+        <%= image_tag rails_blob_path(@attachment.file, disposition: "inline"), class: "max-w-full max-h-[600px]", alt: @attachment.filename %>
+      </div>
+    <% elsif @attachment.file.content_type == "application/pdf" %>
+      <iframe src="<%= rails_blob_path(@attachment.file, disposition: "inline") %>" class="w-full rounded-lg border border-gray-200" style="height: 700px;"></iframe>
+    <% else %>
+      <div class="text-center py-8 text-gray-400">
+        <svg class="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+        </svg>
+        <p>No preview available. <%= link_to "Download file", rails_blob_path(@attachment.file, disposition: "attachment"), class: "text-accent hover:text-accent-hover" %>.</p>
+      </div>
+    <% end %>
+  </div>
+</div>
