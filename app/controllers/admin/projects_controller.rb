@@ -24,6 +24,7 @@ module Admin
       @schedule = @project.schedule
       @order_forms = @project.order_forms.includes(:line_items)
       @invoices = @project.invoices
+      @attachments = @project.attachments.includes(:uploaded_by, file_attachment: :blob).recent
       @notes = @project.notes.includes(:user).reverse_chronological
     end
 

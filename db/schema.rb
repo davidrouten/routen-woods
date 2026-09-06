@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_05_215202) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_06_014312) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -81,6 +81,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_05_215202) do
     t.index ["user_id"], name: "index_ahoy_visits_on_user_id"
     t.index ["visit_token"], name: "index_ahoy_visits_on_visit_token", unique: true
     t.index ["visitor_token", "started_at"], name: "index_ahoy_visits_on_visitor_token_and_started_at"
+  end
+
+  create_table "attachments", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.bigint "project_id", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "uploaded_by_id", null: false
+    t.index ["project_id"], name: "index_attachments_on_project_id"
+    t.index ["uploaded_by_id"], name: "index_attachments_on_uploaded_by_id"
   end
 
   create_table "customers", force: :cascade do |t|
@@ -392,6 +402,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_05_215202) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "attachments", "projects"
+  add_foreign_key "attachments", "users", column: "uploaded_by_id"
   add_foreign_key "inbound_leads", "leads"
   add_foreign_key "invoice_adjustments", "invoices"
   add_foreign_key "invoice_line_items", "invoices"

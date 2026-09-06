@@ -29,6 +29,7 @@ class Project < ApplicationRecord
   belongs_to :customer, optional: true
   has_many :order_forms, dependent: :destroy
   has_many :invoices, dependent: :destroy
+  has_many :attachments, dependent: :destroy
   has_many :notes, as: :notable, dependent: :destroy
 
   has_secure_token :client_token
