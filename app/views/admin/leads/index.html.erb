@@ -20,7 +20,7 @@
   </h1>
   <div class="flex items-center gap-3">
     <% if current_view == :spam && @leads.any? && current_user_can?(:manage, :leads) %>
-      <%= render "shared/confirm_button", url: purge_spam_admin_leads_path, method: :delete, label: "Delete All Spam", title: "Delete All Spam Leads", message: "Permanently delete all #{@pagy.count} spam #{"lead".pluralize(@pagy.count)}? Customers linked only to auto-detected spam leads will also be deleted. This cannot be undone.", confirm_text: "Delete All Spam", danger: true, button_class: "px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition cursor-pointer" %>
+      <%= render "shared/confirm_button", url: purge_spam_admin_leads_path, method: :delete, label: "Delete All Spam", title: "Delete All Spam Leads", message: "Permanently delete all #{@pagy.count} spam #{"lead".pluralize(@pagy.count)}? Customers linked only to auto-detected spam leads will also be deleted. This cannot be undone.", confirm_text: "Delete All Spam", danger: true, button_class: "btn-admin-destructive" %>
     <% end %>
     <%= link_to "New Lead", new_admin_lead_path, class: "btn-admin" %>
   </div>
@@ -57,7 +57,7 @@
     <div class="w-full sm:w-auto sm:ml-auto">
       <%= form_with url: admin_leads_path, method: :get, class: "flex gap-2" do |f| %>
         <%= f.search_field :q, value: params[:q], placeholder: "Search leads...", class: "px-3 py-1.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-accent focus:border-transparent outline-none" %>
-        <%= f.submit "Search", class: "px-3 py-1.5 bg-primary text-white rounded-lg text-sm hover:bg-primary-light transition cursor-pointer" %>
+        <%= f.submit "Search", class: "btn-admin cursor-pointer" %>
       <% end %>
     </div>
   </div>
@@ -76,7 +76,7 @@
         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Temp</th>
         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"><%= sort_link("Location", :city) %></th>
         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"><%= sort_link("Date", :date, default_desc: true, page_default: true) %></th>
-        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+        <th class="px-6 py-3"></th>
       </tr>
     </thead>
     <tbody class="divide-y divide-gray-200">

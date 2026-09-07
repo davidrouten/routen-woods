@@ -17,12 +17,17 @@
             <p class="text-gray-500 text-sm">Customer: <%= link_to @project.customer.full_name, admin_customer_path(@project.customer), class: "text-accent hover:text-accent-hover" %></p>
           <% end %>
         </div>
-        <span class="inline-block px-3 py-1 rounded-full text-sm font-medium <%= project_status_color(@project.status) %>"><%= @project.status.titleize %></span>
-      </div>
-
-      <div class="flex gap-2 mb-4">
-        <%= link_to "Edit", edit_admin_project_path(@project), class: "btn-admin-secondary" %>
-        <%= render "shared/confirm_button", url: admin_project_path(@project), method: :delete, label: "Delete", title: "Delete Project", message: "Permanently delete this project? This cannot be undone.", danger: true, button_class: "btn-admin-destructive" %>
+        <div class="flex items-center gap-3">
+          <span class="inline-block px-3 py-1 rounded-full text-sm font-medium <%= project_status_color(@project.status) %>"><%= @project.status.titleize %></span>
+          <div class="icon-btn-group">
+            <%= link_to edit_admin_project_path(@project), class: "icon-btn", title: "Edit" do %>
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+            <% end %>
+            <%= button_to admin_project_path(@project), method: :delete, form_class: "contents", class: "icon-btn-destructive", title: "Delete", data: { turbo_confirm: "Permanently delete this project? This cannot be undone." } do %>
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+            <% end %>
+          </div>
+        </div>
       </div>
 
       <div class="grid grid-cols-2 gap-4 text-sm">
@@ -218,7 +223,7 @@
         <div class="mb-6">
           <%= form_with url: admin_project_notes_path(@project), id: "note_form", class: "flex gap-3" do |f| %>
             <%= f.text_area :body, placeholder: "Add a note...", rows: 2, class: "flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 input-admin resize-none text-sm", required: true %>
-            <%= f.submit "Add Note", class: "self-end px-4 py-2 bg-primary text-white rounded-lg text-sm hover:bg-primary-light transition cursor-pointer" %>
+            <%= f.submit "Add Note", class: "self-end btn-admin cursor-pointer" %>
           <% end %>
         </div>
       <% end %>
