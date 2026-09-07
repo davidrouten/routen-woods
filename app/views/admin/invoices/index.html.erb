@@ -17,39 +17,39 @@
   <table class="min-w-full divide-y divide-gray-200">
     <thead class="bg-gray-50">
       <tr>
-        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Invoice #</th>
-        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Project</th>
-        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Total</th>
-        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Balance Due</th>
-        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Issued</th>
-        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Due</th>
-        <th class="px-6 py-3"></th>
+        <th class="px-6 py-2 text-left text-xs font-medium text-gray-500 uppercase">Invoice #</th>
+        <th class="px-6 py-2 text-left text-xs font-medium text-gray-500 uppercase">Project</th>
+        <th class="px-6 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+        <th class="px-6 py-2 text-right text-xs font-medium text-gray-500 uppercase">Total</th>
+        <th class="px-6 py-2 text-right text-xs font-medium text-gray-500 uppercase">Balance Due</th>
+        <th class="px-6 py-2 text-left text-xs font-medium text-gray-500 uppercase">Issued</th>
+        <th class="px-6 py-2 text-left text-xs font-medium text-gray-500 uppercase">Due</th>
+        <th class="px-6 py-2"></th>
       </tr>
     </thead>
     <tbody class="divide-y divide-gray-200">
       <% @invoices.each do |invoice| %>
         <tr class="hover:bg-gray-50">
-          <td class="px-6 py-4">
+          <td class="px-6 py-2 whitespace-nowrap">
             <%= link_to (invoice.project ? admin_project_invoice_path(invoice.project, invoice) : admin_invoice_path(invoice)), class: "font-medium text-gray-900 hover:text-accent" do %>
               <%= invoice.invoice_number %>
             <% end %>
           </td>
-          <td class="px-6 py-4 text-sm text-gray-500">
+          <td class="px-6 py-2 text-sm text-gray-500 max-w-xs">
             <% if invoice.project %>
-              <%= link_to invoice.project.title, admin_project_path(invoice.project), class: "hover:text-accent" %>
+              <%= link_to invoice.project.title, admin_project_path(invoice.project), class: "hover:text-accent truncate block" %>
             <% else %>
               <span class="text-gray-400">—</span>
             <% end %>
           </td>
-          <td class="px-6 py-4">
+          <td class="px-6 py-2 whitespace-nowrap">
             <span class="inline-block px-2 py-1 rounded-full text-xs font-medium <%= invoice_status_color(invoice.status) %>"><%= invoice.status.titleize %></span>
           </td>
-          <td class="px-6 py-4 text-sm text-right text-gray-700"><%= number_to_currency(invoice.total) %></td>
-          <td class="px-6 py-4 text-sm text-right text-gray-700"><%= number_to_currency(invoice.balance_due) %></td>
-          <td class="px-6 py-4 text-sm text-gray-500"><%= format_date(invoice.issued_date) %></td>
-          <td class="px-6 py-4 text-sm text-gray-500"><%= format_date(invoice.due_date) %></td>
-          <td class="px-6 py-4">
+          <td class="px-6 py-2 text-sm text-right text-gray-700"><%= number_to_currency(invoice.total) %></td>
+          <td class="px-6 py-2 text-sm text-right text-gray-700"><%= number_to_currency(invoice.balance_due) %></td>
+          <td class="px-6 py-2 text-sm text-gray-500"><%= format_date(invoice.issued_date) %></td>
+          <td class="px-6 py-2 text-sm text-gray-500"><%= format_date(invoice.due_date) %></td>
+          <td class="px-6 py-2">
             <div class="flex justify-end">
               <div class="icon-btn-group">
                 <%= link_to edit_admin_invoice_path(invoice), class: "icon-btn", title: "Edit" do %>

@@ -7,18 +7,18 @@
     <table class="min-w-full divide-y divide-gray-200">
       <thead class="bg-gray-50">
         <tr>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Event</th>
+          <th class="px-6 py-2 text-left text-xs font-medium text-gray-500 uppercase">Event</th>
           <% NotificationPreference::CHANNELS.each do |channel| %>
-            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase"><%= channel.titleize %></th>
+            <th class="px-6 py-2 text-center text-xs font-medium text-gray-500 uppercase"><%= channel.titleize %></th>
           <% end %>
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-200">
         <% NotificationPreference::EVENTS.each do |event| %>
           <tr>
-            <td class="px-6 py-4 font-medium text-gray-900"><%= event.titleize %></td>
+            <td class="px-6 py-2 font-medium text-gray-900"><%= event.titleize %></td>
             <% NotificationPreference::CHANNELS.each do |channel| %>
-              <td class="px-6 py-4 text-center">
+              <td class="px-6 py-2 text-center">
                 <%= check_box_tag "preferences[#{event}][]", channel,
                       @preference.channels_for(event).include?(channel.to_sym),
                       class: "rounded text-accent focus:ring-accent",

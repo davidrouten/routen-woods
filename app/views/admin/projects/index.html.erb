@@ -18,41 +18,41 @@
   <table class="min-w-full divide-y divide-gray-200">
     <thead class="bg-gray-50">
       <tr>
-        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"><%= sort_link("Project", :project) %></th>
-        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"><%= sort_link("Client", :client) %></th>
-        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"><%= sort_link("Agreed Price", :price, default_desc: true) %></th>
-        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"><%= sort_link("Schedule", :schedule, page_default: true) %></th>
-        <th class="px-6 py-3"></th>
+        <th class="px-6 py-2 text-left text-xs font-medium text-gray-500 uppercase"><%= sort_link("Project", :project) %></th>
+        <th class="px-6 py-2 text-left text-xs font-medium text-gray-500 uppercase"><%= sort_link("Client", :client) %></th>
+        <th class="px-6 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+        <th class="px-6 py-2 text-left text-xs font-medium text-gray-500 uppercase"><%= sort_link("Agreed Price", :price, default_desc: true) %></th>
+        <th class="px-6 py-2 text-left text-xs font-medium text-gray-500 uppercase"><%= sort_link("Schedule", :schedule, page_default: true) %></th>
+        <th class="px-6 py-2"></th>
       </tr>
     </thead>
     <tbody class="divide-y divide-gray-200">
       <% @projects.each do |project| %>
         <tr class="hover:bg-gray-50">
-          <td class="px-6 py-4">
-            <%= link_to admin_project_path(project), class: "font-medium text-gray-900 hover:text-accent" do %>
+          <td class="px-6 py-2 max-w-xs">
+            <%= link_to admin_project_path(project), class: "font-medium text-gray-900 hover:text-accent truncate block" do %>
               <%= project.title %>
             <% end %>
           </td>
-          <td class="px-6 py-4 text-sm text-gray-500">
+          <td class="px-6 py-2 text-sm text-gray-500">
             <% if project.lead %>
               <%= project.lead.first_name %> <%= project.lead.last_name %>
             <% end %>
           </td>
-          <td class="px-6 py-4">
+          <td class="px-6 py-2 whitespace-nowrap">
             <span class="inline-block px-2 py-1 rounded-full text-xs font-medium <%= project_status_color(project.status) %>"><%= project.status.titleize %></span>
           </td>
-          <td class="px-6 py-4 text-sm text-gray-700">
+          <td class="px-6 py-2 text-sm text-gray-700">
             <%= project.agreed_price ? number_to_currency(project.agreed_price) : "—" %>
           </td>
-          <td class="px-6 py-4 text-sm text-gray-500">
+          <td class="px-6 py-2 text-sm text-gray-500">
             <% if project.scheduled_start_date %>
               <%= project.scheduled_start_date.strftime("%b %d") %><% if project.scheduled_end_date %> – <%= project.scheduled_end_date.strftime("%b %d") %><% end %>
             <% else %>
               —
             <% end %>
           </td>
-          <td class="px-6 py-4">
+          <td class="px-6 py-2">
             <div class="flex justify-end">
               <div class="icon-btn-group">
                 <%= link_to edit_admin_project_path(project), class: "icon-btn", title: "Edit" do %>

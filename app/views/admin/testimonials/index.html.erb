@@ -9,24 +9,24 @@
   <table class="min-w-full divide-y divide-gray-200">
     <thead class="bg-gray-50">
       <tr>
-        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Author</th>
-        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Rating</th>
-        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Featured</th>
-        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Position</th>
-        <th class="px-6 py-3"></th>
+        <th class="px-6 py-2 text-left text-xs font-medium text-gray-500 uppercase">Author</th>
+        <th class="px-6 py-2 text-left text-xs font-medium text-gray-500 uppercase">Rating</th>
+        <th class="px-6 py-2 text-left text-xs font-medium text-gray-500 uppercase">Featured</th>
+        <th class="px-6 py-2 text-left text-xs font-medium text-gray-500 uppercase">Position</th>
+        <th class="px-6 py-2"></th>
       </tr>
     </thead>
     <tbody class="divide-y divide-gray-200">
       <% @testimonials.each do |t| %>
         <tr class="hover:bg-gray-50">
-          <td class="px-6 py-4">
+          <td class="px-6 py-2">
             <p class="font-medium text-gray-900"><%= t.author_name %></p>
             <p class="text-sm text-gray-500 truncate max-w-xs"><%= truncate(t.body, length: 80) %></p>
           </td>
-          <td class="px-6 py-4 text-accent"><%= "★" * t.rating %></td>
-          <td class="px-6 py-4"><%= t.featured? ? "✓" : "—" %></td>
-          <td class="px-6 py-4 text-gray-500"><%= t.position %></td>
-          <td class="px-6 py-4">
+          <td class="px-6 py-2 text-accent"><%= "★" * t.rating %></td>
+          <td class="px-6 py-2"><%= t.featured? ? "✓" : "—" %></td>
+          <td class="px-6 py-2 text-gray-500"><%= t.position %></td>
+          <td class="px-6 py-2">
             <% if current_user_can?(:manage, :testimonials) %>
               <div class="flex justify-end">
                 <div class="icon-btn-group">

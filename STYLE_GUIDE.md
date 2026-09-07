@@ -99,9 +99,9 @@ For remove buttons on nested form rows (line items, payments, adjustments), use 
 ```
 table.min-w-full.divide-y.divide-gray-200
   thead.bg-gray-50
-    th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
+    th.px-6.py-2.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
   tbody.bg-white.divide-y.divide-gray-200
-    td.px-6.py-4
+    td.px-6.py-2
 ```
 
 ### Row Navigation

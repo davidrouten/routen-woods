@@ -1,5 +1,5 @@
 <tr class="<%= lead.status == 'booked' ? 'bg-orange-50 hover:bg-orange-100' : 'hover:bg-gray-50' %>" id="<%= dom_id(lead) %>">
-  <td class="px-6 py-4">
+  <td class="px-6 py-2">
     <div class="flex items-center gap-1.5">
       <%= link_to admin_lead_path(lead), class: "font-medium text-gray-900 hover:text-accent" do %>
         <%= lead.first_name %> <%= lead.last_name %>
@@ -11,13 +11,13 @@
       <% end %>
     </div>
   </td>
-  <td class="px-6 py-4 text-sm text-gray-500">
+  <td class="px-6 py-2 text-sm text-gray-500">
     <% if lead.email.present? %><p><%= lead.email %></p><% end %>
     <% if lead.phone.present? %><p><%= format_phone(lead.phone) %></p><% end %>
   </td>
-  <td class="px-6 py-4 text-sm text-gray-500"><%= budget_range_label(lead.budget_range) %></td>
-  <td class="px-6 py-4 text-sm text-gray-500"><%= timeframe_label(lead.timeframe) %></td>
-  <td class="px-6 py-4">
+  <td class="px-6 py-2 text-sm text-gray-500"><%= budget_range_label(lead.budget_range) %></td>
+  <td class="px-6 py-2 text-sm text-gray-500"><%= timeframe_label(lead.timeframe) %></td>
+  <td class="px-6 py-2 whitespace-nowrap">
     <% if current_user_can?(:manage, :leads) %>
       <button class="inline-block px-2 py-1 rounded-full text-xs font-medium cursor-pointer hover:ring-2 hover:ring-accent transition <%= status_badge_color(lead.status) %>"
               data-action="click->modal#openContent"
@@ -45,19 +45,19 @@
       <span class="inline-block px-2 py-1 rounded-full text-xs font-medium <%= status_badge_color(lead.status) %>"><%= lead.status.titleize %></span>
     <% end %>
   </td>
-  <td class="px-6 py-4">
+  <td class="px-6 py-2">
     <% if lead.lead_temperature.present? %>
       <span class="inline-flex items-center gap-1 whitespace-nowrap px-2 py-1 rounded-full text-xs font-medium <%= temperature_badge_color(lead.lead_temperature) %>"><%= lead.temperature_emoji %> <%= lead.lead_temperature.capitalize %></span>
     <% end %>
   </td>
-  <td class="px-6 py-4 text-sm text-gray-500">
+  <td class="px-6 py-2 text-sm text-gray-500">
     <% location = [lead.address_city, lead.address_state].compact_blank.join(", ") %>
     <%= location.present? ? location : "—" %>
   </td>
-  <td class="px-6 py-4 text-sm text-gray-500">
+  <td class="px-6 py-2 text-sm text-gray-500">
     <span class="tooltip" data-tip="<%= format_datetime(lead.created_at) %>"><%= time_ago_in_words(lead.created_at) %> ago</span>
   </td>
-  <td class="px-6 py-4">
+  <td class="px-6 py-2">
     <div class="flex justify-end">
       <% if current_user_can?(:manage, :leads) %>
         <% if current_view == :spam %>
