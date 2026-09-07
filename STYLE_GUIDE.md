@@ -24,8 +24,10 @@ Edit/Delete actions use a **joined button group** — a single bordered containe
 | Class | Use | Look |
 |---|---|---|
 | `icon-btn-group` | Wrapper container | Rounded border, divider between children |
+| `icon-btn-group-xs` | Wrapper for inline contexts (attachments) | Same, smaller padding (p-1.5), w-3.5 icons |
 | `icon-btn` | Edit/secondary icon | Gold (accent) icon, gold tint on hover |
 | `icon-btn-destructive` | Delete/destructive icon | Red icon, red tint on hover |
+| `icon-btn-success` | Non-destructive action (Archive) | Green icon, green tint on hover |
 
 ### Index row markup (w-4 icons):
 ```erb

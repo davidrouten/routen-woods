@@ -76,7 +76,7 @@
           </div>
         <% elsif current_view == :archived %>
           <div class="icon-btn-group">
-            <%= button_to restore_admin_lead_path(lead), method: :patch, form_class: "contents", class: "icon-btn", title: "Restore", data: { turbo_confirm: "Restore #{lead.first_name} #{lead.last_name} from archive?" } do %>
+            <%= button_to restore_admin_lead_path(lead), method: :patch, form_class: "contents", class: "icon-btn-success", title: "Restore", data: { turbo_confirm: "Restore #{lead.first_name} #{lead.last_name} from archive?" } do %>
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
             <% end %>
           </div>
@@ -85,7 +85,7 @@
             <%= link_to edit_admin_lead_path(lead), class: "icon-btn", title: "Edit" do %>
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
             <% end %>
-            <%= button_to archive_admin_lead_path(lead), method: :patch, form_class: "contents", class: "icon-btn-destructive", title: "Archive", data: { turbo_confirm: "Archive #{lead.first_name} #{lead.last_name}? You can restore it later from the Archived view." } do %>
+            <%= button_to archive_admin_lead_path(lead), method: :patch, form_class: "contents", class: "icon-btn-success", title: "Archive", data: { turbo_confirm: "Archive #{lead.first_name} #{lead.last_name}? You can restore it later from the Archived view." } do %>
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/></svg>
             <% end %>
             <%= button_to mark_spam_admin_lead_path(lead), method: :patch, form_class: "contents", class: "icon-btn-destructive", title: "Spam", data: { turbo_confirm: "Mark #{lead.first_name} #{lead.last_name} as spam?" } do %>
