@@ -1,8 +1,8 @@
 module Admin
   class CustomersController < BaseController
-    before_action :set_customer, only: [:show, :edit, :update]
+    before_action :set_customer, only: [:show, :edit, :update, :destroy]
     before_action -> { require_permission!(:view, :leads) }, only: [:index, :show, :suggest]
-    before_action -> { require_permission!(:manage, :leads) }, only: [:edit, :update]
+    before_action -> { require_permission!(:manage, :leads) }, only: [:new, :create, :edit, :update, :destroy]
 
     def index
       scope = Customer.left_joins(:leads, :projects)
@@ -37,6 +37,19 @@ module Admin
       @invoices = @customer.invoices.order(created_at: :desc)
     end
 
+    def new
+      @customer = Customer.new
+    end
+
+    def create
+      @customer = Customer.new(customer_params)
+      if @customer.save
+        redirect_to admin_customer_path(@customer), notice: "Customer created."
+      else
+        render :new, status: :unprocessable_entity
+      end
+    end
+
     def edit
     end
 
@@ -46,6 +59,11 @@ module Admin
       else
         render :edit, status: :unprocessable_entity
       end
+    end
+
+    def destroy
+      @customer.destroy
+      redirect_to admin_customers_path, notice: "Customer deleted."
     end
 
     def suggest

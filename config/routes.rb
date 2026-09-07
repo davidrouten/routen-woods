@@ -33,7 +33,7 @@ Rails.application.routes.draw do
     resource :account, only: [:show, :update], controller: "account"
     get "search", to: "search#index"
 
-    resources :customers, only: [:index, :show, :edit, :update] do
+    resources :customers, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
       collection do
         get :suggest
       end

@@ -63,7 +63,7 @@
   </div>
 
   <div class="flex justify-end gap-3">
-    <%= link_to "Cancel", admin_customer_path(customer), class: "btn-admin-secondary" %>
-    <%= f.submit "Update Customer", class: "btn-admin" %>
+    <%= link_to "Cancel", customer.persisted? ? admin_customer_path(customer) : admin_customers_path, class: "btn-admin-secondary" %>
+    <%= f.submit customer.persisted? ? "Update Customer" : "Create Customer", class: "btn-admin" %>
   </div>
 <% end %>

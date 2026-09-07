@@ -109,6 +109,44 @@ RSpec.describe "Admin::Customers", type: :request do
     end
   end
 
+  describe "GET /admin/customers/new" do
+    it "renders the new customer form" do
+      get new_admin_customer_path
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
+  describe "POST /admin/customers" do
+    it "creates a customer with valid params" do
+      expect {
+        post admin_customers_path, params: { customer: { first_name: "New", last_name: "Person", email: "new@example.com" } }
+      }.to change(Customer, :count).by(1)
+      expect(response).to redirect_to(admin_customer_path(Customer.last))
+    end
+
+    it "re-renders new on validation error" do
+      post admin_customers_path, params: { customer: { first_name: "" } }
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+  end
+
+  describe "DELETE /admin/customers/:id" do
+    it "deletes the customer" do
+      customer = create(:customer)
+      expect {
+        delete admin_customer_path(customer)
+      }.to change(Customer, :count).by(-1)
+      expect(response).to redirect_to(admin_customers_path)
+    end
+
+    it "nullifies associated leads" do
+      customer = create(:customer)
+      lead = create(:lead, customer: customer)
+      delete admin_customer_path(customer)
+      expect(lead.reload.customer_id).to be_nil
+    end
+  end
+
   describe "GET /admin/customers/suggest" do
     before do
       allow_any_instance_of(Lead).to receive(:link_to_customer)

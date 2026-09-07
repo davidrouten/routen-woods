@@ -1,5 +1,6 @@
 <div class="flex justify-between items-center mb-6">
   <h1 class="text-2xl font-bold text-gray-900">Customers</h1>
+  <%= link_to "New Customer", new_admin_customer_path, class: "btn-admin" %>
 </div>
 
 <div class="bg-white rounded-xl shadow-sm p-4 mb-6">
@@ -42,6 +43,9 @@
                 <div class="icon-btn-group">
                   <%= link_to edit_admin_customer_path(customer), class: "icon-btn", title: "Edit" do %>
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                  <% end %>
+                  <%= button_to admin_customer_path(customer), method: :delete, form_class: "contents", class: "icon-btn-destructive", title: "Delete", data: { turbo_confirm: "Delete #{customer.full_name}? Their leads and projects will be kept but unlinked." } do %>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                   <% end %>
                 </div>
               </div>
