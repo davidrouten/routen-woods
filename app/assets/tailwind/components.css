@@ -63,6 +63,31 @@
          focus:ring-2 focus:ring-accent focus:border-transparent outline-none;
 }
 
+/* --- Icon Button Group (row actions, show-page header) --- */
+
+.icon-btn-group {
+  @apply inline-flex rounded-lg border border-gray-200 divide-x divide-gray-200 overflow-hidden;
+}
+
+.icon-btn-group .icon-btn {
+  @apply inline-flex items-center justify-center p-2 bg-white text-accent
+         hover:bg-accent/10 transition cursor-pointer;
+}
+
+.icon-btn-group .icon-btn-destructive {
+  @apply inline-flex items-center justify-center p-2 bg-white text-red-400
+         hover:bg-red-50 hover:text-red-600 transition cursor-pointer
+         border-0 rounded-none;
+}
+
+/* Standalone icon buttons (outside a group) */
+
+.icon-btn-destructive {
+  @apply inline-flex items-center justify-center p-1.5 rounded-lg border border-red-200
+         text-red-400 bg-white hover:bg-red-50 hover:text-red-600
+         transition cursor-pointer;
+}
+
 /* --- Section Headings --- */
 
 .section-label {
