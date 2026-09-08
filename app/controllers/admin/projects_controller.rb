@@ -25,14 +25,13 @@ module Admin
     end
 
     def show
-      @schedule = @project.schedule
       if @project.discarded?
-        @order_forms = OrderForm.with_discarded.where(project_id: @project.id).includes(:line_items)
-        @invoices = Invoice.with_discarded.where(project_id: @project.id)
-      else
-        @order_forms = @project.order_forms.includes(:line_items)
-        @invoices = @project.invoices
+        redirect_to admin_projects_path(archived: true), alert: "This project is archived. Restore it to view details."
+        return
       end
+      @schedule = @project.schedule
+      @order_forms = @project.order_forms.includes(:line_items)
+      @invoices = @project.invoices
       @attachments = @project.attachments.includes(:uploaded_by, file_attachment: :blob).recent
       @notes = @project.notes.includes(:user).reverse_chronological
     end
@@ -68,6 +67,7 @@ module Admin
     end
 
     def edit
+      redirect_to admin_projects_path(archived: true), alert: "Restore this project before editing." and return if @project.discarded?
     end
 
     def update

@@ -57,16 +57,14 @@ RSpec.describe "Admin::Projects", type: :request do
   end
 
   describe "GET /admin/projects/:id (archived)" do
-    it "shows discarded invoices and order forms on an archived project" do
-      project = create(:project, title: "Archived Job")
-      invoice = create(:invoice, project: project)
-      order_form = create(:order_form, project: project)
+    it "redirects to archived index when viewing a discarded project" do
+      project = create(:project)
       project.discard!
 
       get admin_project_path(project)
-      expect(response).to be_successful
-      expect(response.body).to include(invoice.invoice_number)
-      expect(response.body).to include(order_form.supplier_name)
+      expect(response).to redirect_to(admin_projects_path(archived: true))
+      follow_redirect!
+      expect(response.body).to include("archived")
     end
 
     it "hides discarded invoices on an active project" do
@@ -79,6 +77,14 @@ RSpec.describe "Admin::Projects", type: :request do
       expect(response).to be_successful
       expect(response.body).to include(kept_invoice.invoice_number)
       expect(response.body).not_to include(discarded_invoice.invoice_number)
+    end
+
+    it "redirects to archived index when trying to edit a discarded project" do
+      project = create(:project)
+      project.discard!
+
+      get edit_admin_project_path(project)
+      expect(response).to redirect_to(admin_projects_path(archived: true))
     end
   end
 
