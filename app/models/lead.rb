@@ -1,4 +1,5 @@
 class Lead < ApplicationRecord
+  include Discard::Model
   include Searchable
 
   searchable :first_name, :last_name, context: "Name"
@@ -57,26 +58,12 @@ class Lead < ApplicationRecord
 
   scope :not_spam, -> { where(spam: false) }
   scope :spam_only, -> { where(spam: true) }
-  scope :not_archived, -> { where(archived_at: nil) }
-  scope :archived_only, -> { where.not(archived_at: nil) }
-  scope :open_leads, -> { not_spam.not_archived.where.not(status: [ :completed, :lost, :lost_no_contact ]) }
+  scope :open_leads, -> { not_spam.kept.where.not(status: [ :completed, :lost, :lost_no_contact ]) }
   scope :by_status, ->(s) { where(status: s) }
   scope :hot, -> { where(lead_temperature: "hot") }
   scope :warm, -> { where(lead_temperature: "warm") }
   scope :cold, -> { where(lead_temperature: "cold") }
   scope :recent, -> { order(created_at: :desc) }
-
-  def archive!
-    update!(archived_at: Time.current)
-  end
-
-  def restore!
-    update!(archived_at: nil)
-  end
-
-  def archived?
-    archived_at.present?
-  end
 
   def auto_detected_spam?
     spam? && spam_score >= SpamDetector::SPAM_THRESHOLD

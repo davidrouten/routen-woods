@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_06_183432) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_08_120937) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -191,7 +191,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_06_183432) do
     t.string "address_street2"
     t.string "address_zip"
     t.float "ai_score", default: 0.0
-    t.datetime "archived_at"
     t.bigint "assigned_to_id"
     t.datetime "booked_at"
     t.string "budget_range"
@@ -200,6 +199,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_06_183432) do
     t.datetime "created_at", null: false
     t.bigint "created_by_id"
     t.bigint "customer_id"
+    t.datetime "discarded_at"
     t.string "email"
     t.string "first_name", null: false
     t.float "form_completion_seconds"

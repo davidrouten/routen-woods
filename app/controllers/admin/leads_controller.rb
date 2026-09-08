@@ -9,11 +9,11 @@ module Admin
       scope = if params[:spam] == "true"
                 Lead.spam_only.includes(:customer)
               elsif params[:archived] == "true"
-                Lead.archived_only
+                Lead.discarded
               elsif params[:filter] == "all"
-                Lead.not_spam.not_archived
+                Lead.not_spam.kept
               elsif params[:status].present?
-                Lead.not_spam.not_archived.by_status(params[:status])
+                Lead.not_spam.kept.by_status(params[:status])
               else
                 Lead.open_leads
               end
@@ -87,7 +87,7 @@ module Admin
     end
 
     def archive
-      @lead.archive!
+      @lead.discard!
       respond_to do |format|
         format.turbo_stream { render turbo_stream: turbo_stream.remove(dom_id(@lead)) }
         format.html { redirect_to admin_leads_path, notice: "Lead archived." }
@@ -95,7 +95,7 @@ module Admin
     end
 
     def restore
-      @lead.restore!
+      @lead.undiscard!
       respond_to do |format|
         format.turbo_stream { render turbo_stream: turbo_stream.remove(dom_id(@lead)) }
         format.html { redirect_to admin_leads_path(archived: true), notice: "Lead restored." }

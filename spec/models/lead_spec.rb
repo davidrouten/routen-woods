@@ -44,6 +44,30 @@ RSpec.describe Lead, type: :model do
     end
   end
 
+  describe "discard (archive)" do
+    let(:lead) { create(:lead) }
+
+    it "can be discarded and undiscarded" do
+      lead.discard!
+      expect(lead).to be_discarded
+      expect(Lead.kept).not_to include(lead)
+      expect(Lead.discarded).to include(lead)
+
+      lead.undiscard!
+      expect(lead).not_to be_discarded
+      expect(Lead.kept).to include(lead)
+    end
+
+    it ".open_leads excludes discarded leads" do
+      active_lead = create(:lead, status: :incoming)
+      discarded_lead = create(:lead, status: :incoming)
+      discarded_lead.discard!
+
+      expect(Lead.open_leads).to include(active_lead)
+      expect(Lead.open_leads).not_to include(discarded_lead)
+    end
+  end
+
   describe "#transition_to!" do
     let(:lead) { create(:lead, status: :incoming) }
     let(:user) { create(:user, :admin) }

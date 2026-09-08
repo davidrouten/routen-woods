@@ -48,6 +48,9 @@ gem "phonelib"
 # Pagination
 gem "pagy"
 
+# Soft deletes
+gem "discard"
+
 # Notifications
 gem "twilio-ruby"
 gem "slack-notifier"
