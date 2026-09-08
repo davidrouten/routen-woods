@@ -1,4 +1,5 @@
 class Invoice < ApplicationRecord
+  include Discard::Model
   include Searchable
 
   searchable :invoice_number, context: "Invoice #"

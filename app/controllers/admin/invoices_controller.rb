@@ -5,7 +5,7 @@ module Admin
     before_action -> { require_permission!(:manage, :leads) }
 
     def index
-      scope = Invoice.includes(:project, :line_items, :payments)
+      scope = Invoice.kept.includes(:project, :line_items, :payments)
       scope = scope.where(status: params[:status]) if params[:status].present?
       @invoices = scope.order(created_at: :desc)
     end

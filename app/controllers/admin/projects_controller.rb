@@ -1,11 +1,15 @@
 module Admin
   class ProjectsController < BaseController
-    before_action :set_project, only: [:show, :edit, :update, :destroy, :transition]
+    before_action :set_project, only: [:show, :edit, :update, :transition, :archive, :restore]
     before_action -> { require_permission!(:view, :leads) }, only: [:index, :show]
-    before_action -> { require_permission!(:manage, :leads) }, only: [:new, :create, :edit, :update, :destroy, :transition]
+    before_action -> { require_permission!(:manage, :leads) }, only: [:new, :create, :edit, :update, :transition, :archive, :restore]
 
     def index
-      scope = Project.includes(:lead, :customer)
+      scope = if params[:archived] == "true"
+                Project.discarded.includes(:lead, :customer)
+              else
+                Project.kept.includes(:lead, :customer)
+              end
       scope = scope.where(status: params[:status]) if params[:status].present?
 
       dir = current_sort.direction
@@ -69,9 +73,14 @@ module Admin
       end
     end
 
-    def destroy
-      @project.destroy
-      redirect_to admin_projects_path, notice: "Project deleted."
+    def archive
+      @project.discard!
+      redirect_to admin_projects_path, notice: "Project archived."
+    end
+
+    def restore
+      @project.undiscard!
+      redirect_to admin_projects_path(archived: true), notice: "Project restored."
     end
 
     def transition

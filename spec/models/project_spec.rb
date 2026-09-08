@@ -107,4 +107,119 @@ RSpec.describe Project do
       expect(sched.work_saturdays).to be false
     end
   end
+
+  describe "discard (archive)" do
+    let(:project) { create(:project) }
+
+    it "can be discarded and undiscarded" do
+      project.discard!
+      expect(project).to be_discarded
+      expect(Project.kept).not_to include(project)
+      expect(Project.discarded).to include(project)
+
+      project.undiscard!
+      expect(project).not_to be_discarded
+      expect(Project.kept).to include(project)
+    end
+
+    it ".active excludes discarded projects" do
+      active = create(:project, status: :in_progress)
+      discarded = create(:project, status: :in_progress)
+      discarded.discard!
+
+      expect(Project.active).to include(active)
+      expect(Project.active).not_to include(discarded)
+    end
+
+    it "cascade-discards invoices when project is discarded" do
+      invoice = create(:invoice, project: project)
+      project.discard!
+      expect(invoice.reload).to be_discarded
+    end
+
+    it "cascade-discards order forms when project is discarded" do
+      order_form = create(:order_form, project: project)
+      project.discard!
+      expect(order_form.reload).to be_discarded
+    end
+
+    it "does not cascade-discard attachments or notes" do
+      attachment = create(:attachment, attachable: project)
+      project.discard!
+      expect(Attachment.exists?(attachment.id)).to be true
+      expect(attachment.reload).to be_present
+    end
+
+    describe "scoped associations" do
+      it "project.invoices returns only kept invoices" do
+        kept_invoice = create(:invoice, project: project)
+        discarded_invoice = create(:invoice, project: project)
+        discarded_invoice.discard!
+
+        expect(project.invoices.reload).to include(kept_invoice)
+        expect(project.invoices.reload).not_to include(discarded_invoice)
+      end
+
+      it "project.discarded_invoices returns only discarded invoices" do
+        kept_invoice = create(:invoice, project: project)
+        discarded_invoice = create(:invoice, project: project)
+        discarded_invoice.discard!
+
+        expect(project.discarded_invoices).to include(discarded_invoice)
+        expect(project.discarded_invoices).not_to include(kept_invoice)
+      end
+
+      it "project.order_forms returns only kept order forms" do
+        kept_of = create(:order_form, project: project)
+        discarded_of = create(:order_form, project: project)
+        discarded_of.discard!
+
+        expect(project.order_forms.reload).to include(kept_of)
+        expect(project.order_forms.reload).not_to include(discarded_of)
+      end
+
+      it "project.discarded_order_forms returns only discarded order forms" do
+        kept_of = create(:order_form, project: project)
+        discarded_of = create(:order_form, project: project)
+        discarded_of.discard!
+
+        expect(project.discarded_order_forms).to include(discarded_of)
+        expect(project.discarded_order_forms).not_to include(kept_of)
+      end
+    end
+  end
+
+  describe "before_destroy guard" do
+    it "blocks destroy when invoices have payments" do
+      project = create(:project)
+      invoice = create(:invoice, project: project)
+      create(:payment, invoice: invoice)
+
+      expect(project.destroy).to be false
+      expect(project.errors[:base]).to include("Cannot delete a project with invoices that have payments")
+      expect(Project.exists?(project.id)).to be true
+    end
+
+    it "blocks destroy even when the invoice is discarded" do
+      project = create(:project)
+      invoice = create(:invoice, project: project)
+      create(:payment, invoice: invoice)
+      invoice.discard!
+
+      expect(project.destroy).to be false
+      expect(Project.exists?(project.id)).to be true
+    end
+
+    it "allows destroy when invoices have no payments" do
+      project = create(:project)
+      create(:invoice, project: project)
+
+      expect { project.destroy }.to change(Project, :count).by(-1)
+    end
+
+    it "allows destroy when project has no invoices" do
+      project = create(:project)
+      expect { project.destroy }.to change(Project, :count).by(-1)
+    end
+  end
 end

@@ -1,4 +1,5 @@
 class OrderForm < ApplicationRecord
+  include Discard::Model
   enum :status, {
     draft: 0,
     submitted: 1,

@@ -1,4 +1,5 @@
 class Project < ApplicationRecord
+  include Discard::Model
   include Searchable
 
   searchable :title, context: "Title"
@@ -27,10 +28,25 @@ class Project < ApplicationRecord
   belongs_to :lead, optional: true
   belongs_to :assigned_to, class_name: "User", optional: true
   belongs_to :customer, optional: true
-  has_many :order_forms, dependent: :destroy
-  has_many :invoices, dependent: :destroy
+  has_many :order_forms, -> { kept }, inverse_of: :project
+  has_many :discarded_order_forms, -> { discarded }, class_name: "OrderForm", inverse_of: :project
+  has_many :invoices, -> { kept }, inverse_of: :project
+  has_many :discarded_invoices, -> { discarded }, class_name: "Invoice", inverse_of: :project
   has_many :attachments, as: :attachable, dependent: :destroy
   has_many :notes, as: :notable, dependent: :destroy
+
+  before_destroy :ensure_no_invoices_with_payments
+  before_destroy :destroy_child_records
+
+  after_discard do
+    invoices.discard_all
+    order_forms.discard_all
+  end
+
+  after_undiscard do
+    discarded_invoices.undiscard_all
+    discarded_order_forms.undiscard_all
+  end
 
   has_secure_token :client_token
 
@@ -64,7 +80,7 @@ class Project < ApplicationRecord
 
   before_create :assign_calendar_color, unless: -> { calendar_color.present? }
 
-  scope :active, -> { where(status: [:scheduled, :in_progress, :blocked]) }
+  scope :active, -> { kept.where(status: [:scheduled, :in_progress, :blocked]) }
   scope :recent, -> { order(created_at: :desc) }
 
   def schedule
@@ -114,5 +130,17 @@ class Project < ApplicationRecord
     used = Project.where.not(calendar_color: [nil, ""]).distinct.pluck(:calendar_color)
     available = CALENDAR_PALETTE - used
     self.calendar_color = available.any? ? available.first : CALENDAR_PALETTE[Project.count % CALENDAR_PALETTE.length]
+  end
+
+  def ensure_no_invoices_with_payments
+    if Invoice.with_discarded.where(project_id: id).joins(:payments).exists?
+      errors.add(:base, "Cannot delete a project with invoices that have payments")
+      throw(:abort)
+    end
+  end
+
+  def destroy_child_records
+    Invoice.with_discarded.where(project_id: id).destroy_all
+    OrderForm.with_discarded.where(project_id: id).destroy_all
   end
 end

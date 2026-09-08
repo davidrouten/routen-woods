@@ -13,10 +13,10 @@ module Admin
       booked_project_ids = @booked_leads.flat_map { |l| l.projects.map(&:id) }
       @booked_revenue = Project.where(id: booked_project_ids).sum(:agreed_price)
 
-      active_invoices = Invoice.where(project_id: booked_project_ids)
+      active_invoices = Invoice.kept.where(project_id: booked_project_ids)
       @total_outstanding = active_invoices.total_outstanding
 
-      @collected_this_month = Invoice.total_collected_since(Date.current.beginning_of_month)
+      @collected_this_month = Invoice.kept.total_collected_since(Date.current.beginning_of_month)
 
       week_start = Date.current.beginning_of_week(:monday)
       week_end = week_start + 6.days

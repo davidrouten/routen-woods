@@ -72,9 +72,11 @@ Rails.application.routes.draw do
       resources :attachments, only: [:show, :edit, :update, :create, :destroy]
     end
 
-    resources :projects do
+    resources :projects, except: [:destroy] do
       member do
         patch :transition
+        patch :archive
+        patch :restore
       end
       resources :notes, only: [:create, :destroy]
       resources :order_forms, except: [:index] do

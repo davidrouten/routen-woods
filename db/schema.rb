@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_08_120937) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_08_121554) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -168,6 +168,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_08_120937) do
   create_table "invoices", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.decimal "deposit_amount", precision: 10, scale: 2
+    t.datetime "discarded_at"
     t.date "due_date"
     t.decimal "fees_total", precision: 10, scale: 2, default: "0.0"
     t.string "invoice_number", null: false
@@ -180,6 +181,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_08_120937) do
     t.decimal "tax_total", precision: 10, scale: 2, default: "0.0"
     t.decimal "total", precision: 10, scale: 2, default: "0.0"
     t.datetime "updated_at", null: false
+    t.index ["discarded_at"], name: "index_invoices_on_discarded_at"
     t.index ["invoice_number"], name: "index_invoices_on_invoice_number", unique: true
     t.index ["project_id"], name: "index_invoices_on_project_id"
   end
@@ -265,6 +267,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_08_120937) do
   create_table "order_forms", force: :cascade do |t|
     t.datetime "confirmed_at"
     t.datetime "created_at", null: false
+    t.datetime "discarded_at"
     t.text "notes"
     t.bigint "project_id"
     t.datetime "received_at"
@@ -272,6 +275,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_08_120937) do
     t.datetime "submitted_at"
     t.string "supplier_name"
     t.datetime "updated_at", null: false
+    t.index ["discarded_at"], name: "index_order_forms_on_discarded_at"
     t.index ["project_id"], name: "index_order_forms_on_project_id"
   end
 
@@ -331,6 +335,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_08_120937) do
     t.bigint "customer_id"
     t.decimal "deposit_amount", precision: 10, scale: 2
     t.text "description"
+    t.datetime "discarded_at"
     t.string "email"
     t.decimal "estimated_duration_days", precision: 5, scale: 1
     t.decimal "estimated_price", precision: 10, scale: 2
@@ -349,6 +354,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_08_120937) do
     t.index ["assigned_to_id"], name: "index_projects_on_assigned_to_id"
     t.index ["client_token"], name: "index_projects_on_client_token", unique: true
     t.index ["customer_id"], name: "index_projects_on_customer_id"
+    t.index ["discarded_at"], name: "index_projects_on_discarded_at"
     t.index ["lead_id"], name: "index_projects_on_lead_id"
     t.index ["status"], name: "index_projects_on_status"
   end

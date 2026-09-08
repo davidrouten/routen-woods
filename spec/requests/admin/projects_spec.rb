@@ -127,11 +127,67 @@ RSpec.describe "Admin::Projects", type: :request do
     end
   end
 
-  describe "DELETE /admin/projects/:id" do
+  describe "PATCH /admin/projects/:id/archive" do
     let!(:project) { create(:project) }
 
-    it "deletes the project" do
-      expect { delete admin_project_path(project) }.to change(Project, :count).by(-1)
+    it "archives the project" do
+      patch archive_admin_project_path(project)
+      expect(project.reload).to be_discarded
+      expect(response).to redirect_to(admin_projects_path)
+    end
+
+    it "cascade-discards invoices" do
+      invoice = create(:invoice, project: project)
+      patch archive_admin_project_path(project)
+      expect(invoice.reload).to be_discarded
+    end
+
+    it "cascade-discards order forms" do
+      order_form = create(:order_form, project: project)
+      patch archive_admin_project_path(project)
+      expect(order_form.reload).to be_discarded
+    end
+  end
+
+  describe "PATCH /admin/projects/:id/restore" do
+    let!(:project) { create(:project) }
+
+    before { project.discard! }
+
+    it "restores the project" do
+      patch restore_admin_project_path(project)
+      expect(project.reload).not_to be_discarded
+      expect(response).to redirect_to(admin_projects_path(archived: true))
+    end
+  end
+
+  describe "GET /admin/projects (archived filter)" do
+    it "excludes archived projects from the default listing" do
+      active = create(:project, title: "Active Project")
+      archived = create(:project, title: "Archived Project")
+      archived.discard!
+
+      get admin_projects_path
+      expect(response.body).to include("Active Project")
+      expect(response.body).not_to include("Archived Project")
+    end
+
+    it "shows only archived projects when filtered" do
+      active = create(:project, title: "Active Project")
+      archived = create(:project, title: "Archived Project")
+      archived.discard!
+
+      get admin_projects_path(archived: true)
+      expect(response.body).to include("Archived Project")
+      expect(response.body).not_to include("Active Project")
+    end
+  end
+
+  describe "DELETE /admin/projects/:id" do
+    it "is not routable (destroy route removed)" do
+      project = create(:project)
+      delete admin_project_path(project)
+      expect(response).not_to be_successful
     end
   end
 end
