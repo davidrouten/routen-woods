@@ -56,6 +56,32 @@ RSpec.describe "Admin::Projects", type: :request do
     end
   end
 
+  describe "GET /admin/projects/:id (archived)" do
+    it "shows discarded invoices and order forms on an archived project" do
+      project = create(:project, title: "Archived Job")
+      invoice = create(:invoice, project: project)
+      order_form = create(:order_form, project: project)
+      project.discard!
+
+      get admin_project_path(project)
+      expect(response).to be_successful
+      expect(response.body).to include(invoice.invoice_number)
+      expect(response.body).to include(order_form.supplier_name)
+    end
+
+    it "hides discarded invoices on an active project" do
+      project = create(:project)
+      kept_invoice = create(:invoice, project: project)
+      discarded_invoice = create(:invoice, project: project)
+      discarded_invoice.discard!
+
+      get admin_project_path(project)
+      expect(response).to be_successful
+      expect(response.body).to include(kept_invoice.invoice_number)
+      expect(response.body).not_to include(discarded_invoice.invoice_number)
+    end
+  end
+
   describe "GET /admin/projects/new" do
     it "renders new form" do
       get new_admin_project_path
