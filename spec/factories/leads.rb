@@ -6,7 +6,7 @@ FactoryBot.define do
     phone { "813-555-0100" }
     services_interested_in { ["cabinet_refacing"] }
     message { "I need my cabinets refaced" }
-    source { "website" }
+    lead_external_source { "website" }
     status { :incoming }
 
     trait :spam do

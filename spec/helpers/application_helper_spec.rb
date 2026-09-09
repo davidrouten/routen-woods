@@ -90,6 +90,30 @@ RSpec.describe ApplicationHelper, type: :helper do
     end
   end
 
+  describe "#lead_source_icon" do
+    it "returns an Angi badge for angi source" do
+      result = helper.lead_source_icon("angi")
+      expect(result).to include("svg")
+      expect(result).to include("Angi")
+    end
+
+    it "returns an RW badge for website source" do
+      result = helper.lead_source_icon("website")
+      expect(result).to include("svg")
+      expect(result).to include("Routenwoods")
+    end
+
+    it "returns a dash for unknown sources" do
+      result = helper.lead_source_icon("other")
+      expect(result).to include("—")
+    end
+
+    it "returns a dash for nil source" do
+      result = helper.lead_source_icon(nil)
+      expect(result).to include("—")
+    end
+  end
+
   describe "#format_date" do
     it "returns em dash for nil" do
       expect(helper.format_date(nil)).to eq("—")

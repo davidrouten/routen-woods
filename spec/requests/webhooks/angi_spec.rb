@@ -58,6 +58,12 @@ RSpec.describe "Webhooks::Angi", type: :request do
       expect(inbound.payload["interview"]).to be_an(Array)
     end
 
+    it "enqueues ProcessInboundLeadJob" do
+      expect {
+        post "/webhooks/angi", params: angi_payload.to_json, headers: headers
+      }.to have_enqueued_job(ProcessInboundLeadJob)
+    end
+
     it "rejects requests with wrong API key" do
       post "/webhooks/angi",
         params: angi_payload.to_json,

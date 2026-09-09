@@ -138,8 +138,8 @@ RSpec.describe "Admin::Leads", type: :request do
       patch admin_lead_path(lead), params: {
         lead: {
           first_name: "Janet",
-          lead_source: "Angi",
-          lead_source_reference: "ANG-12345",
+          source: "Angi",
+          lead_external_source_id: "ANG-12345",
           other_service: "Custom pantry",
           address_street: "123 Main St",
           address_city: "Oxford",
@@ -149,8 +149,8 @@ RSpec.describe "Admin::Leads", type: :request do
       }
       lead.reload
       expect(lead.first_name).to eq("Janet")
-      expect(lead.lead_source).to eq("Angi")
-      expect(lead.lead_source_reference).to eq("ANG-12345")
+      expect(lead.source).to eq("Angi")
+      expect(lead.lead_external_source_id).to eq("ANG-12345")
       expect(lead.other_service).to eq("Custom pantry")
       expect(lead.address_street).to eq("123 Main St")
       expect(lead.address_city).to eq("Oxford")

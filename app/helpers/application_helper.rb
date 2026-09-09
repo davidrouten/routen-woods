@@ -96,6 +96,24 @@ module ApplicationHelper
     dt.in_time_zone("Eastern Time (US & Canada)").strftime("%b %d, %Y @ %l:%M%P").squish
   end
 
+  LEAD_SOURCE_ICONS = {
+    InboundLead::SOURCE_ANGI => {
+      svg: '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="24" rx="6" fill="#1DBF73"/><text x="12" y="16.5" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700" fill="white" text-anchor="middle">A</text></svg>'.html_safe.freeze,
+      tooltip: "Angi"
+    },
+    InboundLead::SOURCE_WEBSITE => {
+      svg: '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="12" fill="#D4A843"/><text x="12" y="16" font-family="system-ui, -apple-system, sans-serif" font-size="9" font-weight="700" fill="#1B2A4A" text-anchor="middle">RW</text></svg>'.html_safe.freeze,
+      tooltip: "Routenwoods.com"
+    }
+  }.freeze
+
+  def lead_source_icon(source)
+    config = LEAD_SOURCE_ICONS[source]
+    return tag.span("—", class: "text-gray-400 text-sm") unless config
+
+    tag.span(config[:svg], class: "tooltip inline-flex", data: { tip: config[:tooltip] })
+  end
+
   def format_date(dt)
     return "—" if dt.nil?
     dt.to_date.strftime("%b %d, %Y")

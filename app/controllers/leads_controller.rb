@@ -29,12 +29,12 @@ class LeadsController < ApplicationController
     params.require(:lead).permit(
       :first_name, :last_name, :email, :phone,
       :budget_range, :timeframe, :zip_code, :message,
-      :other_service, :lead_source, :form_page,
+      :other_service, :source, :form_page,
       :address_street, :address_street2, :address_city, :address_state, :address_zip,
       :honeypot_value, :form_completion_seconds,
       services_interested_in: []
     ).merge(
-      source: "website",
+      lead_external_source: InboundLead::SOURCE_WEBSITE,
       ip_address: request.remote_ip,
       landing_page: request.referer,
       referrer: request.referer

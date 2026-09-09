@@ -58,12 +58,15 @@
         <% end %>
         <div>
           <p class="text-gray-500">Source</p>
-          <p class="font-medium"><%= @lead.lead_source.present? ? @lead.lead_source : (@lead.source&.titleize || "—") %></p>
+          <p class="font-medium flex items-center gap-1.5">
+            <%= lead_source_icon(@lead.lead_external_source) %>
+            <%= @lead.source.present? ? @lead.source : (@lead.lead_external_source&.titleize || "—") %>
+          </p>
         </div>
-        <% if @lead.lead_source_reference.present? %>
+        <% if @lead.lead_external_source_id.present? %>
           <div>
             <p class="text-gray-500">Reference #</p>
-            <p class="font-medium"><%= @lead.lead_source_reference %></p>
+            <p class="font-medium"><%= @lead.lead_external_source_id %></p>
           </div>
         <% end %>
         <% if @lead.customer.present? %>

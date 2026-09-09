@@ -4,11 +4,12 @@ module Webhooks
 
     def create
       inbound = InboundLead.create!(
-        source: "angi",
+        source: InboundLead::SOURCE_ANGI,
         external_id: payload_params[:leadOid]&.to_s,
         payload: payload_params.to_unsafe_h
       )
 
+      ProcessInboundLeadJob.perform_later(inbound)
       Rails.logger.info("[AngiWebhook] Saved InboundLead##{inbound.id} (leadOid=#{inbound.external_id})")
 
       render json: { status: "success" }

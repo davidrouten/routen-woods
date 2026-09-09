@@ -48,6 +48,7 @@ class Lead < ApplicationRecord
   belongs_to :assigned_to, class_name: "User", optional: true
   belongs_to :created_by, class_name: "User", optional: true
   belongs_to :customer, optional: true
+  has_many :inbound_leads, dependent: :nullify
   has_many :notes, as: :notable, dependent: :destroy
   has_many :status_changes, dependent: :destroy
   has_many :projects, dependent: :nullify

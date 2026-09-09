@@ -1,4 +1,7 @@
 class InboundLead < ApplicationRecord
+  SOURCE_ANGI = "angi"
+  SOURCE_WEBSITE = "website"
+
   belongs_to :lead, optional: true
 
   validates :source, presence: true

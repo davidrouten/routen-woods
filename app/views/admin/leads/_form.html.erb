@@ -107,12 +107,12 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
       <div>
-        <%= f.label :lead_source, "Lead Source", class: "block text-sm font-semibold text-gray-700 mb-1.5" %>
-        <%= f.select :lead_source, Lead::LEAD_SOURCES.map { |s| [s, s] }, { include_blank: "Select source..." }, class: "input-admin w-full" %>
+        <%= f.label :source, "Lead Source", class: "block text-sm font-semibold text-gray-700 mb-1.5" %>
+        <%= f.select :source, Lead::LEAD_SOURCES.map { |s| [s, s] }, { include_blank: "Select source..." }, class: "input-admin w-full" %>
       </div>
       <div>
-        <%= f.label :lead_source_reference, "Reference #", class: "block text-sm font-semibold text-gray-700 mb-1.5" %>
-        <%= f.text_field :lead_source_reference, class: "input-admin w-full", placeholder: "Angi lead #, referral name, etc." %>
+        <%= f.label :lead_external_source_id, "Reference #", class: "block text-sm font-semibold text-gray-700 mb-1.5" %>
+        <%= f.text_field :lead_external_source_id, class: "input-admin w-full", placeholder: "Angi lead #, referral name, etc." %>
       </div>
     </div>
 
