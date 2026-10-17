@@ -76,7 +76,7 @@ class SchedulePresenter
   end
 
   def color_for(project)
-    project.calendar_color.presence || PALETTE[project.id % PALETTE.length]
+    project.calendar_color.presence || PALETTE[project.id.sum % PALETTE.length]
   end
 
   private

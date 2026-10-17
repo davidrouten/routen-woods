@@ -10,11 +10,8 @@ class Invoice < ApplicationRecord
   end
 
   def search_url
-    if project_id
-      "/admin/projects/#{project_id}/invoices/#{id}"
-    else
-      "/admin/invoices/#{id}"
-    end
+    helpers = Rails.application.routes.url_helpers
+    project ? helpers.admin_project_invoice_path(project, self) : helpers.admin_invoice_path(self)
   end
 
   enum :status, {

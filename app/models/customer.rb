@@ -10,7 +10,7 @@ class Customer < ApplicationRecord
   end
 
   def search_url
-    "/admin/customers/#{id}"
+    Rails.application.routes.url_helpers.admin_customer_path(self)
   end
 
   has_many :leads, dependent: :nullify

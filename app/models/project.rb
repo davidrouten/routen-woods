@@ -14,7 +14,7 @@ class Project < ApplicationRecord
   end
 
   def search_url
-    "/admin/projects/#{id}"
+    Rails.application.routes.url_helpers.admin_project_path(self)
   end
 
   enum :status, {
