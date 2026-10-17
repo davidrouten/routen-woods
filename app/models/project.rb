@@ -70,7 +70,7 @@ class Project < ApplicationRecord
     "Forest"      => "#166534",
     "Brown"       => "#78350F",
     "Silver"      => "#9CA3AF",
-    "Slate"       => "#64748B",
+    "Slate"       => "#64748B"
   }.freeze
 
   CALENDAR_PALETTE = CALENDAR_COLORS.values.freeze

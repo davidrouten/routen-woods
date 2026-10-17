@@ -68,14 +68,14 @@ module Admin
 
     def suggest
       matches = if params[:q].present?
-        q = "%#{params[:q]}%"
-        Customer.where(
-          "first_name ILIKE :q OR last_name ILIKE :q OR email ILIKE :q OR phone ILIKE :q",
-          q: q
-        ).limit(5)
-      else
-        CustomerMatcher.find_matches(email: params[:email], phone: params[:phone])
-      end
+                  q = "%#{params[:q]}%"
+                  Customer.where(
+                    "first_name ILIKE :q OR last_name ILIKE :q OR email ILIKE :q OR phone ILIKE :q",
+                    q: q
+                  ).limit(5)
+                else
+                  CustomerMatcher.find_matches(email: params[:email], phone: params[:phone])
+                end
 
       render json: matches.map { |c|
         {

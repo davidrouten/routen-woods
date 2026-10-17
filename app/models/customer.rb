@@ -22,7 +22,7 @@ class Customer < ApplicationRecord
   scope :recent, -> { order(created_at: :desc) }
 
   def full_name
-    [ first_name, last_name ].compact_blank.join(" ")
+    [first_name, last_name].compact_blank.join(" ")
   end
 
   def total_revenue

@@ -50,7 +50,6 @@ RSpec.describe SpamCleanupService do
         expect(Customer.find_by(id: customer.id)).to be_nil
         expect(lead2.reload.customer_id).to be_nil
       end
-
     end
 
     context "manually-marked spam lead with customer" do

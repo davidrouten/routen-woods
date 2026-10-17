@@ -60,10 +60,10 @@ class GlobalSearch
       next unless record
 
       context = if note.body.downcase.include?(@query.downcase)
-        "Note: #{snippet(note.body)}"
-      else
-        "Note by #{note.user.full_name}: #{snippet(note.body)}"
-      end
+                  "Note: #{snippet(note.body)}"
+                else
+                  "Note by #{note.user.full_name}: #{snippet(note.body)}"
+                end
 
       add_result(found, record, context)
     end
