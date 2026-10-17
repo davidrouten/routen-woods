@@ -34,6 +34,9 @@ module RoutenWoods
     # in config/environments, which are processed later.
     #
     config.time_zone = "Eastern Time (US & Canada)"
+
+    # Slack (lead posts and ops alerts) stays off unless SLACK_ENABLED=true.
+    config.x.slack_enabled = ENV["SLACK_ENABLED"] == "true"
     # config.eager_load_paths << Rails.root.join("extras")
 
     # Don't generate system test files.

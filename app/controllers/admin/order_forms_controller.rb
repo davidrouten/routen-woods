@@ -81,10 +81,10 @@ module Admin
 
     def set_order_form
       @order_form = if @project
-        @project.order_forms.find(params[:id])
-      else
-        OrderForm.find(params[:id])
-      end
+                      @project.order_forms.find(params[:id])
+                    else
+                      OrderForm.find(params[:id])
+                    end
     end
 
     def order_form_path_for(order_form)

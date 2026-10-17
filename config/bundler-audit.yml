@@ -2,4 +2,6 @@
 # CVEs that are not relevant to the application can be enumerated on the ignore list below.
 
 ignore:
-  - CVE-THAT-DOES-NOT-APPLY
+  # pagy: locale option used in a file path. We never pass a user-supplied locale to pagy.
+  # The fix (pagy >= 43.5.6) requires Ruby 3.3; remove this when upgrading Ruby.
+  - CVE-2026-54659

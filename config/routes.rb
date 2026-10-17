@@ -1,6 +1,11 @@
 Rails.application.routes.draw do
   devise_for :users
 
+  # Background jobs dashboard (admins only)
+  authenticate :user, ->(user) { user.admin? } do
+    mount GoodJob::Engine, at: "/admin/jobs"
+  end
+
   # Public marketing site
   root "pages#home"
   get "about", to: "pages#about"

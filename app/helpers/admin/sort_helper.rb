@@ -15,11 +15,11 @@ module Admin
       next_sort = next_desc ? "-#{col}" : col
       back_to_default = page_default && next_desc == default_desc
 
-      url_params = if back_to_default
-                     request.params.except("sort")
-                   else
-                     request.params.merge(sort: next_sort)
-                   end
+      # Built from the current path and query string only, so a crafted
+      # param (e.g. host=) can't point the link somewhere else.
+      query = request.query_parameters.except("sort")
+      query["sort"] = next_sort unless back_to_default
+      url = query.empty? ? request.path : "#{request.path}?#{query.to_query}"
 
       indicator = if active
                     active_desc ? " ▼" : " ▲"
@@ -29,8 +29,8 @@ module Admin
 
       css = active ? "text-accent" : "text-gray-400"
 
-      link_to url_params, class: "inline-flex items-center gap-1 hover:text-accent transition" do
-        (label + content_tag(:span, indicator, class: "text-xs #{css}")).html_safe
+      link_to url, class: "inline-flex items-center gap-1 hover:text-accent transition" do
+        safe_join([label, content_tag(:span, indicator, class: "text-xs #{css}")])
       end
     end
   end

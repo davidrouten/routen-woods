@@ -62,6 +62,60 @@ RSpec.describe NotificationService do
       end
     end
 
+    context "when multiple users have Slack enabled" do
+      let(:user2) { create(:user) }
+
+      around do |example|
+        Rails.configuration.x.slack_enabled = true
+        example.run
+      ensure
+        Rails.configuration.x.slack_enabled = false
+      end
+
+      before do
+        create(:notification_preference, user: user, preferences: { "status_changed" => %w[slack email] })
+        create(:notification_preference, user: user2, preferences: { "status_changed" => %w[slack email] })
+      end
+
+      it "posts to the shared Slack channel once" do
+        slack = instance_double(Notifiers::SlackNotifier, deliver_later: true)
+        email = instance_double(Notifiers::EmailNotifier, deliver_later: true)
+        allow(Notifiers::SlackNotifier).to receive(:new).and_return(slack)
+        allow(Notifiers::EmailNotifier).to receive(:new).and_return(email)
+
+        NotificationService.notify(:status_changed, lead)
+
+        expect(Notifiers::SlackNotifier).to have_received(:new).once
+      end
+
+      it "still emails each user" do
+        slack = instance_double(Notifiers::SlackNotifier, deliver_later: true)
+        email = instance_double(Notifiers::EmailNotifier, deliver_later: true)
+        allow(Notifiers::SlackNotifier).to receive(:new).and_return(slack)
+        allow(Notifiers::EmailNotifier).to receive(:new).and_return(email)
+
+        NotificationService.notify(:status_changed, lead)
+
+        expect(Notifiers::EmailNotifier).to have_received(:new).twice
+      end
+    end
+
+    context "when Slack is disabled" do
+      before do
+        create(:notification_preference, user: user, preferences: { "status_changed" => %w[slack email] })
+      end
+
+      it "skips Slack but still emails" do
+        email = instance_double(Notifiers::EmailNotifier, deliver_later: true)
+        allow(Notifiers::EmailNotifier).to receive(:new).and_return(email)
+        expect(Notifiers::SlackNotifier).not_to receive(:new)
+
+        NotificationService.notify(:status_changed, lead)
+
+        expect(Notifiers::EmailNotifier).to have_received(:new).once
+      end
+    end
+
     context "when no preferences exist" do
       it "does not deliver anything" do
         expect(Notifiers::EmailNotifier).not_to receive(:new)

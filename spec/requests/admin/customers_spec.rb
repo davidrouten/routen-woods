@@ -180,4 +180,27 @@ RSpec.describe "Admin::Customers", type: :request do
       expect(json[0]["name"]).to eq("Alice Wonder")
     end
   end
+
+  describe "GET /admin/customers sorting" do
+    %w[name email phone leads projects revenue].each do |column|
+      ["", "-"].each do |prefix|
+        it "sorts by #{prefix}#{column}" do
+          create(:customer)
+          get admin_customers_path, params: { sort: "#{prefix}#{column}" }
+          expect(response).to have_http_status(:ok)
+        end
+      end
+    end
+
+    it "sorts by revenue descending" do
+      low = create(:customer, first_name: "Lowrev")
+      high = create(:customer, first_name: "Highrev")
+      create(:project, customer: low, agreed_price: 100)
+      create(:project, customer: high, agreed_price: 9000)
+
+      get admin_customers_path, params: { sort: "-revenue" }
+
+      expect(response.body.index("Highrev")).to be < response.body.index("Lowrev")
+    end
+  end
 end

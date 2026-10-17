@@ -2,7 +2,20 @@
 inherit_gem: { rubocop-rails-omakase: rubocop.yml }
 
 # Overwrite or add rules to create your own house style
-#
-# # Use `[a, [b, c]]` not `[ a, [ b, c ] ]`
-# Layout/SpaceInsideArrayLiteralBrackets:
-#   Enabled: false
+
+# Use `[a, [b, c]]` not `[ a, [ b, c ] ]` (hashes keep `{ a: 1 }`)
+Layout/SpaceInsideArrayLiteralBrackets:
+  EnforcedStyle: no_space
+
+# Align `else`/`end` with `if`/`case`, not with the assigned variable:
+#   scope = if x
+#             a
+#           else
+#             b
+#           end
+Layout/EndAlignment:
+  EnforcedStyleAlignWith: keyword
+
+# Align `when` with `case`
+Layout/CaseIndentation:
+  EnforcedStyle: case

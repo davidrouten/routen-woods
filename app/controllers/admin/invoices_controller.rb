@@ -83,10 +83,10 @@ module Admin
 
     def set_invoice
       @invoice = if @project
-        @project.invoices.find(params[:id])
-      else
-        Invoice.find(params[:id])
-      end
+                   @project.invoices.find(params[:id])
+                 else
+                   Invoice.find(params[:id])
+                 end
     end
 
     def invoice_path_for(invoice)

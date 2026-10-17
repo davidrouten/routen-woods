@@ -16,10 +16,14 @@ class NotificationService
   end
 
   def deliver
+    sent_shared = Set.new
+
     NotificationPreference.includes(:user).find_each do |pref|
       pref.channels_for(@event_name).each do |channel|
         notifier = NOTIFIERS[channel]
-        next unless notifier
+        next unless notifier&.enabled?
+        # Shared channels (one Slack channel for everyone) post once, not once per user.
+        next if notifier.shared? && !sent_shared.add?(channel)
         notifier.new(@event_name, @lead, user: pref.user, **@context).deliver_later
       end
     end

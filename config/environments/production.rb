@@ -34,7 +34,7 @@ Rails.application.configure do
   config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
 
   # Log to STDOUT with the current request id as a default log tag.
-  config.log_tags = [ :request_id ]
+  config.log_tags = [:request_id]
   config.logger   = ActiveSupport::TaggedLogging.logger(STDOUT)
 
   # Change to "debug" to log everything (including potentially personally-identifiable information!).
@@ -49,8 +49,13 @@ Rails.application.configure do
   # Use memory cache store for single-dyno deployment (no separate cache DB needed).
   config.cache_store = :memory_store
 
-  # Use async job adapter for single-dyno deployment (runs jobs in-process).
-  config.active_job.queue_adapter = :async
+  # GoodJob stores jobs in Postgres, so restarts and deploys don't lose them.
+  # :async runs the workers inside the web dyno (no separate worker dyno).
+  config.active_job.queue_adapter = :good_job
+  config.good_job.execution_mode = :async
+  config.good_job.max_threads = 2
+  # Heroku sends SIGKILL 30s after SIGTERM; unfinished jobs stay queued and resume on boot.
+  config.good_job.shutdown_timeout = 25
 
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.delivery_method = :smtp
@@ -73,7 +78,7 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   # Only use :id for inspections in production.
-  config.active_record.attributes_for_inspect = [ :id ]
+  config.active_record.attributes_for_inspect = [:id]
 
   # Enable DNS rebinding protection and other `Host` header attacks.
   # config.hosts = [
