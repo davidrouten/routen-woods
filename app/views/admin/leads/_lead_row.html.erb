@@ -24,10 +24,10 @@
     <% if current_user_can?(:manage, :leads) %>
       <button class="inline-block px-2 py-1 rounded-full text-xs font-medium cursor-pointer hover:ring-2 hover:ring-accent transition <%= status_badge_color(lead.status) %>"
               data-action="click->modal#openContent"
-              data-modal-target="#status_modal_<%= lead.id %>">
+              data-modal-target="#status_modal_<%= lead.public_id %>">
         <%= lead.status.titleize %>
       </button>
-      <template id="status_modal_<%= lead.id %>">
+      <template id="status_modal_<%= lead.public_id %>">
         <h3 class="text-lg font-bold text-gray-900 mb-4">Change Status</h3>
         <p class="text-gray-500 text-sm mb-4"><%= lead.first_name %> <%= lead.last_name %></p>
         <div class="flex flex-wrap gap-2">

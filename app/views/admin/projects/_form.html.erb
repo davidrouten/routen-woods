@@ -9,7 +9,7 @@
     </div>
   <% end %>
 
-  <%= f.hidden_field :lead_id if project.lead_id %>
+  <%= f.hidden_field :lead_id, value: project.lead.public_id if project.lead %>
 
   <div class="bg-white rounded-xl shadow-sm p-6 space-y-5">
     <h2 class="text-lg font-semibold text-gray-900">Project Details</h2>
@@ -32,11 +32,11 @@
 
   <div class="bg-white rounded-xl shadow-sm p-6 space-y-5"
        data-controller="customer-suggest"
-       data-customer-suggest-current-id-value="<%= project.customer_id %>"
+       data-customer-suggest-current-id-value="<%= project.customer&.public_id %>"
        data-customer-suggest-current-name-value="<%= project.customer&.full_name %>"
   >
     <h2 class="text-lg font-semibold text-gray-900">Client Info</h2>
-    <%= f.hidden_field :customer_id, data: { customer_suggest_target: "customerId" } %>
+    <%= f.hidden_field :customer_id, value: project.customer&.public_id, data: { customer_suggest_target: "customerId" } %>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
       <div>

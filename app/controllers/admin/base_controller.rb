@@ -2,6 +2,7 @@ module Admin
   class BaseController < ApplicationController
     before_action :authenticate_user!
     before_action :authorize_access!
+    include LegacyIdRedirect
     layout "admin"
 
     private
@@ -22,6 +23,19 @@ module Admin
       @current_sort ||= SortParam.new(params[:sort])
     end
     helper_method :current_sort
+
+    # Form fields that reference other records carry public IDs. Swap them for
+    # internal ids before assigning; blank stays blank (clears the association).
+    #   resolve_public_ids(lead_params, customer_id: Customer)
+    def resolve_public_ids(attrs, **scopes)
+      scopes.each do |key, scope|
+        key = key.to_s
+        next unless attrs.key?(key)
+
+        attrs[key] = attrs[key].presence && scope.find_public!(attrs[key]).id
+      end
+      attrs
+    end
 
     # ORDER BY nodes for SQL expressions in the current sort direction, so the
     # direction is never interpolated into the SQL string.

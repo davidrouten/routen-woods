@@ -39,7 +39,7 @@ module Admin
     private
 
     def set_testimonial
-      @testimonial = Testimonial.find(params[:id])
+      @testimonial = Testimonial.find_public!(params[:id])
     end
 
     def testimonial_params

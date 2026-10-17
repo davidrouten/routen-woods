@@ -26,7 +26,7 @@ module Admin
       @week_schedule = presenter.week_schedule(week_start, week_end)
       @density_grid = presenter.density_grid(week_start)
       @schedule_key = presenter.key_entries(week_start, eight_week_end)
-      @project_colors = presenter.scheduled_projects.each_with_object({}) { |p, h| h[p.id] = presenter.color_for(p) }
+      @project_colors = presenter.scheduled_projects.each_with_object({}) { |p, h| h[p.public_id] = presenter.color_for(p) }
     end
   end
 end

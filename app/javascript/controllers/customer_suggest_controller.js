@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["email", "phone", "customerArea", "customerId"]
-  static values = { currentName: String, currentId: Number }
+  static values = { currentName: String, currentId: String }
 
   connect() {
     this.timeout = null
@@ -164,7 +164,7 @@ export default class extends Controller {
 
   unlinkCustomer() {
     this.customerIdTarget.value = ""
-    this.currentIdValue = 0
+    this.currentIdValue = ""
     this.currentNameValue = ""
     this.skipNextBlur = true
     this.showSearchField()

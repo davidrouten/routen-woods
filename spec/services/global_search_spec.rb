@@ -127,7 +127,7 @@ RSpec.describe GlobalSearch do
         lead = create(:lead, first_name: "Tom")
         create(:note, notable: lead, user: user, body: "This is a unique findable note")
         results = GlobalSearch.new("unique findable").results
-        expect(results.first[:url]).to eq("/admin/leads/#{lead.id}")
+        expect(results.first[:url]).to eq("/admin/leads/#{lead.public_id}")
       end
     end
 
@@ -229,7 +229,7 @@ RSpec.describe GlobalSearch do
         expect(results.first[:type]).to eq("Project")
         expect(results.first[:title]).to eq("Big Renovation")
         expect(results.first[:subtitle]).to start_with("Note:")
-        expect(results.first[:url]).to eq("/admin/projects/#{project.id}")
+        expect(results.first[:url]).to eq("/admin/projects/#{project.public_id}")
       end
     end
 
@@ -288,13 +288,13 @@ RSpec.describe GlobalSearch do
         project = create(:project, title: "Kitchen Job")
         invoice = create(:invoice, invoice_number: "INV-4000", project: project)
         result = GlobalSearch.new("INV-4000").results.first
-        expect(result[:url]).to eq("/admin/projects/#{project.id}/invoices/#{invoice.id}")
+        expect(result[:url]).to eq("/admin/projects/#{project.public_id}/invoices/#{invoice.public_id}")
       end
 
       it "routes to standalone path when no project" do
         invoice = create(:invoice, invoice_number: "INV-4001", project: nil)
         result = GlobalSearch.new("INV-4001").results.first
-        expect(result[:url]).to eq("/admin/invoices/#{invoice.id}")
+        expect(result[:url]).to eq("/admin/invoices/#{invoice.public_id}")
       end
     end
 

@@ -16,7 +16,7 @@ class SchedulePresenter
   end
 
   def serialize_unscheduled
-    unscheduled_projects.map { |p| { id: p.id, title: p.title, customer_name: customer_name(p), url: project_url(p) } }
+    unscheduled_projects.map { |p| { id: p.public_id, title: p.title, customer_name: customer_name(p), url: project_url(p) } }
   end
 
   def week_schedule(week_start, week_end)
@@ -35,7 +35,7 @@ class SchedulePresenter
           { date: day, count: 0, sunday: true, month: day.month, project_ids: [] }
         else
           on_day = scheduled_projects.select { |p| p.schedule.work_days.include?(day) }
-          { date: day, count: on_day.size, sunday: false, month: day.month, project_ids: on_day.map(&:id) }
+          { date: day, count: on_day.size, sunday: false, month: day.month, project_ids: on_day.map(&:public_id) }
         end
       end
     end
@@ -60,7 +60,7 @@ class SchedulePresenter
 
         start_col = (work_in_week.min - ws).to_i
         end_col = (work_in_week.max - ws).to_i
-        { id: p.id, color: color_for(p), start_col: start_col, end_col: end_col, url: project_url(p), title: p.title }
+        { id: p.public_id, color: color_for(p), start_col: start_col, end_col: end_col, url: project_url(p), title: p.title }
       end
 
       days = (ws..we).map { |d| { date: d, sunday: d.sunday?, month: d.month } }
@@ -84,7 +84,7 @@ class SchedulePresenter
   def serialize_project(project)
     schedule = project.schedule
     {
-      id: project.id,
+      id: project.public_id,
       title: project.title,
       customer_name: customer_name(project),
       start_date: project.scheduled_start_date.iso8601,
@@ -100,7 +100,7 @@ class SchedulePresenter
   def key_entry(project)
     customer = customer_name(project)
     label = customer ? "#{project.title.truncate(50)} (#{customer})" : project.title.truncate(50)
-    { id: project.id, label: label, color: color_for(project), url: project_url(project) }
+    { id: project.public_id, label: label, color: color_for(project), url: project_url(project) }
   end
 
   def project_url(project)

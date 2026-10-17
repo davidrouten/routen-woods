@@ -95,7 +95,7 @@ RSpec.describe "Admin::Projects", type: :request do
     end
 
     it "prefills from lead when lead_id provided" do
-      get new_admin_project_path(lead_id: lead.id)
+      get new_admin_project_path(lead_id: lead.public_id)
       expect(response).to be_successful
       expect(response.body).to include(lead.email)
     end
@@ -105,7 +105,7 @@ RSpec.describe "Admin::Projects", type: :request do
     it "creates a project" do
       expect {
         post admin_projects_path, params: {
-          project: { lead_id: lead.id, title: "New Kitchen Job", email: "client@example.com" }
+          project: { lead_id: lead.public_id, title: "New Kitchen Job", email: "client@example.com" }
         }
       }.to change(Project, :count).by(1)
 
@@ -114,7 +114,7 @@ RSpec.describe "Admin::Projects", type: :request do
 
     it "transitions lead to booked" do
       post admin_projects_path, params: {
-        project: { lead_id: lead.id, title: "New Job" }
+        project: { lead_id: lead.public_id, title: "New Job" }
       }
       expect(lead.reload).to be_booked
     end
@@ -124,7 +124,7 @@ RSpec.describe "Admin::Projects", type: :request do
       lead.update_column(:customer_id, customer.id)
 
       post admin_projects_path, params: {
-        project: { lead_id: lead.id, title: "Customer Inherited Job" }
+        project: { lead_id: lead.public_id, title: "Customer Inherited Job" }
       }
 
       expect(Project.last.customer_id).to eq(customer.id)

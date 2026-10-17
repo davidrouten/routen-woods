@@ -78,14 +78,14 @@ module Admin
     private
 
     def set_project
-      @project = Project.find(params[:project_id])
+      @project = Project.find_public!(params[:project_id])
     end
 
     def set_invoice
       @invoice = if @project
-                   @project.invoices.find(params[:id])
+                   @project.invoices.find_public!(params[:id])
                  else
-                   Invoice.find(params[:id])
+                   Invoice.find_public!(params[:id])
                  end
     end
 
@@ -98,12 +98,13 @@ module Admin
     end
 
     def invoice_params
-      params.require(:invoice).permit(
+      permitted = params.require(:invoice).permit(
         :issued_date, :due_date, :deposit_amount, :notes, :project_id, :status, :tax_rate,
         line_items_attributes: [:id, :name, :description, :quantity, :unit_price, :line_type, :position, :taxable, :_destroy],
         adjustments_attributes: [:id, :label, :adjustment_type, :rate, :amount, :position, :_destroy],
         payments_attributes: [:id, :amount, :paid_at, :deposit, :notes, :payment_method, :reference_number, :_destroy]
       )
+      resolve_public_ids(permitted, project_id: Project)
     end
 
     def payment_params

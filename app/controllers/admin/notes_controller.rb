@@ -14,7 +14,7 @@ module Admin
     end
 
     def destroy
-      @note = Note.find(params[:id])
+      @note = Note.find_public!(params[:id])
       unless current_user.admin? || @note.user == current_user
         redirect_to notable_path, alert: "Not authorized"
         return
@@ -27,9 +27,9 @@ module Admin
 
     def set_notable
       if params[:lead_id]
-        @notable = Lead.find(params[:lead_id])
+        @notable = Lead.find_public!(params[:lead_id])
       elsif params[:project_id]
-        @notable = Project.find(params[:project_id])
+        @notable = Project.find_public!(params[:project_id])
       end
     end
 

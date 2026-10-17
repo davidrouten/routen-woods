@@ -70,7 +70,7 @@ RSpec.describe Customer, type: :model do
 
     it "returns admin path as search_url" do
       customer = create(:customer)
-      expect(customer.search_url).to eq("/admin/customers/#{customer.id}")
+      expect(customer.search_url).to eq("/admin/customers/#{customer.public_id}")
     end
   end
 end

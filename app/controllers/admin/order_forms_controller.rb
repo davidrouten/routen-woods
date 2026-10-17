@@ -68,7 +68,8 @@ module Admin
       html = render_to_string(template: "pdfs/order_form", layout: "pdf")
       pdf_data = PdfService.render(html)
       send_data pdf_data,
-        filename: "Order-#{@order_form.supplier_name.parameterize}-#{@order_form.id}.pdf",
+        # Temporary until order forms get per-account numbers (Phase 18.2)
+        filename: "Order-#{@order_form.supplier_name.parameterize}-#{@order_form.created_at.to_date.iso8601}.pdf",
         type: :pdf,
         disposition: params[:download] ? :attachment : :inline
     end
@@ -76,14 +77,14 @@ module Admin
     private
 
     def set_project
-      @project = Project.find(params[:project_id])
+      @project = Project.find_public!(params[:project_id])
     end
 
     def set_order_form
       @order_form = if @project
-                      @project.order_forms.find(params[:id])
+                      @project.order_forms.find_public!(params[:id])
                     else
-                      OrderForm.find(params[:id])
+                      OrderForm.find_public!(params[:id])
                     end
     end
 
@@ -96,7 +97,7 @@ module Admin
     end
 
     def order_form_params
-      params.require(:order_form).permit(
+      permitted = params.require(:order_form).permit(
         :supplier_name, :notes, :project_id,
         line_items_attributes: [
           :id, :name, :category, :color, :finish, :material, :size,
@@ -105,6 +106,7 @@ module Admin
           :specifications, :notes, :_destroy
         ]
       )
+      resolve_public_ids(permitted, project_id: Project)
     end
   end
 end

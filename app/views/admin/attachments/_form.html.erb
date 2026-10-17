@@ -28,21 +28,21 @@
 
     <div>
       <label class="block text-sm font-semibold text-gray-700 mb-1.5">Belongs To</label>
-      <% current_value = "#{attachment.attachable_type}-#{attachment.attachable_id}" %>
+      <% current_value = "#{attachment.attachable_type}-#{attachment.attachable&.public_id}" %>
       <select name="attachment[attachable_gid]" class="input-admin w-full">
         <optgroup label="Projects">
           <% Project.order(:title).each do |p| %>
-            <option value="Project-<%= p.id %>" <%= "selected" if current_value == "Project-#{p.id}" %>><%= p.title %></option>
+            <option value="Project-<%= p.public_id %>" <%= "selected" if current_value == "Project-#{p.public_id}" %>><%= p.title %></option>
           <% end %>
         </optgroup>
         <optgroup label="Invoices">
           <% Invoice.order(:invoice_number).each do |inv| %>
-            <option value="Invoice-<%= inv.id %>" <%= "selected" if current_value == "Invoice-#{inv.id}" %>><%= inv.invoice_number %><%= " — #{inv.project.title}" if inv.project %></option>
+            <option value="Invoice-<%= inv.public_id %>" <%= "selected" if current_value == "Invoice-#{inv.public_id}" %>><%= inv.invoice_number %><%= " — #{inv.project.title}" if inv.project %></option>
           <% end %>
         </optgroup>
         <optgroup label="Order Forms">
           <% OrderForm.order(:supplier_name).each do |of| %>
-            <option value="OrderForm-<%= of.id %>" <%= "selected" if current_value == "OrderForm-#{of.id}" %>><%= of.supplier_name %><%= " — #{of.project.title}" if of.project %></option>
+            <option value="OrderForm-<%= of.public_id %>" <%= "selected" if current_value == "OrderForm-#{of.public_id}" %>><%= of.supplier_name %><%= " — #{of.project.title}" if of.project %></option>
           <% end %>
         </optgroup>
       </select>

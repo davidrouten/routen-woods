@@ -64,7 +64,7 @@ module Admin
     private
 
     def set_gallery_image
-      @gallery_image = GalleryImage.find(params[:id])
+      @gallery_image = GalleryImage.find_public!(params[:id])
     end
 
     def gallery_image_params

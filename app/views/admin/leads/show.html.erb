@@ -227,7 +227,7 @@
             <% end %>
           </div>
         <% end %>
-        <%= link_to "Create Project", new_admin_project_path(lead_id: @lead.id), class: "btn-admin w-full text-center" %>
+        <%= link_to "Create Project", new_admin_project_path(lead_id: @lead.public_id), class: "btn-admin w-full text-center" %>
       </div>
     <% end %>
 

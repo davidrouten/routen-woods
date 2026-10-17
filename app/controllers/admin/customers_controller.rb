@@ -78,7 +78,7 @@ module Admin
 
       render json: matches.map { |c|
         {
-          id: c.id,
+          id: c.public_id,
           name: c.full_name,
           email: c.email,
           phone: c.phone,
@@ -91,7 +91,7 @@ module Admin
     private
 
     def set_customer
-      @customer = Customer.find(params[:id])
+      @customer = Customer.find_public!(params[:id])
     end
 
     def customer_params

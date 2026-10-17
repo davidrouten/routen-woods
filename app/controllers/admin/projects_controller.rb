@@ -39,7 +39,7 @@ module Admin
     def new
       @project = Project.new
       if params[:lead_id]
-        @lead = Lead.find(params[:lead_id])
+        @lead = Lead.find_public!(params[:lead_id])
         @project.lead = @lead
         @project.title = "#{@lead.service_names.presence || 'Project'} — #{@lead.first_name} #{@lead.last_name}"
         @project.email = @lead.email
@@ -108,17 +108,18 @@ module Admin
     private
 
     def set_project
-      @project = Project.find(params[:id])
+      @project = Project.find_public!(params[:id])
     end
 
     def project_params
-      params.require(:project).permit(
+      permitted = params.require(:project).permit(
         :lead_id, :assigned_to_id, :customer_id, :title, :description, :internal_notes,
         :address, :email, :phone,
         :estimated_price, :agreed_price, :deposit_amount, :balance_amount,
         :time_estimate, :scheduled_start_date, :scheduled_end_date,
         :estimated_duration_days, :work_saturdays, :calendar_color
       )
+      resolve_public_ids(permitted, lead_id: Lead, customer_id: Customer)
     end
   end
 end

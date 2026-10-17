@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_17_160148) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_17_183157) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -90,7 +90,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_17_160148) do
     t.text "description"
     t.datetime "updated_at", null: false
     t.bigint "uploaded_by_id", null: false
+    t.uuid "public_id", default: -> { "gen_random_uuid()" }, null: false
     t.index ["attachable_type", "attachable_id"], name: "index_attachments_on_attachable_type_and_attachable_id"
+    t.index ["public_id"], name: "index_attachments_on_public_id", unique: true
     t.index ["uploaded_by_id"], name: "index_attachments_on_uploaded_by_id"
   end
 
@@ -107,11 +109,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_17_160148) do
     t.text "notes"
     t.string "phone"
     t.datetime "updated_at", null: false
+    t.uuid "public_id", default: -> { "gen_random_uuid()" }, null: false
     t.index ["email"], name: "idx_customers_email_trgm", opclass: :gin_trgm_ops, using: :gin
     t.index ["email"], name: "index_customers_on_email"
     t.index ["last_name"], name: "index_customers_on_last_name"
     t.index ["phone"], name: "idx_customers_phone_trgm", opclass: :gin_trgm_ops, using: :gin
     t.index ["phone"], name: "index_customers_on_phone"
+    t.index ["public_id"], name: "index_customers_on_public_id", unique: true
   end
 
   create_table "gallery_images", force: :cascade do |t|
@@ -122,6 +126,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_17_160148) do
     t.integer "position"
     t.string "title"
     t.datetime "updated_at", null: false
+    t.uuid "public_id", default: -> { "gen_random_uuid()" }, null: false
+    t.index ["public_id"], name: "index_gallery_images_on_public_id", unique: true
   end
 
   create_table "good_job_batches", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -299,9 +305,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_17_160148) do
     t.decimal "tax_total", precision: 10, scale: 2, default: "0.0"
     t.decimal "total", precision: 10, scale: 2, default: "0.0"
     t.datetime "updated_at", null: false
+    t.uuid "public_id", default: -> { "gen_random_uuid()" }, null: false
     t.index ["discarded_at"], name: "index_invoices_on_discarded_at"
     t.index ["invoice_number"], name: "index_invoices_on_invoice_number", unique: true
     t.index ["project_id"], name: "index_invoices_on_project_id"
+    t.index ["public_id"], name: "index_invoices_on_public_id", unique: true
   end
 
   create_table "leads", force: :cascade do |t|
@@ -352,11 +360,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_17_160148) do
     t.string "utm_source"
     t.string "utm_term"
     t.string "zip_code"
+    t.uuid "public_id", default: -> { "gen_random_uuid()" }, null: false
     t.index ["assigned_to_id"], name: "index_leads_on_assigned_to_id"
     t.index ["created_at"], name: "index_leads_on_created_at"
     t.index ["created_by_id"], name: "index_leads_on_created_by_id"
     t.index ["customer_id"], name: "index_leads_on_customer_id"
     t.index ["lead_temperature"], name: "index_leads_on_lead_temperature"
+    t.index ["public_id"], name: "index_leads_on_public_id", unique: true
     t.index ["spam"], name: "index_leads_on_spam"
     t.index ["status"], name: "index_leads_on_status"
     t.index ["utm_source", "utm_medium", "utm_campaign"], name: "index_leads_on_utm"
@@ -370,7 +380,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_17_160148) do
     t.string "note_type", default: "manual"
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
+    t.uuid "public_id", default: -> { "gen_random_uuid()" }, null: false
     t.index ["notable_type", "notable_id"], name: "index_notes_on_notable_type_and_notable_id"
+    t.index ["public_id"], name: "index_notes_on_public_id", unique: true
     t.index ["user_id"], name: "index_notes_on_user_id"
   end
 
@@ -393,8 +405,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_17_160148) do
     t.datetime "submitted_at"
     t.string "supplier_name"
     t.datetime "updated_at", null: false
+    t.uuid "public_id", default: -> { "gen_random_uuid()" }, null: false
     t.index ["discarded_at"], name: "index_order_forms_on_discarded_at"
     t.index ["project_id"], name: "index_order_forms_on_project_id"
+    t.index ["public_id"], name: "index_order_forms_on_public_id", unique: true
   end
 
   create_table "order_line_items", force: :cascade do |t|
@@ -469,11 +483,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_17_160148) do
     t.string "title", null: false
     t.datetime "updated_at", null: false
     t.boolean "work_saturdays", default: false, null: false
+    t.uuid "public_id", default: -> { "gen_random_uuid()" }, null: false
     t.index ["assigned_to_id"], name: "index_projects_on_assigned_to_id"
     t.index ["client_token"], name: "index_projects_on_client_token", unique: true
     t.index ["customer_id"], name: "index_projects_on_customer_id"
     t.index ["discarded_at"], name: "index_projects_on_discarded_at"
     t.index ["lead_id"], name: "index_projects_on_lead_id"
+    t.index ["public_id"], name: "index_projects_on_public_id", unique: true
     t.index ["status"], name: "index_projects_on_status"
   end
 
@@ -497,6 +513,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_17_160148) do
     t.integer "position", default: 0
     t.integer "rating", default: 5
     t.datetime "updated_at", null: false
+    t.uuid "public_id", default: -> { "gen_random_uuid()" }, null: false
+    t.index ["public_id"], name: "index_testimonials_on_public_id", unique: true
   end
 
   create_table "user_permissions", force: :cascade do |t|

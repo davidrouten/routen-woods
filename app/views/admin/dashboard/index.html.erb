@@ -139,6 +139,10 @@
     var container = document.getElementById("dash-schedule");
     if (!container) return;
 
+    // Project classes are "proj-<public UUID>" (not "proj-key")
+    var PROJ_ID = /proj-([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/;
+    var PROJ_IDS = new RegExp(PROJ_ID.source, "g");
+
     var urlMap = {};
     var colorMap = {};
     container.querySelectorAll("a[data-projects]").forEach(function(a) {
@@ -148,7 +152,7 @@
       var dot = el.querySelector("[style*='background-color']");
       if (!dot) return;
       var color = dot.style.backgroundColor;
-      var m = el.className.match(/proj-(\d+)/);
+      var m = el.className.match(PROJ_ID);
       if (m) colorMap[m[1]] = color;
     });
 
@@ -190,7 +194,7 @@
       var data = el.dataset.projects;
       var ids = data ? data.split(",") : [];
       if (ids.length === 0) {
-        var match = el.className.match(/proj-(\d+)/g);
+        var match = el.className.match(PROJ_IDS);
         if (match) ids = match.map(function(c) { return c.replace("proj-", ""); });
       }
       if (ids.length > 0) highlight(ids);

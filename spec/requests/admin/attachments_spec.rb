@@ -52,7 +52,7 @@ RSpec.describe "Admin::Attachments", type: :request do
     it "moves the attachment to a different project" do
       other_project = create(:project, title: "Other Project")
       patch admin_project_attachment_path(project, attachment), params: {
-        attachment: { attachable_gid: "Project-#{other_project.id}" }
+        attachment: { attachable_gid: "Project-#{other_project.public_id}" }
       }
       expect(attachment.reload.attachable).to eq(other_project)
       expect(response).to redirect_to(admin_project_attachment_path(other_project, attachment))
@@ -61,7 +61,7 @@ RSpec.describe "Admin::Attachments", type: :request do
     it "moves the attachment to an invoice" do
       invoice = create(:invoice, project: project)
       patch admin_project_attachment_path(project, attachment), params: {
-        attachment: { attachable_gid: "Invoice-#{invoice.id}" }
+        attachment: { attachable_gid: "Invoice-#{invoice.public_id}" }
       }
       expect(attachment.reload.attachable).to eq(invoice)
       expect(response).to redirect_to(admin_invoice_attachment_path(invoice, attachment))
@@ -70,7 +70,7 @@ RSpec.describe "Admin::Attachments", type: :request do
     it "moves the attachment to an order form" do
       order_form = create(:order_form, project: project)
       patch admin_project_attachment_path(project, attachment), params: {
-        attachment: { attachable_gid: "OrderForm-#{order_form.id}" }
+        attachment: { attachable_gid: "OrderForm-#{order_form.public_id}" }
       }
       expect(attachment.reload.attachable).to eq(order_form)
       expect(response).to redirect_to(admin_order_form_attachment_path(order_form, attachment))
@@ -187,7 +187,7 @@ RSpec.describe "Admin::Attachments", type: :request do
     it "moves the attachment to a project" do
       attachment = create(:attachment, :on_invoice, attachable: invoice)
       patch admin_invoice_attachment_path(invoice, attachment), params: {
-        attachment: { attachable_gid: "Project-#{project.id}" }
+        attachment: { attachable_gid: "Project-#{project.public_id}" }
       }
       expect(attachment.reload.attachable).to eq(project)
       expect(response).to redirect_to(admin_project_attachment_path(project, attachment))
@@ -250,7 +250,7 @@ RSpec.describe "Admin::Attachments", type: :request do
       invoice = create(:invoice, project: project)
       attachment = create(:attachment, :on_order_form, attachable: order_form)
       patch admin_order_form_attachment_path(order_form, attachment), params: {
-        attachment: { attachable_gid: "Invoice-#{invoice.id}" }
+        attachment: { attachable_gid: "Invoice-#{invoice.public_id}" }
       }
       expect(attachment.reload.attachable).to eq(invoice)
       expect(response).to redirect_to(admin_invoice_attachment_path(invoice, attachment))

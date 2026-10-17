@@ -124,17 +124,18 @@ module Admin
     private
 
     def set_lead
-      @lead = Lead.find(params[:id])
+      @lead = Lead.find_public!(params[:id])
     end
 
     def lead_params
-      params.require(:lead).permit(
+      permitted = params.require(:lead).permit(
         :first_name, :last_name, :email, :phone, :customer_id,
         :budget_range, :timeframe, :zip_code, :message,
         :status, :source, :lead_external_source_id, :other_service,
         :address_street, :address_street2, :address_city, :address_state, :address_zip,
         services_interested_in: []
       )
+      resolve_public_ids(permitted, customer_id: Customer)
     end
   end
 end

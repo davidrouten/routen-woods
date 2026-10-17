@@ -161,7 +161,7 @@ RSpec.describe "Admin::Customers", type: :request do
 
       json = JSON.parse(response.body)
       expect(json.length).to eq(1)
-      expect(json[0]["id"]).to eq(customer.id)
+      expect(json[0]["id"]).to eq(customer.public_id)
       expect(json[0]["name"]).to eq(customer.full_name)
     end
 

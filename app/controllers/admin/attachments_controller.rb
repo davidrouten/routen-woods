@@ -49,16 +49,16 @@ module Admin
 
     def set_attachable
       if params[:invoice_id].present?
-        @attachable = Invoice.find(params[:invoice_id])
+        @attachable = Invoice.find_public!(params[:invoice_id])
       elsif params[:order_form_id].present?
-        @attachable = OrderForm.find(params[:order_form_id])
+        @attachable = OrderForm.find_public!(params[:order_form_id])
       elsif params[:project_id].present?
-        @attachable = Project.find(params[:project_id])
+        @attachable = Project.find_public!(params[:project_id])
       end
     end
 
     def set_attachment
-      @attachment = @attachable.attachments.find(params[:id])
+      @attachment = @attachable.attachments.find_public!(params[:id])
     end
 
     def assign_attachable_from_gid
@@ -68,7 +68,7 @@ module Admin
       type, id = gid.split("-", 2)
       return unless ATTACHABLE_TYPES.include?(type) && id.present?
 
-      @attachment.attachable = type.constantize.find(id)
+      @attachment.attachable = type.constantize.find_public!(id)
     end
 
     def attachment_params
