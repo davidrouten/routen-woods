@@ -8,6 +8,15 @@ module Notifiers
       @context = context
     end
 
+    def self.enabled?
+      true
+    end
+
+    # True when every user shares one destination (e.g. a single Slack channel).
+    def self.shared?
+      false
+    end
+
     def deliver_later
       raise NotImplementedError
     end

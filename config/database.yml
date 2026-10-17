@@ -87,3 +87,5 @@ test:
 production:
   <<: *default
   url: <%= ENV["DATABASE_URL"] %>
+  # Puma threads + GoodJob's 2 workers + 2 for GoodJob's listener and scheduler.
+  max_connections: <%= ENV.fetch("RAILS_MAX_THREADS", 3).to_i + 4 %>
