@@ -13,13 +13,6 @@
       "file": "app/helpers/admin/sort_helper.rb",
       "code": "link_to(url)",
       "note": "The href is always request.path plus an encoded query string, so it can't change host or scheme (no javascript: URLs). The label is escaped via safe_join."
-    },
-    {
-      "warning_type": "Unmaintained Dependency",
-      "fingerprint": "edf687f759ec9765bd5db185dbc615c80af77d6e7e19386fc42934e7a80307af",
-      "file": ".ruby-version",
-      "code": null,
-      "note": "Ruby 3.2 is end-of-life. Upgrade is tracked as its own PR; ignored so CI can pass in the meantime. Remove this entry when upgrading."
     }
   ],
   "brakeman_version": "8.1.0"
