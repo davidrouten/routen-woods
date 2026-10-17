@@ -15,9 +15,9 @@ module Admin
       dir = current_sort.direction
       scope = case current_sort.column
               when "project" then scope.order(title: dir)
-              when "client" then scope.left_joins(:lead).order("leads.first_name #{dir}")
+              when "client" then scope.left_joins(:lead).order(sort_order("leads.first_name"))
               when "price" then scope.order(agreed_price: dir)
-              when "schedule" then scope.order(Arel.sql("COALESCE(scheduled_start_date, '9999-12-31') #{dir}"))
+              when "schedule" then scope.order(sort_order("COALESCE(scheduled_start_date, '9999-12-31')"))
               else scope.order(Arel.sql("COALESCE(scheduled_start_date, '9999-12-31') ASC"))
               end
 

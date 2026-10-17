@@ -17,14 +17,13 @@ module Admin
         )
       end
 
-      dir = current_sort.direction
       scope = case current_sort.column
-              when "name" then scope.order("customers.first_name #{dir}, customers.last_name #{dir}")
-              when "email" then scope.order("customers.email #{dir}")
-              when "phone" then scope.order("customers.phone #{dir}")
-              when "leads" then scope.order(Arel.sql("COUNT(DISTINCT leads.id) #{dir}"))
-              when "projects" then scope.order(Arel.sql("COUNT(DISTINCT projects.id) #{dir}"))
-              when "revenue" then scope.order(Arel.sql("COALESCE(SUM(projects.agreed_price), 0) #{dir}"))
+              when "name" then scope.order(sort_order("customers.first_name", "customers.last_name"))
+              when "email" then scope.order(sort_order("customers.email"))
+              when "phone" then scope.order(sort_order("customers.phone"))
+              when "leads" then scope.order(sort_order("COUNT(DISTINCT leads.id)"))
+              when "projects" then scope.order(sort_order("COUNT(DISTINCT projects.id)"))
+              when "revenue" then scope.order(sort_order("COALESCE(SUM(projects.agreed_price), 0)"))
               else scope.order("customers.first_name ASC, customers.last_name ASC")
               end
 

@@ -1,0 +1,26 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "Mass Assignment",
+      "fingerprint": "11d59a56189a1ca23eb384dffb0b22d630dde478c2025dcc8ee02a3293621f0c",
+      "file": "app/controllers/webhooks/angi_controller.rb",
+      "code": "params.permit!",
+      "note": "Angi webhook payload is stored verbatim as JSON on InboundLead#payload and mapped field-by-field by InboundLeadMappers::Angi. It is never mass-assigned to model attributes."
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "fingerprint": "1afe09dd5aa8154a6d46f2d2820cd42527d55da99a754c8a40bb494086bced4e",
+      "file": "app/helpers/admin/sort_helper.rb",
+      "code": "link_to(url)",
+      "note": "The href is always request.path plus an encoded query string, so it can't change host or scheme (no javascript: URLs). The label is escaped via safe_join."
+    },
+    {
+      "warning_type": "Unmaintained Dependency",
+      "fingerprint": "edf687f759ec9765bd5db185dbc615c80af77d6e7e19386fc42934e7a80307af",
+      "file": ".ruby-version",
+      "code": null,
+      "note": "Ruby 3.2 is end-of-life. Upgrade is tracked as its own PR; ignored so CI can pass in the meantime. Remove this entry when upgrading."
+    }
+  ],
+  "brakeman_version": "8.1.0"
+}

@@ -22,5 +22,14 @@ module Admin
       @current_sort ||= SortParam.new(params[:sort])
     end
     helper_method :current_sort
+
+    # ORDER BY nodes for SQL expressions in the current sort direction, so the
+    # direction is never interpolated into the SQL string.
+    def sort_order(*expressions)
+      expressions.map do |sql|
+        node = Arel.sql(sql)
+        current_sort.desc? ? node.desc : node.asc
+      end
+    end
   end
 end
