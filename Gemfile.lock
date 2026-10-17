@@ -280,7 +280,7 @@ GEM
     nokogiri (1.19.4-x86_64-linux-musl)
       racc (~> 1.4)
     orm_adapter (0.5.0)
-    pagy (43.4.4)
+    pagy (43.8.0)
       json
       uri
       yaml
@@ -529,6 +529,9 @@ DEPENDENCIES
   tzinfo-data
   web-console
   webmock
+
+RUBY VERSION
+   ruby 3.4.11p137
 
 BUNDLED WITH
    2.5.4
