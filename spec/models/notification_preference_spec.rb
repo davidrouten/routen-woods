@@ -4,7 +4,8 @@ RSpec.describe NotificationPreference, type: :model do
   describe "validations" do
     subject { build(:notification_preference) }
 
-    it { is_expected.to validate_uniqueness_of(:user_id) }
+    # UUIDs are case-insensitive by nature, so skip the matcher's upcase check
+    it { is_expected.to validate_uniqueness_of(:user_id).ignoring_case_sensitivity }
 
     it "rejects unknown events" do
       pref = build(:notification_preference, preferences: { "bogus" => ["email"] })

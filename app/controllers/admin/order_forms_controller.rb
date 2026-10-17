@@ -68,7 +68,8 @@ module Admin
       html = render_to_string(template: "pdfs/order_form", layout: "pdf")
       pdf_data = PdfService.render(html)
       send_data pdf_data,
-        filename: "Order-#{@order_form.supplier_name.parameterize}-#{@order_form.id}.pdf",
+        # Temporary until order forms get per-account numbers (Phase 18.2)
+        filename: "Order-#{@order_form.supplier_name.parameterize}-#{@order_form.created_at.to_date.iso8601}.pdf",
         type: :pdf,
         disposition: params[:download] ? :attachment : :inline
     end

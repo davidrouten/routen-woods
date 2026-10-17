@@ -380,7 +380,10 @@ export default class extends Controller {
 
   colorFor(id) {
     const p = this.projectsValue.find(p => p.id === id)
-    return (p && p.color) || PALETTE[id % PALETTE.length]
+    if (p && p.color) return p.color
+    // ids are UUID strings: derive a stable palette index from the characters
+    const hash = [...String(id)].reduce((sum, ch) => sum + ch.charCodeAt(0), 0)
+    return PALETTE[hash % PALETTE.length]
   }
 
   statusOverlay(status) {

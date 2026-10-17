@@ -19,7 +19,7 @@ class Lead < ApplicationRecord
   end
 
   def search_url
-    "/admin/leads/#{id}"
+    Rails.application.routes.url_helpers.admin_lead_path(self)
   end
 
   enum :status, {
